@@ -84,7 +84,7 @@ a {
 
 /* 游戏卡片悬浮效果 */
 .game-card {
-  @apply group relative flex min-h-[9.25rem] flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-3.5 text-white shadow-lg shadow-black/30 backdrop-blur-xl transition-all duration-300 hover:border-pink-300/60 hover:bg-black/5 hover:-translate-y-1 sm:min-h-0 sm:rounded-3xl sm:p-6;
+  @apply relative flex min-h-[9.25rem] flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-3.5 text-white shadow-lg shadow-black/30 backdrop-blur-xl transition-all duration-300 hover:border-pink-300/60 hover:bg-black/5 hover:-translate-y-1 sm:min-h-0 sm:rounded-3xl sm:p-6;
 }
 
 /* 动画 */

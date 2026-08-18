@@ -58,7 +58,7 @@ export default function Home() {
               <Link
                 key={game.slug}
                 href={`/${game.slug}`}
-                className="game-card"
+                className="game-card group"
               >
                 <div
                   className={`absolute -right-2 -top-2 text-4xl opacity-20 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 group-hover:opacity-60 sm:-right-4 sm:-top-4 sm:text-7xl`}
