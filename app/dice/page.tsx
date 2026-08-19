@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import LicenseGate from "../../components/LicenseGate";
 import { useState } from "react";
 
 const defaultPenalties = [
@@ -103,6 +104,7 @@ export default function DiceGame() {
 
   return (
     <>
+      <LicenseGate gameName="情趣骰子">
       <div className="bg-aurora" />
       <div className="relative z-10 mx-auto min-h-screen w-full max-w-5xl px-3.5 py-4 sm:px-6 sm:py-8">
         {/* 顶部返回 */}
@@ -267,6 +269,7 @@ export default function DiceGame() {
           </div>
         </div>
       )}
-    </>
+          </LicenseGate>
+        </>
   );
 }

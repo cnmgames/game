@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import LicenseGate from "../../components/LicenseGate";
 import { useState } from "react";
 
 const defaultTruth = [
@@ -96,6 +97,7 @@ export default function TruthGame() {
 
   return (
     <>
+      <LicenseGate gameName="真心话大冒险转盘">
       <div className="bg-aurora" />
       <div className="relative z-10 mx-auto min-h-screen w-full max-w-4xl px-3.5 py-4 sm:px-6 sm:py-10">
         <div className="mb-4">
@@ -240,6 +242,7 @@ export default function TruthGame() {
           </div>
         </div>
       )}
-    </>
+          </LicenseGate>
+        </>
   );
 }

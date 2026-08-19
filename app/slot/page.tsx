@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import LicenseGate from "../../components/LicenseGate";
 import { useState, useRef } from "react";
 
 const defaultLocations = ["阳台", "沙发", "厨房", "床上", "浴室", "车内", "酒店", "天台"];
@@ -81,6 +82,7 @@ export default function SlotGame() {
 
   return (
     <>
+      <LicenseGate gameName="桃色老虎机">
       <div className="bg-aurora" />
       <div className="relative z-10 mx-auto min-h-screen w-full max-w-3xl px-3.5 py-4 sm:px-6 sm:py-10">
         <div className="mb-4"><Link href="/" className="back-btn">← 返回游戏列表</Link></div>
@@ -211,6 +213,7 @@ export default function SlotGame() {
           </div>
         </div>
       )}
-    </>
+          </LicenseGate>
+        </>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import LicenseGate from "../../components/LicenseGate";
 import { useState } from "react";
 
 const boardEvents = [
@@ -91,6 +92,7 @@ export default function MonopolyGame() {
 
   return (
     <>
+      <LicenseGate gameName="午夜大富翁">
       <div className="bg-aurora" />
       <div className="relative z-10 mx-auto min-h-screen w-full max-w-3xl px-3.5 py-4 sm:px-6 sm:py-10">
         <div className="mb-4">
@@ -167,6 +169,7 @@ export default function MonopolyGame() {
           <p className="mt-2">© 2024 ~ 2026 www.hoothin.com</p>
         </div>
       </div>
-    </>
+          </LicenseGate>
+        </>
   );
 }

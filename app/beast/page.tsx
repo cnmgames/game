@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import LicenseGate from "../../components/LicenseGate";
 import { useState, useEffect } from "react";
 
 const beastNames = ["鼠", "猫", "狗", "狼", "豹", "虎", "狮", "象"];
@@ -94,6 +95,7 @@ export default function BeastGame() {
 
   return (
     <>
+      <LicenseGate gameName="火辣暗兽棋">
       <div className="bg-aurora" />
       <div className="relative z-10 mx-auto min-h-screen w-full max-w-4xl px-3.5 py-4 sm:px-6 sm:py-10">
         <div className="mb-4"><Link href="/" className="back-btn">← 返回游戏列表</Link></div>
@@ -221,6 +223,7 @@ export default function BeastGame() {
           </div>
         </div>
       )}
-    </>
+          </LicenseGate>
+        </>
   );
 }
