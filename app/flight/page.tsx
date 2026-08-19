@@ -241,7 +241,6 @@ export default function FlightGame() {
 
         <div className="footer-card">
           <p>请在充分沟通界限的前提下玩乐，确保每一步都建立在积极同意之上。</p>
-          <p className="mt-2">© 2024 ~ 2026 www.hoothin.com</p>
         </div>
       </div>
 
