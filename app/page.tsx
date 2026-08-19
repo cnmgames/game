@@ -147,13 +147,10 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 激活和管理入口 */}
+        {/* 激活入口 */}
         <div className="flex flex-wrap justify-center gap-4">
           <Link href="/activate" className="rounded-full border border-pink-400/40 bg-pink-500/10 px-6 py-2.5 text-sm font-semibold text-pink-200 hover:bg-pink-500/20 transition">
             🔑 激活游戏
-          </Link>
-          <Link href="/admin/generate" className="rounded-full border border-white/15 bg-white/5 px-6 py-2.5 text-sm font-semibold text-white/70 hover:bg-white/10 transition">
-            ⚙️ 生成激活码
           </Link>
         </div>
 
