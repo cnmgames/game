@@ -2,109 +2,127 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #050510;
-  --foreground: #f4f4f5;
+@layer components {
+  .game-card {
+    @apply relative flex min-h-[9.25rem] flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-3.5 text-white shadow-lg shadow-black/30 backdrop-blur-xl transition-all duration-300 hover:border-pink-300/60 hover:bg-black/5 hover:-translate-y-1 sm:min-h-0 sm:rounded-3xl sm:p-6;
+  }
+  .game-card-emoji {
+    @apply absolute -right-2 -top-2 text-4xl opacity-20 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 group-hover:opacity-60 sm:-right-4 sm:-top-4 sm:text-7xl;
+  }
+  .game-card-tag {
+    @apply relative z-10 inline-flex max-w-full items-center gap-2 rounded-full bg-transparent py-0 text-sm font-semibold leading-tight text-pink-100 sm:bg-white/10 sm:px-3 sm:py-1 sm:text-xs sm:uppercase sm:tracking-widest sm:text-pink-200;
+  }
+  .game-card-desc {
+    @apply overflow-hidden text-[11px] leading-snug text-white/60 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] sm:block sm:text-sm sm:leading-relaxed sm:text-white/70;
+  }
+  .game-card-link {
+    @apply relative z-10 mt-3 flex items-center gap-1.5 text-xs font-semibold text-pink-200 transition group-hover:text-pink-100 sm:mt-6 sm:gap-2 sm:text-sm;
+  }
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-full bg-pink-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400;
+  }
+  .nav-pill {
+    @apply inline-flex h-8 items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold tracking-wide text-white/90 backdrop-blur-xl sm:h-9 sm:px-4;
+  }
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-html,
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  @apply bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#1f2937] text-zinc-100 antialiased;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* 背景动画层 */
+.bg-aurora {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #050512;
+}
+.bg-aurora::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% 20%, rgba(236, 72, 153, 0.15), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 30%, rgba(139, 92, 246, 0.12), transparent),
+    radial-gradient(ellipse 70% 60% at 50% 80%, rgba(59, 130, 246, 0.1), transparent);
+  opacity: 0.8;
+  animation: auroraShift 15s ease-in-out infinite alternate;
+}
+.bg-aurora::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(2, 2, 5, 0.8) 0%, transparent 50%, transparent 100%);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+@keyframes auroraShift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(2%, -2%) scale(1.05); }
+  100% { transform: translate(-1%, 1%) scale(1.02); }
 }
 
-/* 自定义滚动条 */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* 在线人数绿点呼吸 */
+.online-dot {
+  @apply h-2 w-2 rounded-full;
+  background: #4ade80;
+  box-shadow: 0 0 8px #4ade80;
+  animation: dotPulse 2s ease-in-out infinite;
+}
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+/* 左下角脉冲按钮 */
+.pwa-btn-glow {
+  animation: pingSlow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes pingSlow {
+  75%, 100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(236, 72, 153, 0.4);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(236, 72, 153, 0.6);
-}
-
-/* 玻璃拟态工具类 */
-.glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.glass-strong {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-/* 渐变文字 */
-.gradient-text {
-  background: linear-gradient(135deg, #f472b6, #ec4899, #db2777);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* 按钮基础样式 */
-.btn-primary {
-  @apply inline-flex items-center justify-center gap-2 rounded-full bg-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition-all duration-300 hover:bg-pink-400 hover:shadow-pink-500/60 hover:-translate-y-0.5 active:translate-y-0;
-}
-
-.btn-secondary {
-  @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-white/80 backdrop-blur-xl transition-all duration-300 hover:border-white/20 hover:bg-white/10 hover:text-white;
-}
-
-/* 游戏卡片悬浮效果 */
-.game-card {
-  @apply relative flex min-h-[9.25rem] flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-3.5 text-white shadow-lg shadow-black/30 backdrop-blur-xl transition-all duration-300 hover:border-pink-300/60 hover:bg-black/5 hover:-translate-y-1 sm:min-h-0 sm:rounded-3xl sm:p-6;
-}
-
-/* 动画 */
-@keyframes dice-roll {
+/* 骰子滚动动画 */
+@keyframes diceRoll {
   0% { transform: rotate(0deg) scale(1); }
   25% { transform: rotate(90deg) scale(1.1); }
-  50% { transform: rotate(180deg) scale(1); }
-  75% { transform: rotate(270deg) scale(1.1); }
+  50% { transform: rotate(180deg) scale(0.95); }
+  75% { transform: rotate(270deg) scale(1.05); }
   100% { transform: rotate(360deg) scale(1); }
 }
-
 .dice-rolling {
-  animation: dice-roll 0.6s ease-in-out;
+  animation: diceRoll 0.6s ease-in-out;
 }
 
-@keyframes wheel-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(var(--spin-deg, 1440deg)); }
+/* 转盘旋转 */
+.wheel-spin {
+  transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
 }
 
-.wheel-spinning {
-  animation: wheel-spin 4s cubic-bezier(0.17, 0.67, 0.12, 0.99) forwards;
+/* 老虎机滚动 */
+@keyframes slotScroll {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
 }
+.slot-reel {
+  animation: slotScroll 0.1s linear infinite;
+}
+
+/* 卡片入场动画 */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #0f172a; }
+::-webkit-scrollbar-thumb { background: rgba(236, 72, 153, 0.3); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(236, 72, 153, 0.5); }

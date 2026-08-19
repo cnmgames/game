@@ -1,249 +1,178 @@
 "use client";
-
+import Link from "next/link";
 import { useState } from "react";
-import GameLayout from "@/components/GameLayout";
-import { monopolyEvents, truthQuestions, dareChallenges } from "@/lib/gameData";
 
-const BOARD_SIZE = 16;
+const boardEvents = [
+  { type: "start", text: "起点", color: "bg-green-500/20 border-green-400/50" },
+  { type: "event", text: "互夸3个优点", color: "bg-pink-500/10" },
+  { type: "event", text: "拥抱30秒", color: "bg-purple-500/10" },
+  { type: "reward", text: "前进2格 🎁", color: "bg-yellow-500/10" },
+  { type: "event", text: "说一句情话", color: "bg-pink-500/10" },
+  { type: "event", text: "亲一下额头", color: "bg-purple-500/10" },
+  { type: "penalty", text: "后退1格 ⬅️", color: "bg-red-500/10" },
+  { type: "event", text: "按摩肩膀1分钟", color: "bg-pink-500/10" },
+  { type: "event", text: "深情对视20秒", color: "bg-purple-500/10" },
+  { type: "reward", text: "再来一次 🎲", color: "bg-yellow-500/10" },
+  { type: "event", text: "交换小秘密", color: "bg-pink-500/10" },
+  { type: "event", text: "喂对方一口水", color: "bg-purple-500/10" },
+  { type: "event", text: "十指相扣1分钟", color: "bg-pink-500/10" },
+  { type: "penalty", text: "停一轮 ⏸️", color: "bg-red-500/10" },
+  { type: "event", text: "唱一句情歌", color: "bg-purple-500/10" },
+  { type: "end", text: "终点 🏆", color: "bg-yellow-500/20 border-yellow-400/50" },
+];
 
 export default function MonopolyGame() {
-  const [positions, setPositions] = useState([0, 0]);
-  const [currentPlayer, setCurrentPlayer] = useState(0);
-  const [diceValue, setDiceValue] = useState<number | null>(null);
-  const [isRolling, setIsRolling] = useState(false);
-  const [currentEvent, setCurrentEvent] = useState<typeof monopolyEvents[0] | null>(null);
-  const [showEvent, setShowEvent] = useState(false);
-  const [eventDetail, setEventDetail] = useState<string>("");
-  const [gameOver, setGameOver] = useState(false);
-  const [winner, setWinner] = useState<number | null>(null);
+  const [pos, setPos] = useState(0);
+  const [dice, setDice] = useState(0);
+  const [rolling, setRolling] = useState(false);
+  const [message, setMessage] = useState("掷骰子开始冒险");
+  const [currentEvent, setCurrentEvent] = useState("");
+  const [skipTurn, setSkipTurn] = useState(false);
+  const [extraTurn, setExtraTurn] = useState(false);
 
-  const rollDice = () => {
-    if (isRolling || gameOver) return;
-    setIsRolling(true);
-    setShowEvent(false);
+  const diceFaces = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
 
-    let rolls = 0;
-    const interval = setInterval(() => {
-      setDiceValue(Math.floor(Math.random() * 6) + 1);
-      rolls++;
-      if (rolls >= 10) {
-        clearInterval(interval);
-        const finalValue = Math.floor(Math.random() * 6) + 1;
-        setDiceValue(finalValue);
-        setIsRolling(false);
+  const roll = () => {
+    if (rolling) return;
+    if (skipTurn) {
+      setMessage("这一轮被跳过了，再掷一次继续！");
+      setSkipTurn(false);
+      return;
+    }
+    setRolling(true);
+    setCurrentEvent("");
+    let count = 0;
+    const anim = setInterval(() => {
+      setDice(Math.floor(Math.random() * 6) + 1);
+      count++;
+      if (count >= 8) {
+        clearInterval(anim);
+        const final = Math.floor(Math.random() * 6) + 1;
+        setDice(final);
+        setRolling(false);
 
-        // 移动
-        const newPos = (positions[currentPlayer] + finalValue) % BOARD_SIZE;
-        const newPositions = [...positions];
-        newPositions[currentPlayer] = newPos;
-        setPositions(newPositions);
+        let newPos = Math.min(pos + final, boardEvents.length - 1);
+        setPos(newPos);
+        setMessage(`掷出 ${final} 点，前进到第 ${newPos} 格`);
 
-        // 触发事件
-        const event = monopolyEvents[newPos];
-        setTimeout(() => {
-          setCurrentEvent(event);
-          setShowEvent(true);
-
-          // 处理事件效果
-          if (event.effect === "truth") {
-            setEventDetail(truthQuestions[Math.floor(Math.random() * truthQuestions.length)]);
-          } else if (event.effect === "dare") {
-            setEventDetail(dareChallenges[Math.floor(Math.random() * dareChallenges.length)]);
-          } else if (event.effect === "win") {
-            setGameOver(true);
-            setWinner(currentPlayer);
-            setEventDetail("恭喜到达终点！你可以向对方许一个愿望！");
-          } else {
-            setEventDetail(event.text);
-          }
-
-          // 处理前进/后退
-          if (event.effect.startsWith("+")) {
-            const steps = parseInt(event.effect);
-            setTimeout(() => {
-              setPositions((prev) => {
-                const updated = [...prev];
-                updated[currentPlayer] = (updated[currentPlayer] + steps) % BOARD_SIZE;
-                return updated;
-              });
-            }, 500);
-          } else if (event.effect.startsWith("-")) {
-            const steps = parseInt(event.effect);
-            setTimeout(() => {
-              setPositions((prev) => {
-                const updated = [...prev];
-                updated[currentPlayer] = (updated[currentPlayer] - steps + BOARD_SIZE) % BOARD_SIZE;
-                return updated;
-              });
-            }, 500);
-          }
-        }, 300);
-
-        // 切换玩家
-        if (finalValue !== 6 && event.effect !== "win") {
+        const event = boardEvents[newPos];
+        if (event.type === "end") {
+          setCurrentEvent("🎉 恭喜到达终点！你们完成了午夜大冒险！");
+        } else if (event.type === "reward" && event.text.includes("前进")) {
+          setCurrentEvent(event.text);
           setTimeout(() => {
-            setCurrentPlayer((prev) => (prev + 1) % 2);
-          }, 800);
+            const bonusPos = Math.min(newPos + 2, boardEvents.length - 1);
+            setPos(bonusPos);
+            setMessage(`奖励前进2格，到第 ${bonusPos} 格`);
+            if (boardEvents[bonusPos].type === "end") {
+              setCurrentEvent("🎉 恭喜到达终点！");
+            } else {
+              setCurrentEvent(boardEvents[bonusPos].text);
+            }
+          }, 1000);
+        } else if (event.type === "reward" && event.text.includes("再来")) {
+          setCurrentEvent(event.text);
+          setExtraTurn(true);
+        } else if (event.type === "penalty" && event.text.includes("后退")) {
+          setCurrentEvent(event.text);
+          setTimeout(() => {
+            const penaltyPos = Math.max(newPos - 1, 0);
+            setPos(penaltyPos);
+            setMessage(`后退1格，到第 ${penaltyPos} 格`);
+          }, 1000);
+        } else if (event.type === "penalty" && event.text.includes("停")) {
+          setCurrentEvent(event.text);
+          setSkipTurn(true);
+        } else {
+          setCurrentEvent(event.text);
         }
       }
     }, 80);
   };
 
-  const resetGame = () => {
-    setPositions([0, 0]);
-    setCurrentPlayer(0);
-    setDiceValue(null);
-    setCurrentEvent(null);
-    setShowEvent(false);
-    setEventDetail("");
-    setGameOver(false);
-    setWinner(null);
+  const reset = () => {
+    setPos(0);
+    setDice(0);
+    setMessage("掷骰子开始冒险");
+    setCurrentEvent("");
+    setSkipTurn(false);
+    setExtraTurn(false);
   };
 
-  const playerColors = [
-    { color: "bg-pink-500", ring: "ring-pink-400", text: "text-pink-300" },
-    { color: "bg-sky-500", ring: "ring-sky-400", text: "text-sky-300" },
-  ];
-
-  const diceFaces = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
-
   return (
-    <GameLayout title="午夜大富翁" emoji="💎">
-      <div className="space-y-6">
-        {/* 玩家状态 */}
-        <div className="grid grid-cols-2 gap-3">
-          {[0, 1].map((p) => (
-            <div
-              key={p}
-              className="rounded-2xl border p-4 backdrop-blur-xl transition-all"
-              style={{
-                background: currentPlayer === p && !gameOver ? (p === 0 ? "rgba(236,72,153,0.15)" : "rgba(14,165,233,0.15)") : "rgba(255,255,255,0.05)",
-                borderColor: currentPlayer === p && !gameOver ? (p === 0 ? "rgba(236,72,153,0.4)" : "rgba(14,165,233,0.4)") : "rgba(255,255,255,0.1)",
-              }}
-            >
-              <div className="flex items-center gap-2">
-                <div className={`w-4 h-4 rounded-full ${playerColors[p].color}`} />
-                <span className="font-semibold text-white">玩家{p + 1}</span>
-                {currentPlayer === p && !gameOver && (
-                  <span className={`text-xs ${playerColors[p].text} animate-pulse`}>行动中</span>
+    <>
+      <div className="bg-aurora" />
+      <div className="relative z-10 mx-auto min-h-screen w-full max-w-3xl px-4 py-6 sm:px-6 sm:py-10">
+        <Link href="/" className="inline-flex items-center gap-2 text-sm text-pink-300 hover:text-pink-200 mb-6">
+          ← 返回首页
+        </Link>
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-2xl shadow-black/40 backdrop-blur-xl sm:p-8">
+          <div className="mb-6 text-center">
+            <h1 className="text-2xl font-bold sm:text-4xl">💎 午夜大富翁</h1>
+            <p className="mt-2 text-sm text-white/70 sm:text-base">绕着棋盘冒险，每一站都有欲望事件等待完成</p>
+          </div>
+
+          {/* 位置 */}
+          <div className="mb-4 text-center">
+            <span className="rounded-full bg-white/10 px-4 py-2 text-sm">
+              当前位置：<span className="font-bold text-pink-300">{pos}</span> / {boardEvents.length - 1}
+            </span>
+          </div>
+
+          {/* 棋盘 */}
+          <div className="mb-6 grid grid-cols-4 gap-1.5 sm:gap-2">
+            {boardEvents.map((e, i) => (
+              <div
+                key={i}
+                className={`relative aspect-square rounded-lg border p-1 text-center text-[9px] sm:text-[11px] flex items-center justify-center transition-all ${
+                  i === pos
+                    ? "border-pink-400 bg-pink-500/30 ring-2 ring-pink-400/50 scale-105"
+                    : e.color
+                } border-white/10`}
+              >
+                <span className="leading-tight">{e.text}</span>
+                {i === pos && (
+                  <span className="absolute -top-2 -right-2 text-base">📍</span>
                 )}
               </div>
-              <p className="text-sm text-white/60 mt-1">位置：第 {positions[p] + 1} 格</p>
+            ))}
+          </div>
+
+          {/* 事件 */}
+          {currentEvent && (
+            <div className="mb-6 rounded-2xl border border-pink-300/30 bg-pink-500/10 p-4 text-center fade-in-up">
+              <div className="text-xs text-pink-300 mb-1">触发事件</div>
+              <div className="text-lg font-semibold">{currentEvent}</div>
             </div>
-          ))}
-        </div>
+          )}
 
-        {/* 棋盘 */}
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl sm:p-6">
-          <div className="grid grid-cols-4 gap-2 sm:gap-3">
-            {monopolyEvents.map((event, idx) => {
-              const playersHere = positions
-                .map((p, pi) => (p === idx ? pi : -1))
-                .filter((p) => p >= 0);
+          {/* 消息 */}
+          <div className="mb-6 text-center text-sm text-white/80 sm:text-base">{message}</div>
 
-              return (
-                <div
-                  key={idx}
-                  className={`relative aspect-square rounded-lg border flex flex-col items-center justify-center p-1 text-center transition-all ${
-                    idx === 0
-                      ? "bg-green-500/20 border-green-400/50"
-                      : idx === BOARD_SIZE - 1
-                      ? "bg-yellow-500/20 border-yellow-400/50"
-                      : "bg-white/5 border-white/10"
-                  }`}
-                >
-                  <span className="text-[10px] text-white/40 absolute top-1 left-1">{idx + 1}</span>
-                  <span className="text-lg sm:text-xl">
-                    {event.type === "forward" ? "⬆️" : event.type === "back" ? "⬇️" : "💕"}
-                  </span>
-                  <span className="text-[9px] sm:text-[10px] text-white/60 leading-tight mt-1 line-clamp-2">
-                    {event.text}
-                  </span>
-                  {playersHere.length > 0 && (
-                    <div className="absolute -bottom-1 -right-1 flex gap-0.5">
-                      {playersHere.map((pi) => (
-                        <div
-                          key={pi}
-                          className={`w-3 h-3 rounded-full ${playerColors[pi].color} ring-2 ring-white/50`}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 骰子和控制 */}
-        <div className="flex flex-col items-center gap-4">
-          <div
-            className={`w-20 h-20 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-4xl font-bold text-white shadow-lg ${
-              isRolling ? "dice-rolling" : ""
-            }`}
-          >
-            {diceValue ? diceFaces[diceValue - 1] : "🎲"}
-          </div>
-
-          <div className="flex gap-3">
-            <button
-              onClick={rollDice}
-              disabled={isRolling || gameOver}
-              className="btn-primary disabled:opacity-50"
-            >
-              {isRolling ? "掷骰中..." : gameOver ? "游戏结束" : "掷骰子"}
-            </button>
-            <button onClick={resetGame} className="btn-secondary">
-              重新开始
-            </button>
-          </div>
-        </div>
-
-        {/* 事件弹窗 */}
-        {showEvent && currentEvent && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={() => setShowEvent(false)}>
-            <div className="max-w-md w-full rounded-3xl border border-pink-400/30 bg-gradient-to-br from-zinc-900 to-zinc-800 p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-              <div className="text-center">
-                <div className="text-5xl mb-4">
-                  {currentEvent.type === "forward" ? "⬆️" : currentEvent.type === "back" ? "⬇️" : "💕"}
-                </div>
-                <h3 className="text-lg font-semibold text-pink-300 mb-3">
-                  第 {positions[currentPlayer] + 1} 格
-                </h3>
-                <p className="text-white text-lg leading-relaxed mb-2">{currentEvent.text}</p>
-                {eventDetail && eventDetail !== currentEvent.text && (
-                  <p className="text-pink-200 text-base leading-relaxed mb-4 mt-4 p-3 rounded-xl bg-pink-500/10">
-                    {eventDetail}
-                  </p>
-                )}
-                <button onClick={() => setShowEvent(false)} className="btn-primary w-full mt-4">
-                  继续 ✓
-                </button>
-              </div>
+          {/* 骰子 */}
+          <div className="flex flex-col items-center gap-4">
+            <div className={`text-7xl sm:text-8xl ${rolling ? "dice-rolling" : ""}`}>
+              {dice > 0 ? diceFaces[dice] : "🎲"}
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={roll}
+                disabled={rolling}
+                className="rounded-full bg-pink-500 px-10 py-3.5 text-base font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400 disabled:opacity-50"
+              >
+                {rolling ? "掷骰中..." : "🎲 掷骰子前进"}
+              </button>
+              <button
+                onClick={reset}
+                className="rounded-full border border-white/20 bg-white/5 px-6 py-3.5 text-sm font-semibold text-white/80 transition hover:bg-white/10"
+              >
+                重新开始
+              </button>
             </div>
           </div>
-        )}
-
-        {/* 游戏结束 */}
-        {gameOver && winner !== null && (
-          <div className="rounded-2xl border border-yellow-400/30 bg-yellow-500/10 p-4 text-center backdrop-blur-xl">
-            <p className="text-lg font-semibold text-white">
-              🎉 玩家{winner + 1} 到达终点，获得胜利！
-            </p>
-          </div>
-        )}
-
-        {/* 规则 */}
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl">
-          <h3 className="text-sm font-semibold text-white/80 mb-2">游戏规则</h3>
-          <ul className="text-xs text-white/60 space-y-1">
-            <li>• 两人轮流掷骰子，根据点数移动棋子</li>
-            <li>• 停在不同格子触发对应事件（前进/后退/互动任务）</li>
-            <li>• 掷出6点可再掷一次</li>
-            <li>• 先到达终点（第16格）者获胜，可向对方许一个愿望</li>
-          </ul>
         </div>
       </div>
-    </GameLayout>
+    </>
   );
 }
