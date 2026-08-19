@@ -124,7 +124,6 @@ export default function FlightGame() {
               ✏️ {editMode ? "退出编辑模式" : "进入编辑模式"}
             </button>
             <button onClick={() => setShowRules(true)} className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-white/80 hover:bg-white/10">⚙️ 规则选项 ▾</button>
-            <button onClick={() => window.open("https://discord.com", "_blank")} className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-white/80 hover:bg-white/10">💬 Discord</button>
           </div>
 
           {editMode && (
