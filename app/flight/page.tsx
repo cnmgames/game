@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState, useCallback } from "react";
 
-const boardEvents = [
+const defaultEvents = [
   "对视10秒不许笑", "夸对方3个优点", "拥抱30秒", "说一句情话",
   "亲一下额头", "模仿对方动作", "后背写字猜词", "喂对方一口水",
   "十指相扣1分钟", "说第一次心动瞬间", "按摩肩膀1分钟", "深情告白30秒",
@@ -12,6 +12,7 @@ const boardEvents = [
 ];
 
 export default function FlightGame() {
+  const [events, setEvents] = useState(defaultEvents);
   const [p1Out, setP1Out] = useState(false);
   const [p2Out, setP2Out] = useState(false);
   const [p1Pos, setP1Pos] = useState(0);
@@ -21,12 +22,16 @@ export default function FlightGame() {
   const [rolling, setRolling] = useState(false);
   const [currentEvent, setCurrentEvent] = useState("掷出6开始游戏");
   const [logs, setLogs] = useState<string[]>([]);
+  const [editMode, setEditMode] = useState(false);
   const [showRules, setShowRules] = useState(false);
+  const [editingIdx, setEditingIdx] = useState<number | null>(null);
+  const [editText, setEditText] = useState("");
+  const [rules, setRules] = useState({ sixAgain: true, canBump: false });
 
   const addLog = (msg: string) => setLogs((p) => [msg, ...p].slice(0, 20));
 
   const rollDice = useCallback(() => {
-    if (rolling) return;
+    if (rolling || editMode) return;
     setRolling(true);
     setDice(0);
     let count = 0;
@@ -40,7 +45,6 @@ export default function FlightGame() {
         setRolling(false);
         const name = turn === 1 ? "男方" : "女方";
         const isOut = turn === 1 ? p1Out : p2Out;
-
         if (!isOut) {
           if (final === 6) {
             if (turn === 1) { setP1Out(true); setP1Pos(0); }
@@ -54,25 +58,43 @@ export default function FlightGame() {
           }
         } else {
           const curPos = turn === 1 ? p1Pos : p2Pos;
-          const newPos = (curPos + final) % boardEvents.length;
+          const newPos = (curPos + final) % events.length;
           if (turn === 1) setP1Pos(newPos); else setP2Pos(newPos);
-          setCurrentEvent(boardEvents[newPos]);
-          addLog(`🎲 ${name}掷出${final}：${boardEvents[newPos]}`);
-          if (final !== 6) setTurn(turn === 1 ? 2 : 1);
+          setCurrentEvent(events[newPos]);
+          addLog(`🎲 ${name}掷出${final}：${events[newPos]}`);
+          if (final !== 6 || !rules.sixAgain) setTurn(turn === 1 ? 2 : 1);
           else addLog(`✨ ${name}掷出6，再掷一次！`);
         }
       }
     }, 80);
-  }, [rolling, turn, p1Out, p2Out, p1Pos, p2Pos]);
+  }, [rolling, turn, p1Out, p2Out, p1Pos, p2Pos, editMode, events, rules]);
 
   const reset = () => {
     setP1Out(false); setP2Out(false); setP1Pos(0); setP2Pos(0);
     setTurn(1); setDice(0); setCurrentEvent("掷出6开始游戏"); setLogs([]);
   };
 
-  const diceFaces = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+  const openEdit = (idx: number) => {
+    setEditingIdx(idx);
+    setEditText(events[idx]);
+  };
 
-  // 6x6棋盘，外圈24格映射
+  const saveEdit = () => {
+    if (editingIdx !== null) {
+      const newEvents = [...events];
+      newEvents[editingIdx] = editText || events[editingIdx];
+      setEvents(newEvents);
+    }
+    setEditingIdx(null);
+    setEditText("");
+  };
+
+  const resetEvents = () => {
+    setEvents(defaultEvents);
+    setEditingIdx(null);
+  };
+
+  const diceFaces = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
   const getBoardIdx = (row: number, col: number): number => {
     if (row === 0) return col;
     if (col === 5) return 5 + (row - 1);
@@ -96,16 +118,17 @@ export default function FlightGame() {
           </div>
 
           <div className="flex flex-wrap justify-center gap-2">
-            <button className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-white/80 hover:bg-white/10">✏️ 进入编辑模式</button>
-            <button onClick={() => setShowRules(!showRules)} className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-white/80 hover:bg-white/10">⚙️ 规则选项 ▾</button>
-            <button className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-white/80 hover:bg-white/10">💬 Discord</button>
+            <button onClick={() => setEditMode(!editMode)} className={`rounded-full border px-4 py-2 text-xs transition ${editMode ? "border-pink-400 bg-pink-500/20 text-pink-200" : "border-white/10 bg-white/5 text-white/80 hover:bg-white/10"}`}>
+              ✏️ {editMode ? "退出编辑模式" : "进入编辑模式"}
+            </button>
+            <button onClick={() => setShowRules(true)} className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-white/80 hover:bg-white/10">⚙️ 规则选项 ▾</button>
+            <button onClick={() => window.open("https://discord.com", "_blank")} className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-white/80 hover:bg-white/10">💬 Discord</button>
           </div>
 
-          {showRules && (
-            <div className="rounded-xl border border-white/10 bg-black/30 p-4 text-xs text-white/70 space-y-1">
-              <p>• 掷出6点飞机才能起飞</p>
-              <p>• 掷出6点可额外再掷一次</p>
-              <p>• 停在格子上需执行对应事件</p>
+          {editMode && (
+            <div className="rounded-xl border border-pink-300/30 bg-pink-500/10 p-3 text-xs text-pink-200">
+              ✏️ 编辑模式：点击任意格子修改事件内容
+              <button onClick={resetEvents} className="ml-3 underline hover:text-pink-100">恢复默认</button>
             </div>
           )}
 
@@ -113,8 +136,7 @@ export default function FlightGame() {
           <div className="relative mx-auto aspect-square w-full max-w-md rounded-2xl border border-white/10 bg-black/20 p-3">
             <div className="grid h-full grid-cols-6 grid-rows-6 gap-1">
               {Array.from({ length: 36 }).map((_, i) => {
-                const row = Math.floor(i / 6);
-                const col = i % 6;
+                const row = Math.floor(i / 6), col = i % 6;
                 const idx = getBoardIdx(row, col);
                 if (idx === -1) {
                   return (
@@ -128,13 +150,17 @@ export default function FlightGame() {
                 const p1Here = p1Out && p1Pos === idx;
                 const p2Here = p2Out && p2Pos === idx;
                 return (
-                  <div key={i} className={`relative flex items-center justify-center rounded border text-xs transition-all ${
-                    p1Here || p2Here ? "border-pink-400/60 bg-pink-500/20" : "border-white/10 bg-white/5"
-                  }`}>
-                    <span className="text-white/30">{idx + 1}</span>
+                  <button
+                    key={i}
+                    onClick={() => editMode && openEdit(idx)}
+                    className={`relative flex items-center justify-center rounded border text-[9px] text-center p-0.5 transition-all ${
+                      p1Here || p2Here ? "border-pink-400/60 bg-pink-500/20" : "border-white/10 bg-white/5"
+                    } ${editMode ? "cursor-pointer hover:border-pink-400/50 hover:bg-pink-500/10" : ""}`}
+                  >
+                    <span className="text-white/40 leading-tight line-clamp-2">{events[idx]}</span>
                     {p1Here && <span className="absolute -top-1 -left-1 text-sm">✈️</span>}
                     {p2Here && <span className="absolute -bottom-1 -right-1 text-sm">✈️</span>}
-                  </div>
+                  </button>
                 );
               })}
             </div>
@@ -159,7 +185,7 @@ export default function FlightGame() {
           <div className="flex flex-col items-center gap-4">
             <div className={`text-6xl sm:text-7xl ${rolling ? "dice-rolling" : ""}`}>{dice > 0 ? diceFaces[dice] : "🎲"}</div>
             <div className="flex gap-3">
-              <button onClick={rollDice} disabled={rolling} className="rounded-full bg-pink-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400 disabled:opacity-50">
+              <button onClick={rollDice} disabled={rolling || editMode} className="rounded-full bg-pink-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400 disabled:opacity-50">
                 {rolling ? "掷骰中..." : `🎲 ${turn === 1 ? "男方" : "女方"}掷骰子`}
               </button>
               <button onClick={reset} className="rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/80 hover:bg-white/10">重置</button>
@@ -181,6 +207,49 @@ export default function FlightGame() {
           <br />© 2024 ~ 2026 www.hoothin.com
         </div>
       </div>
+
+      {/* 编辑事件弹窗 */}
+      {editingIdx !== null && (
+        <div className="modal-overlay" onClick={() => setEditingIdx(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-bold mb-4">编辑第 {editingIdx + 1} 格事件</h3>
+            <textarea
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              className="w-full h-24 rounded-lg border border-white/10 bg-black/30 p-3 text-sm text-white resize-none focus:outline-none focus:border-pink-400/50"
+              placeholder="输入事件内容..."
+            />
+            <div className="flex gap-3 mt-4">
+              <button onClick={saveEdit} className="flex-1 rounded-full bg-pink-500 py-2 text-sm font-semibold text-white hover:bg-pink-400">保存</button>
+              <button onClick={() => setEditingIdx(null)} className="flex-1 rounded-full border border-white/20 bg-white/5 py-2 text-sm text-white/80 hover:bg-white/10">取消</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 规则选项弹窗 */}
+      {showRules && (
+        <div className="modal-overlay" onClick={() => setShowRules(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-bold mb-4">⚙️ 规则选项</h3>
+            <div className="space-y-3">
+              <label className="flex items-center justify-between cursor-pointer">
+                <span className="text-sm">掷出6可再掷一次</span>
+                <button onClick={() => setRules({ ...rules, sixAgain: !rules.sixAgain })} className={`w-12 h-6 rounded-full transition ${rules.sixAgain ? "bg-pink-500" : "bg-white/20"}`}>
+                  <span className={`block w-5 h-5 rounded-full bg-white transition-transform ${rules.sixAgain ? "translate-x-6" : "translate-x-0.5"}`} />
+                </button>
+              </label>
+              <label className="flex items-center justify-between cursor-pointer">
+                <span className="text-sm">可将对方棋子撞回基地</span>
+                <button onClick={() => setRules({ ...rules, canBump: !rules.canBump })} className={`w-12 h-6 rounded-full transition ${rules.canBump ? "bg-pink-500" : "bg-white/20"}`}>
+                  <span className={`block w-5 h-5 rounded-full bg-white transition-transform ${rules.canBump ? "translate-x-6" : "translate-x-0.5"}`} />
+                </button>
+              </label>
+            </div>
+            <button onClick={() => setShowRules(false)} className="w-full mt-6 rounded-full bg-pink-500 py-2 text-sm font-semibold text-white hover:bg-pink-400">确定</button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
