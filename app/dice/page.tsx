@@ -25,7 +25,15 @@ export default function DiceGame() {
   const [editingPlayer, setEditingPlayer] = useState<number | null>(null);
   const [editName, setEditName] = useState("");
 
-  const diceFaces = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+  // 3D骰子点数位置
+  const dotPositions: Record<number, string[]> = {
+    1: ["center"],
+    2: ["top-left", "bottom-right"],
+    3: ["top-left", "center", "bottom-right"],
+    4: ["top-left", "top-right", "bottom-left", "bottom-right"],
+    5: ["top-left", "top-right", "center", "bottom-left", "bottom-right"],
+    6: ["top-left", "top-right", "middle-left", "middle-right", "bottom-left", "bottom-right"],
+  };
 
   const roll = () => {
     if (rolling) return;
@@ -91,73 +99,113 @@ export default function DiceGame() {
   };
   const removePenalty = (idx: number) => setPenaltyPool(penaltyPool.filter((_, i) => i !== idx));
 
+  const playerColors = ["bg-pink-500", "bg-purple-500", "bg-blue-500", "bg-green-500", "bg-yellow-500", "bg-red-500"];
+
   return (
     <>
       <div className="bg-aurora" />
-      <div className="relative z-10 mx-auto min-h-screen w-full max-w-3xl px-3.5 py-4 sm:px-6 sm:py-10">
-        <div className="mb-4"><Link href="/" className="text-sm text-pink-300 hover:text-pink-200">← 返回游戏列表</Link></div>
+      <div className="relative z-10 mx-auto min-h-screen w-full max-w-5xl px-3.5 py-4 sm:px-6 sm:py-8">
+        {/* 顶部返回 */}
+        <div className="mb-4">
+          <Link href="/" className="back-btn">← 返回游戏列表</Link>
+        </div>
 
-        <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl sm:gap-6 sm:rounded-3xl sm:p-6">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold sm:text-4xl">情趣骰子</h1>
-            <p className="mt-2 text-sm text-white/70 sm:text-base">喝酒助兴必备。挑战上家的点数，输了就喝酒或大冒险</p>
+        {/* 主游戏容器 */}
+        <div className="game-container">
+          {/* 标题 */}
+          <div className="text-center mb-4">
+            <h1 className="game-title">情趣骰子</h1>
+            <div className="game-title-underline" />
+            <p className="mt-3 text-sm text-white/60 sm:text-base">喝酒助兴必备。挑战上家的点数，输了就喝酒或大冒险。</p>
           </div>
 
+          <div className="border-t border-white/10 my-4" />
+
+          {/* 左右分栏 */}
           <div className="grid md:grid-cols-3 gap-4">
-            {/* 骰子区域 */}
-            <div className="md:col-span-2 flex flex-col items-center gap-4">
-              <div className="grid grid-cols-3 gap-2 w-full">
-                <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-center">
-                  <div className="text-xs text-white/50">当前骰子数</div>
-                  <div className="flex items-center justify-center gap-1 mt-1">
-                    <button onClick={() => setDiceCount(Math.max(1, diceCount - 1))} className="text-white/50 hover:text-white">-</button>
-                    <span className="text-lg font-bold">{diceCount}</span>
-                    <button onClick={() => setDiceCount(Math.min(3, diceCount + 1))} className="text-white/50 hover:text-white">+</button>
+            {/* 左侧主游戏区 */}
+            <div className="md:col-span-2">
+              <div className="relative rounded-2xl border border-white/10 bg-zinc-900/50 p-4 dot-pattern overflow-hidden">
+                {/* 顶部状态栏 */}
+                <div className="grid grid-cols-3 gap-2 mb-6">
+                  <div className="rounded-xl border border-white/10 bg-black/40 p-3 text-center">
+                    <div className="text-[10px] text-white/40 uppercase tracking-wider">当前骰子数</div>
+                    <div className="flex items-center justify-center gap-2 mt-1">
+                      <button onClick={() => setDiceCount(Math.max(1, diceCount - 1))} className="text-white/40 hover:text-white text-lg">-</button>
+                      <span className="text-xl font-bold">{diceCount}</span>
+                      <button onClick={() => setDiceCount(Math.min(3, diceCount + 1))} className="text-white/40 hover:text-white text-lg">+</button>
+                    </div>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-black/40 p-3 text-center">
+                    <div className="text-[10px] text-white/40 uppercase tracking-wider">当前回合</div>
+                    <div className="text-lg font-semibold text-pink-300 mt-1">{players[currentIdx]}</div>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-black/40 p-3 text-center">
+                    <div className="text-[10px] text-white/40 uppercase tracking-wider">上家点数</div>
+                    <div className="text-xl font-bold mt-1">{previous ?? "—"}</div>
                   </div>
                 </div>
-                <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-center">
-                  <div className="text-xs text-white/50">当前回合</div>
-                  <div className="text-lg font-semibold text-pink-300">{players[currentIdx]}</div>
+
+                {/* 3D骰子 */}
+                <div className="flex justify-center py-8">
+                  <div className={`dice-3d ${rolling ? "dice-rolling" : ""}`}>
+                    {dotPositions[dice]?.map((pos, i) => {
+                      const posClass: Record<string, string> = {
+                        "center": "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+                        "top-left": "top-3 left-3",
+                        "top-right": "top-3 right-3",
+                        "bottom-left": "bottom-3 left-3",
+                        "bottom-right": "bottom-3 right-3",
+                        "middle-left": "top-1/2 left-3 -translate-y-1/2",
+                        "middle-right": "top-1/2 right-3 -translate-y-1/2",
+                      };
+                      return <span key={i} className={`dice-dot ${posClass[pos]}`} />;
+                    })}
+                  </div>
                 </div>
-                <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-center">
-                  <div className="text-xs text-white/50">上家点数</div>
-                  <div className="text-lg font-semibold text-pink-300">{previous ?? "—"}</div>
+
+                {/* 消息 */}
+                <div className="min-h-[40px] text-center text-sm text-white/70 mb-4">{message}</div>
+                {currentPenalty && (
+                  <div className="mb-4 rounded-xl border border-red-300/30 bg-red-500/10 p-3 text-center text-sm text-red-200 fade-in-up">惩罚：{currentPenalty}</div>
+                )}
+
+                {/* 掷骰子按钮 */}
+                <div className="flex justify-center">
+                  <button onClick={roll} disabled={rolling} className="w-full max-w-xs rounded-full bg-white py-3 text-base font-bold text-black shadow-lg shadow-white/20 transition hover:bg-zinc-100 disabled:opacity-50">
+                    {rolling ? "掷骰中..." : "掷骰子"}
+                  </button>
                 </div>
-              </div>
-
-              <div className={`text-8xl sm:text-9xl ${rolling ? "dice-rolling" : ""}`}>{diceFaces[dice]}</div>
-
-              <div className="min-h-[50px] w-full rounded-xl border border-white/10 bg-black/20 p-3 text-center text-sm">{message}</div>
-              {currentPenalty && (
-                <div className="w-full rounded-xl border border-red-300/30 bg-red-500/10 p-3 text-center text-sm text-red-200 fade-in-up">惩罚：{currentPenalty}</div>
-              )}
-
-              <div className="flex gap-3">
-                <button onClick={roll} disabled={rolling} className="rounded-full bg-pink-500 px-10 py-3 text-base font-semibold text-white shadow-lg shadow-pink-500/40 hover:bg-pink-400 disabled:opacity-50">{rolling ? "掷骰中..." : "🎲 掷骰子"}</button>
-                <button onClick={reset} className="rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/80 hover:bg-white/10">重置</button>
               </div>
             </div>
 
-            {/* 右侧面板 */}
+            {/* 右侧控制面板 */}
             <div className="space-y-4">
               {/* 酒局玩家 */}
-              <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+              <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-4">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-semibold">酒局玩家</span>
                   <button onClick={addPlayer} className="text-pink-400 text-xs hover:text-pink-300">+ 添加</button>
                 </div>
-                <div className="space-y-2">
+                <div className="flex flex-wrap gap-2 mb-3">
                   {players.map((p, i) => (
-                    <div key={i} className="flex items-center gap-2">
+                    <div key={i} className={`w-8 h-8 rounded-full ${playerColors[i % 6]} flex items-center justify-center text-xs font-bold text-white`} title={p}>
+                      {p.charAt(0)}
+                    </div>
+                  ))}
+                </div>
+                <div className="space-y-1">
+                  {players.map((p, i) => (
+                    <div key={i} className="flex items-center gap-2 text-xs">
                       {editingPlayer === i ? (
                         <>
-                          <input value={editName} onChange={(e) => setEditName(e.target.value)} onKeyDown={(e) => e.key === "Enter" && savePlayerName()} className="flex-1 rounded bg-white/10 px-2 py-1 text-sm text-white focus:outline-none" autoFocus />
-                          <button onClick={savePlayerName} className="text-green-400 text-xs">✓</button>
+                          <input value={editName} onChange={(e) => setEditName(e.target.value)} onKeyDown={(e) => e.key === "Enter" && savePlayerName()} className="flex-1 rounded bg-white/10 px-2 py-1 text-white focus:outline-none" autoFocus />
+                          <button onClick={savePlayerName} className="text-green-400">✓</button>
                         </>
                       ) : (
                         <>
-                          <span className={`text-sm ${i === currentIdx ? "text-pink-300 font-semibold" : "text-white/70"}`} onClick={() => { setEditingPlayer(i); setEditName(p); }}>{p}</span>
-                          <button onClick={() => removePlayer(i)} className="text-white/40 hover:text-red-400 text-xs ml-auto">✕</button>
+                          <span className={`flex-1 cursor-pointer hover:text-pink-300 ${i === currentIdx ? "text-pink-300 font-semibold" : "text-white/70"}`} onClick={() => { setEditingPlayer(i); setEditName(p); }}>{p}</span>
+                          <button onClick={() => removePlayer(i)} className="text-white/40 hover:text-red-400">✕</button>
                         </>
                       )}
                     </div>
@@ -166,22 +214,36 @@ export default function DiceGame() {
               </div>
 
               {/* 惩罚库 */}
-              <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+              <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-semibold">惩罚库（{penaltyPool.length}）</span>
+                  <span className="text-sm font-semibold">惩罚库</span>
+                  <span className="text-xs bg-pink-500/20 text-pink-300 px-2 py-0.5 rounded-full">{penaltyPool.length}</span>
                   <button onClick={() => setShowPenaltyEditor(true)} className="text-pink-400 text-xs hover:text-pink-300">管理</button>
                 </div>
-                <div className="text-xs text-white/50 mb-2">阶段 {stage} · {stageProgress}/5</div>
-                <div className="h-2 overflow-hidden rounded-full bg-white/10">
-                  <div className="h-full bg-green-500 transition-all" style={{ width: `${(stageProgress / 5) * 100}%` }} />
+                <div className="text-xs text-white/50 mb-1">阶段 {stage} · {stageProgress}/5</div>
+                <div className="h-1.5 overflow-hidden rounded-full bg-white/10 mb-3">
+                  <div className="h-full bg-blue-500 transition-all" style={{ width: `${(stageProgress / 5) * 100}%` }} />
                 </div>
-                {currentPenalty && <div className="mt-2 text-xs text-pink-300">当前惩罚：{currentPenalty}</div>}
+                {currentPenalty ? (
+                  <div className="rounded-xl bg-white/5 p-3 text-center text-sm text-white/80">"{currentPenalty}"</div>
+                ) : (
+                  <div className="rounded-xl bg-white/5 p-3 text-center text-xs text-white/40">点击管理惩罚库</div>
+                )}
               </div>
+
+              {/* 重置 */}
+              <button onClick={reset} className="w-full rounded-full border border-white/15 bg-white/5 py-2.5 text-sm text-white/70 hover:bg-white/10 transition">
+                重置游戏进度
+              </button>
             </div>
           </div>
         </div>
 
-        <div className="mt-8 text-center text-xs text-white/40">请在充分沟通界限的前提下玩乐，确保每一步都建立在积极同意之上。<br />© 2024 ~ 2026 www.hoothin.com</div>
+        {/* 底部声明 */}
+        <div className="footer-card">
+          <p>请在充分沟通界限的前提下玩乐，确保每一步都建立在积极同意之上。</p>
+          <p className="mt-2">© 2024 ~ 2026 www.hoothin.com</p>
+        </div>
       </div>
 
       {/* 惩罚库编辑器 */}

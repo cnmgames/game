@@ -108,14 +108,16 @@ export default function FlightGame() {
       <div className="bg-aurora" />
       <div className="relative z-10 mx-auto min-h-screen w-full max-w-5xl px-3.5 py-4 sm:px-6 sm:py-10">
         <div className="mb-4">
-          <Link href="/" className="text-sm text-pink-300 hover:text-pink-200">← 返回游戏列表</Link>
+          <Link href="/" className="back-btn">← 返回游戏列表</Link>
         </div>
 
-        <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl sm:gap-6 sm:rounded-3xl sm:p-6">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold sm:text-4xl">情侣飞行棋</h1>
-            <p className="mt-2 text-sm text-white/70 sm:text-base">🎲 掷出6开始游戏，体验每个格子的刺激事件</p>
+        <div className="game-container">
+          <div className="text-center mb-4">
+            <h1 className="game-title">情侣飞行棋</h1>
+            <div className="game-title-underline" />
+            <p className="mt-3 text-sm text-white/60 sm:text-base">🎲 掷出6开始游戏，体验每个格子的刺激事件</p>
           </div>
+          <div className="border-t border-white/10 my-4" />
 
           <div className="flex flex-wrap justify-center gap-2">
             <button onClick={() => setEditMode(!editMode)} className={`rounded-full border px-4 py-2 text-xs transition ${editMode ? "border-pink-400 bg-pink-500/20 text-pink-200" : "border-white/10 bg-white/5 text-white/80 hover:bg-white/10"}`}>
@@ -202,9 +204,9 @@ export default function FlightGame() {
           )}
         </div>
 
-        <div className="mt-8 text-center text-xs text-white/40">
-          请在充分沟通界限的前提下玩乐，确保每一步都建立在积极同意之上。
-          <br />© 2024 ~ 2026 www.hoothin.com
+        <div className="footer-card">
+          <p>请在充分沟通界限的前提下玩乐，确保每一步都建立在积极同意之上。</p>
+          <p className="mt-2">© 2024 ~ 2026 www.hoothin.com</p>
         </div>
       </div>
 

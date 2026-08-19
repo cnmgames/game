@@ -42,8 +42,9 @@ export default function Home() {
       )}
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-7 px-3.5 py-4 sm:gap-12 sm:px-6 sm:py-10 lg:gap-16 lg:px-10 lg:py-12">
-        <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl sm:gap-8 sm:rounded-3xl sm:p-8">
-          <div className="flex items-center justify-between gap-2">
+        {/* 顶部卡片 */}
+        <div className="game-container">
+          <div className="flex items-center justify-between gap-2 mb-6">
             <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-pink-200 sm:px-4 sm:text-xs">18+ Experience</span>
             <div className="nav-pill">
               <span className="online-dot" />
@@ -62,6 +63,7 @@ export default function Home() {
           </div>
         </div>
 
+        {/* 游戏合集 */}
         <div id="games" className="space-y-4 sm:space-y-8">
           <div className="max-w-3xl space-y-1.5 text-white sm:space-y-3">
             <h2 className="text-xl font-semibold sm:text-3xl">游戏合集</h2>
@@ -81,9 +83,10 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mt-auto space-y-2 pt-8 text-center text-xs text-white/50 sm:text-sm">
+        {/* 底部声明 */}
+        <div className="footer-card">
           <p>请在充分沟通界限的前提下玩乐，确保每一步都建立在积极同意之上。</p>
-          <p>© 2024 ~ 2026 www.hoothin.com</p>
+          <p className="mt-2">© 2024 ~ 2026 www.hoothin.com</p>
         </div>
       </div>
     </>

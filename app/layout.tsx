@@ -13,7 +13,44 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-CN">
-      <body>{children}</body>
+      <body>
+        {children}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // 移动端滑动误触检测
+              (function() {
+                let touchStartX = 0, touchStartY = 0, touchMoved = false, touchStartTime = 0;
+                document.addEventListener('touchstart', function(e) {
+                  touchStartX = e.touches[0].clientX;
+                  touchStartY = e.touches[0].clientY;
+                  touchMoved = false;
+                  touchStartTime = Date.now();
+                }, { passive: true });
+                document.addEventListener('touchmove', function(e) {
+                  var dx = Math.abs(e.touches[0].clientX - touchStartX);
+                  var dy = Math.abs(e.touches[0].clientY - touchStartY);
+                  if (dx > 8 || dy > 8) touchMoved = true;
+                }, { passive: true });
+                document.addEventListener('touchend', function(e) {
+                  if (touchMoved && Date.now() - touchStartTime < 500) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
+                  touchMoved = false;
+                }, { passive: false, capture: true });
+                document.addEventListener('click', function(e) {
+                  if (touchMoved) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    touchMoved = false;
+                  }
+                }, true);
+              })();
+            `,
+          }}
+        />
+      </body>
     </html>
   )
 }

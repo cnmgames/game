@@ -83,13 +83,16 @@ export default function SlotGame() {
     <>
       <div className="bg-aurora" />
       <div className="relative z-10 mx-auto min-h-screen w-full max-w-3xl px-3.5 py-4 sm:px-6 sm:py-10">
-        <div className="mb-4"><Link href="/" className="text-sm text-pink-300 hover:text-pink-200">← 返回游戏列表</Link></div>
+        <div className="mb-4"><Link href="/" className="back-btn">← 返回游戏列表</Link></div>
 
-        <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl sm:gap-6 sm:rounded-3xl sm:p-6">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold sm:text-4xl">🎰 桃色老虎机</h1>
-            <p className="mt-2 text-sm text-white/70 sm:text-base">一拉定情。地点、动作、部位，随机组合你的下一个亲密时刻</p>
+        <div className="game-container">
+          <div className="text-center mb-4">
+            <h1 className="game-title">桃色老虎机</h1>
+            <div className="game-title-underline" />
+            <p className="mt-3 text-sm text-white/60 sm:text-base">一拉定情。地点、动作、部位，随机组合你的下一个亲密时刻。</p>
           </div>
+          <div className="border-t border-white/10 my-4" />
+
 
           <div className="grid md:grid-cols-3 gap-4">
             {/* 老虎机 */}
@@ -157,7 +160,10 @@ export default function SlotGame() {
           </div>
         </div>
 
-        <div className="mt-8 text-center text-xs text-white/40">请在充分沟通界限的前提下玩乐，确保每一步都建立在积极同意之上。<br />© 2024 ~ 2026 www.hoothin.com</div>
+        <div className="footer-card">
+          <p>请在充分沟通界限的前提下玩乐，确保每一步都建立在积极同意之上。</p>
+          <p className="mt-2">© 2024 ~ 2026 www.hoothin.com</p>
+        </div>
       </div>
 
       {/* 玩家编辑弹窗 */}
