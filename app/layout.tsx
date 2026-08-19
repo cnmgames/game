@@ -1,5 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
 
 export const metadata: Metadata = {
   title: '情侣互动小游戏合集 | 约会之夜前戏必备',
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: ReactNode
 }) {
   return (
     <html lang="zh-CN">
