@@ -3,12 +3,30 @@ import Link from "next/link";
 import { useState, useCallback } from "react";
 
 const defaultEvents = [
-  "对视10秒不许笑", "夸对方3个优点", "拥抱30秒", "说一句情话",
-  "亲一下额头", "模仿对方动作", "后背写字猜词", "喂对方一口水",
-  "十指相扣1分钟", "说第一次心动瞬间", "按摩肩膀1分钟", "深情告白30秒",
-  "交换一个小秘密", "公主抱或背起", "鼻尖碰鼻尖10秒", "用眼神传达爱意",
-  "唱一句情歌", "画对方速写", "说最想一起做的事", "感谢对方一件小事",
-  "许下一个小愿望", "甜蜜拥抱", "说最爱的瞬间", "亲一下手背",
+  { text: "对视10秒不许笑", color: "from-pink-500 to-rose-500" },
+  { text: "夸对方3个优点", color: "from-pink-500 to-rose-500" },
+  { text: "拥抱30秒", color: "from-pink-500 to-rose-500" },
+  { text: "说一句情话", color: "from-pink-500 to-rose-500" },
+  { text: "亲一下额头", color: "from-pink-500 to-rose-500" },
+  { text: "模仿对方动作", color: "from-purple-500 to-violet-500" },
+  { text: "后背写字猜词", color: "from-pink-500 to-rose-500" },
+  { text: "喂对方一口水", color: "from-pink-500 to-rose-500" },
+  { text: "十指相扣1分钟", color: "from-pink-500 to-rose-500" },
+  { text: "说第一次心动瞬间", color: "from-purple-500 to-violet-500" },
+  { text: "按摩肩膀1分钟", color: "from-pink-500 to-rose-500" },
+  { text: "深情告白30秒", color: "from-pink-500 to-rose-500" },
+  { text: "交换一个小秘密", color: "from-pink-500 to-rose-500" },
+  { text: "公主抱或背起", color: "from-yellow-500 to-amber-500" },
+  { text: "鼻尖碰鼻尖10秒", color: "from-pink-500 to-rose-500" },
+  { text: "用眼神传达爱意", color: "from-purple-500 to-violet-500" },
+  { text: "唱一句情歌", color: "from-pink-500 to-rose-500" },
+  { text: "画对方速写", color: "from-pink-500 to-rose-500" },
+  { text: "说最想一起做的事", color: "from-pink-500 to-rose-500" },
+  { text: "感谢对方一件小事", color: "from-blue-500 to-cyan-500" },
+  { text: "许下一个小愿望", color: "from-pink-500 to-rose-500" },
+  { text: "甜蜜拥抱", color: "from-pink-500 to-rose-500" },
+  { text: "说最爱的瞬间", color: "from-pink-500 to-rose-500" },
+  { text: "亲一下手背", color: "from-pink-500 to-rose-500" },
 ];
 
 export default function FlightGame() {
@@ -60,8 +78,8 @@ export default function FlightGame() {
           const curPos = turn === 1 ? p1Pos : p2Pos;
           const newPos = (curPos + final) % events.length;
           if (turn === 1) setP1Pos(newPos); else setP2Pos(newPos);
-          setCurrentEvent(events[newPos]);
-          addLog(`🎲 ${name}掷出${final}：${events[newPos]}`);
+          setCurrentEvent(events[newPos].text);
+          addLog(`🎲 ${name}掷出${final}：${events[newPos].text}`);
           if (final !== 6 || !rules.sixAgain) setTurn(turn === 1 ? 2 : 1);
           else addLog(`✨ ${name}掷出6，再掷一次！`);
         }
@@ -76,13 +94,13 @@ export default function FlightGame() {
 
   const openEdit = (idx: number) => {
     setEditingIdx(idx);
-    setEditText(events[idx]);
+    setEditText(events[idx].text);
   };
 
   const saveEdit = () => {
     if (editingIdx !== null) {
       const newEvents = [...events];
-      newEvents[editingIdx] = editText || events[editingIdx];
+      newEvents[editingIdx] = { ...newEvents[editingIdx], text: editText || events[editingIdx].text };
       setEvents(newEvents);
     }
     setEditingIdx(null);
@@ -104,152 +122,159 @@ export default function FlightGame() {
     return -1;
   };
 
+  // 中间通道的格子（第2-4行，第2-3列）
+  const isCenterPath = (row: number, col: number) => {
+    return row >= 1 && row <= 4 && col >= 2 && col <= 3;
+  };
+
   return (
     <>
       <div className="bg-aurora" />
-      <div className="relative z-10 mx-auto min-h-screen w-full max-w-4xl px-3.5 py-4 sm:px-6 sm:py-8">
-        <div className="mb-4">
+      <div className="relative z-10 mx-auto min-h-screen w-full max-w-5xl px-2 py-3 sm:px-4 sm:py-6">
+        <div className="mb-3">
           <Link href="/" className="back-btn">← 返回游戏列表</Link>
         </div>
 
-        <div className="game-container">
+        <div className="game-container !p-3 sm:!p-5">
           {/* 标题 */}
-          <div className="text-center mb-4 sm:mb-6">
-            <h1 className="game-title">情侣飞行棋</h1>
+          <div className="text-center mb-3 sm:mb-5">
+            <h1 className="game-title !text-2xl sm:!text-4xl">情侣飞行棋</h1>
             <div className="game-title-underline" />
-            <p className="mt-3 text-sm text-white/60 sm:text-base">🎲 掷出6开始游戏，体验每个格子的刺激事件</p>
+            <p className="mt-2 text-xs text-white/60 sm:text-sm">🎲 掷出6开始游戏，体验每个格子的刺激事件</p>
           </div>
 
-          <div className="border-t border-white/10 my-4 sm:my-6" />
-
           {/* 顶部按钮 */}
-          <div className="flex flex-wrap justify-center gap-2 mb-4 sm:mb-6">
-            <button onClick={() => setEditMode(!editMode)} className={`rounded-full border px-4 py-2 text-xs transition ${editMode ? "border-pink-400 bg-pink-500/20 text-pink-200" : "border-white/10 bg-white/5 text-white/80 hover:bg-white/10"}`}>
-              ✏️ {editMode ? "退出编辑模式" : "进入编辑模式"}
+          <div className="flex flex-wrap justify-center gap-2 mb-3">
+            <button onClick={() => setEditMode(!editMode)} className={`rounded-full border px-3 py-1.5 text-xs transition ${editMode ? "border-pink-400 bg-pink-500/20 text-pink-200" : "border-white/10 bg-white/5 text-white/80 hover:bg-white/10"}`}>
+              ✏️ {editMode ? "退出编辑" : "进入编辑模式"}
             </button>
-            <button onClick={() => setShowRules(true)} className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-white/80 hover:bg-white/10">⚙️ 规则选项 ▾</button>
-            <button onClick={reset} className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-white/80 hover:bg-white/10">🔄 重置</button>
+            <button onClick={() => setShowRules(true)} className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 hover:bg-white/10">⚙️ 规则选项 ▾</button>
+            <button onClick={reset} className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 hover:bg-white/10">🔄 重置</button>
           </div>
 
           {editMode && (
-            <div className="mb-4 rounded-xl border border-pink-300/30 bg-pink-500/10 p-3 text-xs text-pink-200">
-              ✏️ 编辑模式：点击任意格子修改事件内容
-              <button onClick={resetEvents} className="ml-3 underline hover:text-pink-100">恢复默认</button>
+            <div className="mb-3 rounded-lg border border-pink-300/30 bg-pink-500/10 p-2 text-xs text-pink-200 text-center">
+              ✏️ 点击任意格子修改事件
+              <button onClick={resetEvents} className="ml-2 underline hover:text-pink-100">恢复默认</button>
             </div>
           )}
 
           {/* 玩家状态 */}
-          <div className="mb-4 grid grid-cols-2 gap-3 sm:gap-4">
-            <div className={`rounded-xl border p-3 text-center transition ${turn === 1 ? "border-blue-400/60 bg-blue-500/15 ring-1 ring-blue-400/30" : "border-white/10 bg-white/5"}`}>
-              <div className="text-base font-semibold sm:text-lg">♂ 男方</div>
-              <div className="text-xs text-white/60 sm:text-sm">{p1Out ? `位置 ${p1Pos + 1}` : "未出列"}</div>
-            </div>
-            <div className={`rounded-xl border p-3 text-center transition ${turn === 2 ? "border-pink-400/60 bg-pink-500/15 ring-1 ring-pink-400/30" : "border-white/10 bg-white/5"}`}>
-              <div className="text-base font-semibold sm:text-lg">♀ 女方</div>
-              <div className="text-xs text-white/60 sm:text-sm">{p2Out ? `位置 ${p2Pos + 1}` : "未出列"}</div>
-            </div>
+          <div className="mb-3 flex justify-center gap-4 text-xs">
+            <span className={`flex items-center gap-1 ${turn === 1 ? "text-blue-300" : "text-white/50"}`}>
+              <span className="w-2 h-2 rounded-full bg-blue-400" /> 男方 {p1Out ? `(${p1Pos + 1})` : "(未出)"}
+            </span>
+            <span className={`flex items-center gap-1 ${turn === 2 ? "text-pink-300" : "text-white/50"}`}>
+              <span className="w-2 h-2 rounded-full bg-pink-400" /> 女方 {p2Out ? `(${p2Pos + 1})` : "(未出)"}
+            </span>
           </div>
 
-          {/* 大棋盘 */}
-          <div className="relative mx-auto aspect-square w-full max-w-2xl rounded-2xl border-2 border-white/15 bg-gradient-to-br from-zinc-900/80 to-black/80 p-2 sm:p-3 shadow-2xl">
-            <div className="grid h-full grid-cols-6 grid-rows-6 gap-1 sm:gap-1.5">
-              {Array.from({ length: 36 }).map((_, i) => {
-                const row = Math.floor(i / 6), col = i % 6;
-                const idx = getBoardIdx(row, col);
-                if (idx === -1) {
-                  return (
-                    <div key={i} className="flex items-center justify-center">
-                      {row === 1 && col === 1 && <span className="text-xl sm:text-2xl">🔻</span>}
-                      {row === 1 && col === 2 && <span className="text-2xl sm:text-4xl">❤️</span>}
-                      {row === 2 && col === 1 && <span className="text-xl sm:text-2xl">🔻</span>}
-                    </div>
-                  );
-                }
-                const p1Here = p1Out && p1Pos === idx;
-                const p2Here = p2Out && p2Pos === idx;
-                return (
-                  <button
-                    key={i}
-                    onClick={() => editMode && openEdit(idx)}
-                    className={`relative flex items-center justify-center rounded-lg border p-1 text-center text-[10px] leading-tight transition-all sm:text-xs ${
-                      p1Here || p2Here ? "border-pink-400/70 bg-pink-500/25 ring-2 ring-pink-400/40" : "border-white/10 bg-white/5"
-                    } ${editMode ? "cursor-pointer hover:border-pink-400/50 hover:bg-pink-500/10" : ""}`}
-                  >
-                    <span className="text-white/70 line-clamp-3">{events[idx]}</span>
-                    {p1Here && <span className="absolute -top-1.5 -left-1.5 text-base sm:text-lg">✈️</span>}
-                    {p2Here && <span className="absolute -bottom-1.5 -right-1.5 text-base sm:text-lg">✈️</span>}
-                  </button>
-                );
-              })}
-            </div>
+          {/* 大棋盘 - 彩色渐变边框 */}
+          <div className="relative mx-auto aspect-square w-full max-w-3xl rounded-xl p-[3px] bg-gradient-to-br from-red-500 via-purple-500 to-green-500">
+            <div className="relative h-full w-full rounded-lg bg-black p-1.5 sm:p-2">
+              <div className="grid h-full grid-cols-6 grid-rows-6 gap-0.5 sm:gap-1">
+                {Array.from({ length: 36 }).map((_, i) => {
+                  const row = Math.floor(i / 6), col = i % 6;
+                  const idx = getBoardIdx(row, col);
 
-            {/* 中间浮动操作面板 */}
-            <div className="absolute left-1/2 top-1/2 z-10 w-[45%] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/15 bg-black/85 p-3 text-center shadow-2xl backdrop-blur-xl sm:p-4">
-              <div className="mb-1 text-xs text-white/50 sm:text-sm">
-                {turn === 1 ? "♂ 男方" : "♀ 女方"} 当前行动
+                  // 中间通道
+                  if (isCenterPath(row, col)) {
+                    const isPathCol = col === 2 || col === 3;
+                    const planePositions = [1, 2, 3]; // 中间行显示飞机
+                    const showPlane = isPathCol && planePositions.includes(row - 1);
+                    return (
+                      <div key={i} className={`flex items-center justify-center ${isPathCol ? "bg-gradient-to-b from-pink-500/20 to-purple-500/20" : ""}`}>
+                        {showPlane && <span className="text-lg sm:text-2xl opacity-60">✈️</span>}
+                      </div>
+                    );
+                  }
+
+                  // 中间空白（心形区域）
+                  if (idx === -1) {
+                    return (
+                      <div key={i} className="flex items-center justify-center">
+                        {row === 1 && col === 1 && <span className="text-xl sm:text-3xl">❤️</span>}
+                      </div>
+                    );
+                  }
+
+                  const event = events[idx];
+                  const p1Here = p1Out && p1Pos === idx;
+                  const p2Here = p2Out && p2Pos === idx;
+                  const isStart = idx === 0;
+                  const isEnd = idx === events.length - 1;
+
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => editMode && openEdit(idx)}
+                      className={`relative flex items-center justify-center rounded bg-gradient-to-br ${event.color} p-0.5 text-center text-[8px] leading-tight text-white shadow-md transition-all hover:scale-105 hover:shadow-lg sm:text-[10px] ${
+                        p1Here || p2Here ? "ring-2 ring-white ring-offset-1 ring-offset-black scale-105" : ""
+                      } ${isStart ? "ring-2 ring-green-400" : ""} ${isEnd ? "ring-2 ring-yellow-400" : ""} ${editMode ? "cursor-pointer" : ""}`}
+                    >
+                      <span className="line-clamp-3 px-0.5 font-medium drop-shadow">{event.text}</span>
+                      {p1Here && <span className="absolute -top-1 -left-1 text-sm sm:text-base">✈️</span>}
+                      {p2Here && <span className="absolute -bottom-1 -right-1 text-sm sm:text-base">✈️</span>}
+                      {isStart && <span className="absolute -top-1 -right-1 text-[8px] bg-green-500 rounded px-1">起</span>}
+                      {isEnd && <span className="absolute -top-1 -right-1 text-[8px] bg-yellow-500 rounded px-1">终</span>}
+                    </button>
+                  );
+                })}
               </div>
-              <div className={`mb-2 text-4xl sm:text-5xl ${rolling ? "dice-rolling" : ""}`}>
-                {dice > 0 ? diceFaces[dice] : "🎲"}
+
+              {/* 中间浮动操作面板 */}
+              <div className="absolute left-1/2 top-1/2 z-10 w-[38%] -translate-x-1/2 -translate-y-1/2 rounded-xl border border-white/20 bg-black/90 p-2 text-center shadow-2xl backdrop-blur-xl sm:p-3">
+                <div className="mb-1 text-[10px] text-white/60 sm:text-xs">
+                  {turn === 1 ? "♂ 男方" : "♀ 女方"} 当前行动
+                </div>
+                <div className={`mb-1 text-2xl sm:text-4xl ${rolling ? "dice-rolling" : ""}`}>
+                  {dice > 0 ? diceFaces[dice] : "🎲"}
+                </div>
+                <div className="mb-2 min-h-[24px] text-[10px] text-pink-200 sm:text-xs line-clamp-2">
+                  {currentEvent}
+                </div>
+                <button
+                  onClick={rollDice}
+                  disabled={rolling || editMode}
+                  className="w-full rounded-full bg-gradient-to-r from-pink-500 to-purple-500 py-1.5 text-xs font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:from-pink-400 hover:to-purple-400 disabled:opacity-50 sm:py-2 sm:text-sm"
+                >
+                  {rolling ? "掷骰中..." : "🎲 掷骰子"}
+                </button>
               </div>
-              <div className="mb-3 min-h-[32px] text-xs text-pink-200 sm:text-sm">
-                {currentEvent}
-              </div>
-              <button
-                onClick={rollDice}
-                disabled={rolling || editMode}
-                className="w-full rounded-full bg-gradient-to-r from-pink-500 to-purple-500 py-2 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:from-pink-400 hover:to-purple-400 disabled:opacity-50 sm:py-2.5 sm:text-base"
-              >
-                {rolling ? "掷骰中..." : "🎲 掷骰子"}
-              </button>
             </div>
           </div>
 
           {/* 游戏记录 */}
           {logs.length > 0 && (
-            <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
+            <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-3">
               <div className="mb-2 text-xs font-semibold text-white/60">📚 游戏记录</div>
-              <div className="max-h-32 space-y-1 overflow-y-auto">
-                {logs.map((log, i) => <div key={i} className="text-xs text-white/70">{log}</div>)}
+              <div className="max-h-24 space-y-1 overflow-y-auto">
+                {logs.map((log, i) => <div key={i} className="text-[10px] text-white/70 sm:text-xs">{log}</div>)}
               </div>
             </div>
           )}
         </div>
 
         {/* 底部介绍 */}
-        <div className="mt-10 space-y-10 sm:mt-16 sm:space-y-14">
+        <div className="mt-8 space-y-8 sm:mt-12 sm:space-y-12">
           <div>
-            <h2 className="mb-5 text-xl font-bold text-pink-400 sm:text-2xl">什么是情侣飞行棋？</h2>
-            <p className="text-sm leading-relaxed text-white/70 sm:text-base">
-              情侣飞行棋（Couples Ludo）是经典飞行棋的浪漫升级版，专为情侣、夫妻和亲密伴侣设计。与普通飞行棋不同，棋盘上的每一个格子都藏着精心设计的互动任务，从真心话大冒险到亲密肢体接触，旨在打破隔阂、升温感情。无论是热恋期的情侣，还是相伴多年的夫妻，都能在游戏中找到新鲜感和刺激。游戏支持自定义事件库，您可以根据双方的接受程度和喜好，量身定制专属的私密挑战。无需下载APP，打开网页即可即时体验，是约会之夜、异地恋互动的完美助攻神器。
+            <h2 className="mb-4 text-lg font-bold text-pink-400 sm:text-xl">什么是情侣飞行棋？</h2>
+            <p className="text-xs leading-relaxed text-white/70 sm:text-sm">
+              情侣飞行棋（Couples Ludo）是经典飞行棋的浪漫升级版，专为情侣、夫妻和亲密伴侣设计。棋盘上的每一个格子都藏着精心设计的互动任务，从真心话大冒险到亲密肢体接触，旨在打破隔阂、升温感情。游戏支持自定义事件库，无需下载APP，打开网页即可即时体验。
             </p>
           </div>
           <div>
-            <h2 className="mb-5 text-xl font-bold text-pink-400 sm:text-2xl">游戏规则</h2>
-            <ul className="space-y-3 text-sm text-white/70 sm:text-base">
-              <li className="flex gap-3"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-pink-400" /><span><strong className="text-white/90">准备阶段：</strong>双方（或多人）选择代表自己的颜色棋子，还可以选择不同的事件库模式（如热恋、私密、异地恋等）。</span></li>
-              <li className="flex gap-3"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-pink-400" /><span><strong className="text-white/90">掷骰子：</strong>玩家轮流掷骰子。只有掷出6点，棋子才能从基地起飞进入棋盘。</span></li>
-              <li className="flex gap-3"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-pink-400" /><span><strong className="text-white/90">行进与任务：</strong>根据骰子点数移动棋子。当棋子停留在某个格子上时，必须执行该格子对应的事件任务（如"亲吻对方"、"说出真心话"等）。</span></li>
-              <li className="flex gap-3"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-pink-400" /><span><strong className="text-white/90">特殊机制：</strong>如果掷出6点，可以额外再掷一次。如果棋子移动终点刚好有对方棋子，可以将对方撞回基地（可视规则设定开启或关闭）。</span></li>
-              <li className="flex gap-3"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-pink-400" /><span><strong className="text-white/90">胜利条件：</strong>率先将所有棋子移动到棋盘中心终点的玩家获胜。赢家通常可以获得输家提供的特别奖励（由双方约定）。</span></li>
+            <h2 className="mb-4 text-lg font-bold text-pink-400 sm:text-xl">游戏规则</h2>
+            <ul className="space-y-2 text-xs text-white/70 sm:text-sm">
+              <li className="flex gap-2"><span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-pink-400" /><span><strong className="text-white/90">掷骰子：</strong>玩家轮流掷骰子，只有掷出6点才能起飞。</span></li>
+              <li className="flex gap-2"><span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-pink-400" /><span><strong className="text-white/90">行进与任务：</strong>根据点数移动棋子，停在哪个格子就执行对应任务。</span></li>
+              <li className="flex gap-2"><span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-pink-400" /><span><strong className="text-white/90">特殊机制：</strong>掷出6点可再掷一次（可在规则选项中关闭）。</span></li>
             </ul>
-          </div>
-          <div>
-            <h2 className="mb-5 text-xl font-bold text-pink-400 sm:text-2xl">常见问题 (FAQ)</h2>
-            <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-              <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-5">
-                <h3 className="mb-2 text-base font-semibold text-white sm:text-lg">异地恋可以玩吗？</h3>
-                <p className="text-sm leading-relaxed text-white/60">当然可以！我们特别设计了"异地恋模式"事件库，包含专门针对视频通话场景的互动任务。利用内置的联机功能，双方只需进入同一个房间号，即可实时同步棋盘状态，跨越距离感受彼此的陪伴。</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-5">
-                <h3 className="mb-2 text-base font-semibold text-white sm:text-lg">需要下载 APP 吗？</h3>
-                <p className="text-sm leading-relaxed text-white/60">不需要。情侣飞行棋是基于网页的在线游戏（Web App），支持电脑、平板和手机浏览器直接访问。您可以将网页添加到手机主屏幕，享受类似APP的全屏流畅体验，既不占内存又方便快捷。</p>
-              </div>
-            </div>
           </div>
         </div>
 
-        <div className="footer-card">
-          <p>请在充分沟通界限的前提下玩乐，确保每一步都建立在积极同意之上。</p>
+        <div className="footer-card !mt-6 !p-3">
+          <p className="text-[10px] sm:text-xs">请在充分沟通界限的前提下玩乐，确保每一步都建立在积极同意之上。</p>
         </div>
       </div>
 
