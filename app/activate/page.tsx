@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { activateCode, checkActivation, TYPE_NAMES } from "../lib/license";
+import { activateCode, checkActivation, TYPE_NAMES } from "../../lib/license";
 
 export default function ActivatePage() {
   const [code, setCode] = useState("");
