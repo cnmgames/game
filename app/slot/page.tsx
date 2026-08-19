@@ -124,10 +124,6 @@ export default function SlotGame() {
       <div className="relative z-10 mx-auto min-h-screen w-full max-w-2xl px-3.5 py-4 sm:px-6 sm:py-10">
         <div className="mb-4 flex items-center justify-between">
           <Link href="/" className="text-sm text-pink-300 hover:text-pink-200">← 返回游戏列表</Link>
-          <div className="hidden md:flex items-center gap-1 rounded-full bg-white/10 px-2 py-1 border border-white/10">
-            <span className="rounded-full px-3 py-1 text-sm bg-white text-gray-900">简体</span>
-            <span className="rounded-full px-3 py-1 text-sm text-white/70">En</span>
-          </div>
         </div>
 
         <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl sm:gap-6 sm:rounded-3xl sm:p-6">

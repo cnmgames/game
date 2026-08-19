@@ -16,7 +16,7 @@ export default function FlightGame() {
   const [p2Out, setP2Out] = useState(false);
   const [p1Pos, setP1Pos] = useState(0);
   const [p2Pos, setP2Pos] = useState(0);
-  const [turn, setTurn] = useState(1);
+  const [turn, setTurn] = useState<1 | 2>(1);
   const [dice, setDice] = useState(0);
   const [rolling, setRolling] = useState(false);
   const [currentEvent, setCurrentEvent] = useState("掷出6开始游戏");
@@ -40,6 +40,7 @@ export default function FlightGame() {
         setRolling(false);
         const name = turn === 1 ? "男方" : "女方";
         const isOut = turn === 1 ? p1Out : p2Out;
+
         if (!isOut) {
           if (final === 6) {
             if (turn === 1) { setP1Out(true); setP1Pos(0); }
@@ -71,16 +72,21 @@ export default function FlightGame() {
 
   const diceFaces = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
 
+  // 6x6棋盘，外圈24格映射
+  const getBoardIdx = (row: number, col: number): number => {
+    if (row === 0) return col;
+    if (col === 5) return 5 + (row - 1);
+    if (row === 5) return 9 + (5 - col);
+    if (col === 0) return 14 + (5 - row);
+    return -1;
+  };
+
   return (
     <>
       <div className="bg-aurora" />
       <div className="relative z-10 mx-auto min-h-screen w-full max-w-5xl px-3.5 py-4 sm:px-6 sm:py-10">
-        <div className="mb-4 flex items-center justify-between gap-2">
+        <div className="mb-4">
           <Link href="/" className="text-sm text-pink-300 hover:text-pink-200">← 返回游戏列表</Link>
-          <div className="hidden md:flex items-center gap-1 rounded-full bg-white/10 px-2 py-1 border border-white/10">
-            <span className="rounded-full px-3 py-1 text-sm bg-white text-gray-900">简体</span>
-            <span className="rounded-full px-3 py-1 text-sm text-white/70">En</span>
-          </div>
         </div>
 
         <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl sm:gap-6 sm:rounded-3xl sm:p-6">
@@ -103,28 +109,22 @@ export default function FlightGame() {
             </div>
           )}
 
-          {/* 环形棋盘 */}
+          {/* 棋盘 */}
           <div className="relative mx-auto aspect-square w-full max-w-md rounded-2xl border border-white/10 bg-black/20 p-3">
             <div className="grid h-full grid-cols-6 grid-rows-6 gap-1">
               {Array.from({ length: 36 }).map((_, i) => {
                 const row = Math.floor(i / 6);
                 const col = i % 6;
-                const isEdge = row === 0 || row === 5 || col === 0 || col === 5;
-                if (!isEdge) {
+                const idx = getBoardIdx(row, col);
+                if (idx === -1) {
                   return (
                     <div key={i} className="flex items-center justify-center">
-                      {i === 7 && <span className="text-2xl">🔻</span>}
-                      {i === 8 && <span className="text-3xl">❤️</span>}
-                      {i === 13 && <span className="text-2xl">🔻</span>}
+                      {row === 1 && col === 1 && <span className="text-2xl">🔻</span>}
+                      {row === 1 && col === 2 && <span className="text-3xl">❤️</span>}
+                      {row === 2 && col === 1 && <span className="text-2xl">🔻</span>}
                     </div>
                   );
                 }
-                // 外圈映射到24个事件
-                let idx: number;
-                if (row === 0) idx = col; // 0-5
-                else if (col === 5) idx = 5 + (row - 1); // 6-9
-                else if (row === 5) idx = 9 + (5 - col); // 10-14
-                else idx = 14 + (5 - row); // 15-23
                 const p1Here = p1Out && p1Pos === idx;
                 const p2Here = p2Out && p2Pos === idx;
                 return (

@@ -33,7 +33,11 @@ export default function TruthGame() {
     if (players.length < 6) setPlayers([...players, `玩家${players.length + 1}`]);
   };
   const removePlayer = (i: number) => {
-    if (players.length > 1) setPlayers(players.filter((_, idx) => idx !== i));
+    if (players.length > 1) {
+      const newPlayers = players.filter((_, idx) => idx !== i);
+      setPlayers(newPlayers);
+      if (currentPlayer >= newPlayers.length) setCurrentPlayer(0);
+    }
   };
 
   const spin = () => {
@@ -43,11 +47,9 @@ export default function TruthGame() {
     setSelectedPlayer("");
     const extra = 5 + Math.floor(Math.random() * 3);
     const angle = Math.floor(Math.random() * 360);
-    const newRot = rotation + extra * 360 + angle;
-    setRotation(newRot);
+    setRotation(rotation + extra * 360 + angle);
     setTimeout(() => {
       setSpinning(false);
-      // 转盘选人
       const picked = players[Math.floor(Math.random() * players.length)];
       setSelectedPlayer(picked);
       setCurrentPlayer(players.indexOf(picked));
@@ -60,12 +62,8 @@ export default function TruthGame() {
     <>
       <div className="bg-aurora" />
       <div className="relative z-10 mx-auto min-h-screen w-full max-w-3xl px-3.5 py-4 sm:px-6 sm:py-10">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4">
           <Link href="/" className="text-sm text-pink-300 hover:text-pink-200">← 返回游戏列表</Link>
-          <div className="hidden md:flex items-center gap-1 rounded-full bg-white/10 px-2 py-1 border border-white/10">
-            <span className="rounded-full px-3 py-1 text-sm bg-white text-gray-900">简体</span>
-            <span className="rounded-full px-3 py-1 text-sm text-white/70">En</span>
-          </div>
         </div>
 
         <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl sm:gap-6 sm:rounded-3xl sm:p-6">
@@ -84,20 +82,12 @@ export default function TruthGame() {
           <div className="flex justify-center gap-2">
             <button
               onClick={() => setMode("truth")}
-              className={`rounded-full px-6 py-2 text-sm font-semibold transition ${
-                mode === "truth" ? "bg-purple-500 text-white" : "bg-white/5 text-white/70 hover:bg-white/10"
-              }`}
-            >
-              真心话
-            </button>
+              className={`rounded-full px-6 py-2 text-sm font-semibold transition ${mode === "truth" ? "bg-purple-500 text-white" : "bg-white/5 text-white/70 hover:bg-white/10"}`}
+            >真心话</button>
             <button
               onClick={() => setMode("dare")}
-              className={`rounded-full px-6 py-2 text-sm font-semibold transition ${
-                mode === "dare" ? "bg-pink-500 text-white" : "bg-white/5 text-white/70 hover:bg-white/10"
-              }`}
-            >
-              大冒险
-            </button>
+              className={`rounded-full px-6 py-2 text-sm font-semibold transition ${mode === "dare" ? "bg-pink-500 text-white" : "bg-white/5 text-white/70 hover:bg-white/10"}`}
+            >大冒险</button>
           </div>
 
           {/* 转盘 */}
@@ -155,7 +145,7 @@ export default function TruthGame() {
           <div className="rounded-xl border border-white/10 bg-black/20 p-4">
             <div className="text-sm font-semibold mb-2">题库管理</div>
             <p className="text-xs text-white/50 mb-3">打开编辑器修改内建题目，或新增自定义题目</p>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <button className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-white/80 hover:bg-white/10">编辑系统真心题</button>
               <button className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-white/80 hover:bg-white/10">编辑系统大冒险</button>
             </div>

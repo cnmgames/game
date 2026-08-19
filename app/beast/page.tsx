@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-// 斗兽棋等级：0=鼠,1=猫,2=狗,3=狼,4=豹,5=虎,6=狮,7=象
 const beastNames = ["鼠", "猫", "狗", "狼", "豹", "虎", "狮", "象"];
 const beastEmojis = ["🐭", "🐱", "🐶", "🐺", "🐆", "🐯", "🦁", "🐘"];
 const penalties = [
@@ -12,7 +11,7 @@ const penalties = [
 
 interface Piece {
   level: number;
-  owner: 1 | 2; // 1=男方🔥, 2=女方❄️
+  owner: 1 | 2;
   revealed: boolean;
 }
 
@@ -22,7 +21,6 @@ function initBoard(): (Piece | null)[] {
     pieces.push({ level: i, owner: 1, revealed: false });
     pieces.push({ level: i, owner: 2, revealed: false });
   }
-  // 洗牌
   for (let i = pieces.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
@@ -34,10 +32,10 @@ export default function BeastGame() {
   const [board, setBoard] = useState<(Piece | null)[]>([]);
   const [turn, setTurn] = useState<1 | 2>(1);
   const [selected, setSelected] = useState<number | null>(null);
-  const [message, setMessage] = useState("🔥 男方先手，翻牌或移动");
+  const [message, setMessage] = useState("点击任意棋子翻牌，第一次翻牌决定先手");
   const [penalty, setPenalty] = useState("");
   const [gameOver, setGameOver] = useState(false);
-  const [firstMove, setFirstMove] = useState(true);
+  const [firstFlip, setFirstFlip] = useState(true);
 
   useEffect(() => { initGame(); }, []);
 
@@ -45,15 +43,15 @@ export default function BeastGame() {
     setBoard(initBoard());
     setTurn(1);
     setSelected(null);
-    setMessage("🔥 男方先手，翻牌或移动");
+    setMessage("点击任意棋子翻牌，第一次翻牌决定先手");
     setPenalty("");
     setGameOver(false);
-    setFirstMove(true);
+    setFirstFlip(true);
   };
 
   const canEat = (attacker: Piece, defender: Piece): boolean => {
-    if (attacker.level === 0 && defender.level === 7) return true; // 鼠吃象
-    if (attacker.level === 7 && defender.level === 0) return false; // 象不能吃鼠
+    if (attacker.level === 0 && defender.level === 7) return true;
+    if (attacker.level === 7 && defender.level === 0) return false;
     return attacker.level >= defender.level;
   };
 
@@ -72,28 +70,24 @@ export default function BeastGame() {
       const newBoard = [...board];
       newBoard[idx] = { ...piece, revealed: true };
       setBoard(newBoard);
-      // 第一次翻牌决定归属
-      if (firstMove) {
-        setFirstMove(false);
-        if (piece.owner === 2) {
-          // 翻到女方的，交换先手
-          setTurn(2);
-          setMessage("❄️ 女方翻到己方棋子，女方先手！");
-        } else {
-          setMessage("🔥 男方翻到己方棋子，男方先手！");
-        }
+      setSelected(null);
+
+      if (firstFlip) {
+        // 第一次翻牌：翻到谁的颜色，谁就是先手
+        setFirstFlip(false);
+        setTurn(piece.owner);
+        setMessage(`${piece.owner === 1 ? "🔥男方" : "❄️女方"}翻到己方棋子，${piece.owner === 1 ? "男方" : "女方"}先手！`);
       } else {
         setMessage(`翻开了${piece.owner === 1 ? "🔥男方" : "❄️女方"}的${beastEmojis[piece.level]}${beastNames[piece.level]}`);
+        setTurn(turn === 1 ? 2 : 1);
       }
-      setTurn(turn === 1 ? 2 : 1);
-      setSelected(null);
       return;
     }
 
-    // 选择己方棋子
+    // 选择己方已翻开的棋子
     if (piece && piece.revealed && piece.owner === turn) {
       setSelected(idx);
-      setMessage(`选中${beastEmojis[piece.level]}${beastNames[piece.level]}，点击相邻格移动`);
+      setMessage(`选中${beastEmojis[piece.level]}${beastNames[piece.level]}，点击相邻格移动或吃子`);
       return;
     }
 
@@ -107,7 +101,9 @@ export default function BeastGame() {
         newBoard[idx] = attacker;
         newBoard[selected] = null;
         setBoard(newBoard);
-        setMessage(`${attacker.owner === 1 ? "🔥" : "❄️"}${beastEmojis[attacker.level]}移动`);
+        setMessage(`${attacker.owner === 1 ? "🔥" : "❄️"}${beastEmojis[attacker.level]}移动到相邻格`);
+        setSelected(null);
+        setTurn(turn === 1 ? 2 : 1);
       } else if (piece.revealed && piece.owner !== turn) {
         // 吃子
         if (canEat(attacker, piece)) {
@@ -115,20 +111,26 @@ export default function BeastGame() {
           newBoard[selected] = null;
           setBoard(newBoard);
           const p = penalties[Math.floor(Math.random() * penalties.length)];
-          setPenalty(`${piece.owner === 1 ? "🔥男方" : "❄️女方"}的${beastEmojis[piece.level]}被吃！惩罚：${p}`);
+          setPenalty(`${piece.owner === 1 ? "🔥男方" : "❄️女方"}的${beastEmojis[piece.level]}${beastNames[piece.level]}被吃！惩罚：${p}`);
           setMessage(`吃掉了对方的${beastEmojis[piece.level]}${beastNames[piece.level]}！`);
           // 检查胜负
           const remaining = newBoard.filter((p) => p && p.revealed && p.owner === piece.owner);
-          if (remaining.length === 0) {
+          const unrevealed = newBoard.filter((p) => p && !p.revealed && p.owner === piece.owner);
+          if (remaining.length === 0 && unrevealed.length === 0) {
             setGameOver(true);
             setMessage(`🎉 ${attacker.owner === 1 ? "男方" : "女方"}获胜！`);
           }
+          setSelected(null);
+          setTurn(turn === 1 ? 2 : 1);
         } else {
-          setMessage(`${beastEmojis[attacker.level]}吃不了${beastEmojis[piece.level]}！`);
+          setMessage(`${beastEmojis[attacker.level]}${beastNames[attacker.level]}吃不了${beastEmojis[piece.level]}${beastNames[piece.level]}！`);
+          setSelected(null);
         }
+      } else {
+        setSelected(null);
       }
+    } else {
       setSelected(null);
-      if (!gameOver) setTurn(turn === 1 ? 2 : 1);
     }
   };
 
@@ -136,12 +138,8 @@ export default function BeastGame() {
     <>
       <div className="bg-aurora" />
       <div className="relative z-10 mx-auto min-h-screen w-full max-w-2xl px-3.5 py-4 sm:px-6 sm:py-10">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4">
           <Link href="/" className="text-sm text-pink-300 hover:text-pink-200">← 返回游戏列表</Link>
-          <div className="hidden md:flex items-center gap-1 rounded-full bg-white/10 px-2 py-1 border border-white/10">
-            <span className="rounded-full px-3 py-1 text-sm bg-white text-gray-900">简体</span>
-            <span className="rounded-full px-3 py-1 text-sm text-white/70">En</span>
-          </div>
         </div>
 
         <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 shadow-2xl shadow-black/40 backdrop-blur-xl sm:gap-6 sm:rounded-3xl sm:p-6">
@@ -150,10 +148,10 @@ export default function BeastGame() {
             <p className="mt-2 text-sm text-white/70 sm:text-base">翻牌、博弈、策略对决，输了接受惩罚</p>
           </div>
 
-          {/* 先手决定 */}
+          {/* 回合显示 */}
           <div className="flex justify-center gap-4">
-            <div className={`rounded-full px-4 py-2 text-sm ${turn === 1 ? "bg-orange-500/30 text-orange-200 ring-1 ring-orange-400/50" : "bg-white/5 text-white/50"}`}>🔥 男方</div>
-            <div className={`rounded-full px-4 py-2 text-sm ${turn === 2 ? "bg-blue-500/30 text-blue-200 ring-1 ring-blue-400/50" : "bg-white/5 text-white/50"}`}>❄️ 女方</div>
+            <div className={`rounded-full px-4 py-2 text-sm transition ${turn === 1 && !firstFlip ? "bg-orange-500/30 text-orange-200 ring-1 ring-orange-400/50" : "bg-white/5 text-white/50"}`}>🔥 男方</div>
+            <div className={`rounded-full px-4 py-2 text-sm transition ${turn === 2 && !firstFlip ? "bg-blue-500/30 text-blue-200 ring-1 ring-blue-400/50" : "bg-white/5 text-white/50"}`}>❄️ 女方</div>
           </div>
 
           {/* 棋盘 */}
@@ -169,7 +167,7 @@ export default function BeastGame() {
                     ? piece.owner === 1
                       ? "border-orange-400/40 bg-orange-500/10"
                       : "border-blue-400/40 bg-blue-500/10"
-                    : "border-white/10 bg-white/10 hover:border-pink-300/40"
+                    : "border-white/10 bg-white/10 hover:border-pink-300/40 hover:bg-white/15"
                 }`}
               >
                 {piece ? (piece.revealed ? beastEmojis[piece.level] : "❓") : ""}
@@ -191,7 +189,7 @@ export default function BeastGame() {
             </div>
           )}
 
-          <div className="flex justify-center gap-3">
+          <div className="flex justify-center">
             <button onClick={initGame} className="rounded-full bg-pink-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 hover:bg-pink-400">🔄 重新开始</button>
           </div>
 
