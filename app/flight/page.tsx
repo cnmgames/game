@@ -135,7 +135,7 @@ export default function FlightGame() {
           )}
 
           {/* 棋盘 */}
-          <div className="relative mx-auto aspect-square w-full max-w-md rounded-2xl border border-white/10 bg-black/20 p-3">
+          <div className="relative mx-auto mb-6 aspect-square w-full max-w-md rounded-2xl border border-white/10 bg-black/20 p-3 sm:mb-8">
             <div className="grid h-full grid-cols-6 grid-rows-6 gap-1">
               {Array.from({ length: 36 }).map((_, i) => {
                 const row = Math.floor(i / 6), col = i % 6;
@@ -168,7 +168,7 @@ export default function FlightGame() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="mb-6 grid grid-cols-2 gap-3 sm:mb-8">
             <div className={`rounded-xl border p-3 text-center ${turn === 1 ? "border-blue-400/60 bg-blue-500/10" : "border-white/10 bg-white/5"}`}>
               <div className="text-sm font-semibold">♂ 男方</div>
               <div className="text-xs text-white/60">{p1Out ? `位置 ${p1Pos + 1}` : "未出列"}</div>
@@ -179,12 +179,12 @@ export default function FlightGame() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-pink-300/30 bg-pink-500/10 p-4 text-center">
+          <div className="mb-8 rounded-xl border border-pink-300/30 bg-pink-500/10 p-4 text-center">
             <div className="text-xs text-pink-300 mb-1">🎯 当前事件</div>
             <div className="text-base font-semibold">{currentEvent}</div>
           </div>
 
-          <div className="flex flex-col items-center gap-4">
+          <div className="mb-8 flex flex-col items-center gap-6 sm:gap-8">
             <div className={`text-6xl sm:text-7xl ${rolling ? "dice-rolling" : ""}`}>{dice > 0 ? diceFaces[dice] : "🎲"}</div>
             <div className="flex gap-3 sm:gap-4">
               <button onClick={rollDice} disabled={rolling || editMode} className="rounded-full bg-pink-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400 disabled:opacity-50">
@@ -195,13 +195,48 @@ export default function FlightGame() {
           </div>
 
           {logs.length > 0 && (
-            <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+            <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
               <div className="text-xs font-semibold text-white/60 mb-2">📚 游戏记录</div>
               <div className="space-y-1 max-h-32 overflow-y-auto">
                 {logs.map((log, i) => <div key={i} className="text-xs text-white/70">{log}</div>)}
               </div>
             </div>
           )}
+        </div>
+
+        {/* 底部介绍 */}
+        <div className="mt-10 space-y-10 sm:mt-16 sm:space-y-14">
+          <div>
+            <h2 className="mb-5 text-xl font-bold text-pink-400 sm:text-2xl">什么是情侣飞行棋？</h2>
+            <p className="text-sm leading-relaxed text-white/70 sm:text-base">
+              情侣飞行棋（Couples Ludo）是经典飞行棋的浪漫升级版，专为情侣、夫妻和亲密伴侣设计。与普通飞行棋不同，棋盘上的每一个格子都藏着精心设计的互动任务，从真心话大冒险到亲密肢体接触，旨在打破隔阂、升温感情。无论是热恋期的情侣，还是相伴多年的夫妻，都能在游戏中找到新鲜感和刺激。游戏支持自定义事件库，您可以根据双方的接受程度和喜好，量身定制专属的私密挑战。无需下载APP，打开网页即可即时体验，是约会之夜、异地恋互动的完美助攻神器。
+            </p>
+          </div>
+
+          <div>
+            <h2 className="mb-5 text-xl font-bold text-pink-400 sm:text-2xl">游戏规则</h2>
+            <ul className="space-y-3 text-sm text-white/70 sm:text-base">
+              <li className="flex gap-3"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-pink-400" /><span><strong className="text-white/90">准备阶段：</strong>双方（或多人）选择代表自己的颜色棋子，还可以选择不同的事件库模式（如热恋、私密、异地恋等）。</span></li>
+              <li className="flex gap-3"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-pink-400" /><span><strong className="text-white/90">掷骰子：</strong>玩家轮流掷骰子。只有掷出6点，棋子才能从基地起飞进入棋盘。</span></li>
+              <li className="flex gap-3"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-pink-400" /><span><strong className="text-white/90">行进与任务：</strong>根据骰子点数移动棋子。当棋子停留在某个格子上时，必须执行该格子对应的事件任务（如"亲吻对方"、"说出真心话"等）。</span></li>
+              <li className="flex gap-3"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-pink-400" /><span><strong className="text-white/90">特殊机制：</strong>如果掷出6点，可以额外再掷一次。如果棋子移动终点刚好有对方棋子，可以将对方撞回基地（可视规则设定开启或关闭）。</span></li>
+              <li className="flex gap-3"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-pink-400" /><span><strong className="text-white/90">胜利条件：</strong>率先将所有棋子移动到棋盘中心终点的玩家获胜。赢家通常可以获得输家提供的特别奖励（由双方约定）。</span></li>
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="mb-5 text-xl font-bold text-pink-400 sm:text-2xl">常见问题 (FAQ)</h2>
+            <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
+              <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-5">
+                <h3 className="mb-2 text-base font-semibold text-white sm:text-lg">异地恋可以玩吗？</h3>
+                <p className="text-sm leading-relaxed text-white/60">当然可以！我们特别设计了"异地恋模式"事件库，包含专门针对视频通话场景的互动任务。利用内置的联机功能，双方只需进入同一个房间号，即可实时同步棋盘状态，跨越距离感受彼此的陪伴。</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-5">
+                <h3 className="mb-2 text-base font-semibold text-white sm:text-lg">需要下载 APP 吗？</h3>
+                <p className="text-sm leading-relaxed text-white/60">不需要。情侣飞行棋是基于网页的在线游戏（Web App），支持电脑、平板和手机浏览器直接访问。您可以将网页添加到手机主屏幕，享受类似APP的全屏流畅体验，既不占内存又方便快捷。</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="footer-card">

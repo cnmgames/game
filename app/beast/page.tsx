@@ -148,16 +148,16 @@ export default function BeastGame() {
           </div>
 
           {/* 回合指示 */}
-          <div className="flex justify-center gap-3 sm:gap-4">
+          <div className="mb-6 flex justify-center gap-3 sm:gap-4 sm:mb-8">
             <div className={`rounded-full px-4 py-2 text-sm transition ${turn === 1 && !firstFlip ? "bg-orange-500/30 text-orange-200 ring-1 ring-orange-400/50" : "bg-white/5 text-white/50"}`}>🔥 红方 {turn === 1 && !firstFlip && "行动中"}</div>
             <div className={`rounded-full px-4 py-2 text-sm transition ${turn === 2 && !firstFlip ? "bg-blue-500/30 text-blue-200 ring-1 ring-blue-400/50" : "bg-white/5 text-white/50"}`}>❄️ 蓝方 {turn === 2 && !firstFlip && "行动中"}</div>
           </div>
 
-          <div className="min-h-[40px] rounded-xl border border-white/10 bg-black/20 p-3 text-center text-sm">{message}</div>
-          {penalty && <div className="rounded-xl border border-red-300/30 bg-red-500/10 p-3 text-center text-sm text-red-200 fade-in-up">{penalty}</div>}
-          {gameOver && <div className="rounded-xl border border-yellow-300/30 bg-yellow-500/10 p-4 text-center"><div className="text-lg font-bold text-yellow-300">{message}</div></div>}
+          <div className="mb-6 min-h-[40px] rounded-xl border border-white/10 bg-black/20 p-3 text-center text-sm sm:mb-8">{message}</div>
+          {penalty && <div className="mb-6 rounded-xl border border-red-300/30 bg-red-500/10 p-3 text-center text-sm text-red-200 fade-in-up sm:mb-8">{penalty}</div>}
+          {gameOver && <div className="mb-6 rounded-xl border border-yellow-300/30 bg-yellow-500/10 p-4 text-center sm:mb-8"><div className="text-lg font-bold text-yellow-300">{message}</div></div>}
 
-          <div className="flex justify-center gap-3 flex-wrap">
+          <div className="mt-6 flex justify-center gap-3 flex-wrap sm:mt-8">
             <button onClick={() => setShowRules(true)} className="rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm text-white/80 hover:bg-white/10">❓ 玩法说明</button>
             <button onClick={() => setShowSettings(true)} className="rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm text-white/80 hover:bg-white/10">⚙️ 游戏设置</button>
             <button onClick={initGame} className="rounded-full bg-pink-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 hover:bg-pink-400">🔄 重新开始</button>
