@@ -71,6 +71,9 @@ export function parseCode(code: string): number | null {
 
 // 验证激活码并激活
 export function activateCode(code: string): { success: boolean; message: string; type?: number; expireAt?: number } {
+  if (typeof window === "undefined") {
+    return { success: false, message: "服务端环境" };
+  }
   const type = parseCode(code);
   if (type === null) {
     return { success: false, message: "激活码格式不正确或已失效" };
@@ -111,6 +114,9 @@ export function activateCode(code: string): { success: boolean; message: string;
 
 // 检查是否已激活且未过期
 export function checkActivation(): { active: boolean; type?: number; expireAt?: number; daysLeft?: number } {
+  if (typeof window === "undefined") {
+    return { active: false };
+  }
   const data = localStorage.getItem("lg_activation");
   if (!data) return { active: false };
   
@@ -134,5 +140,6 @@ export function checkActivation(): { active: boolean; type?: number; expireAt?: 
 
 // 清除激活（测试用）
 export function clearActivation() {
+  if (typeof window === "undefined") return;
   localStorage.removeItem("lg_activation");
 }
