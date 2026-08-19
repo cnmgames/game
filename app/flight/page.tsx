@@ -1,28 +1,28 @@
 "use client";
 import Link from "next/link";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 
 const defaultEvents = [
-  { text: "气息交融", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
-  { text: "窒息拥抱", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
-  { text: "掌心听心", color: "from-purple-500/70 to-violet-500/70", type: "special" },
-  { text: "唇线抚触", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
-  { text: "背后温存", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
-  { text: "锁骨流连", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
-  { text: "颈侧印记", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
-  { text: "心灵交换", color: "from-purple-500/70 to-violet-500/70", type: "special" },
-  { text: "感恩此刻", color: "from-blue-500/70 to-cyan-500/70", type: "reward" },
-  { text: "怦然心动", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
-  { text: "唇角试探", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
-  { text: "大胆示爱", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
-  { text: "鼻尖磨蹭", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
-  { text: "后脊依偎", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
-  { text: "唇际掌控", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
-  { text: "十指连心", color: "from-purple-500/70 to-violet-500/70", type: "special" },
-  { text: "肌肤探险", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
-  { text: "颈窝传情", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
-  { text: "雨点轻吻", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
-  { text: "贴身慢摇", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
+  { text: "气息交融", desc: "双方鼻尖相对，缓慢呼吸，感受彼此的气息交融在一起", duration: 15, color: "from-pink-500/70 to-rose-500/70" },
+  { text: "窒息拥抱", desc: "紧紧拥抱对方，感受彼此的心跳和体温，持续到无法呼吸", duration: 20, color: "from-pink-500/70 to-rose-500/70" },
+  { text: "掌心听心", desc: "将手掌贴在对方胸口，静静聆听心跳的声音", duration: 15, color: "from-purple-500/70 to-violet-500/70" },
+  { text: "唇线抚触", desc: "用手指轻轻描绘对方的唇线，感受柔软的触感", duration: 15, color: "from-pink-500/70 to-rose-500/70" },
+  { text: "背后温存", desc: "从背后环抱对方，下巴搁在肩上，感受温暖的依靠", duration: 20, color: "from-pink-500/70 to-rose-500/70" },
+  { text: "锁骨流连", desc: "用指尖在对方锁骨处轻轻游走，流连忘返", duration: 15, color: "from-pink-500/70 to-rose-500/70" },
+  { text: "颈侧印记", desc: "在对方颈侧留下一个温柔的吻痕，标记属于你的印记", duration: 15, color: "from-pink-500/70 to-rose-500/70" },
+  { text: "心灵交换", desc: "对视30秒，说出一个从未告诉过对方的秘密", duration: 30, color: "from-purple-500/70 to-violet-500/70" },
+  { text: "感恩此刻", desc: "说出三件感谢对方的事情，真诚表达爱意", duration: 30, color: "from-blue-500/70 to-cyan-500/70" },
+  { text: "怦然心动", desc: "突然深情告白，让对方心跳加速", duration: 15, color: "from-pink-500/70 to-rose-500/70" },
+  { text: "唇角试探", desc: "用唇轻轻触碰对方唇角，似有若无地停留", duration: 10, color: "from-pink-500/70 to-rose-500/70" },
+  { text: "大胆示爱", desc: "用最大的声音喊出"我爱你"，让全世界都听到", duration: 10, color: "from-pink-500/70 to-rose-500/70" },
+  { text: "鼻尖磨蹭", desc: "鼻尖相对，轻轻磨蹭，像小兔子一样可爱", duration: 15, color: "from-pink-500/70 to-rose-500/70" },
+  { text: "后脊依偎", desc: "从背后依偎，双手环腰，感受后背的温度", duration: 20, color: "from-pink-500/70 to-rose-500/70" },
+  { text: "唇际掌控", desc: "主动掌控亲吻的节奏和深度，展现你的魅力", duration: 15, color: "from-pink-500/70 to-rose-500/70" },
+  { text: "十指连心", desc: "十指相扣，感受指尖传来的温度和爱意", duration: 20, color: "from-purple-500/70 to-violet-500/70" },
+  { text: "肌肤探险", desc: "用指尖探索对方身体的每一寸肌肤，找到敏感点", duration: 30, color: "from-pink-500/70 to-rose-500/70" },
+  { text: "颈窝传情", desc: "在对方颈窝处轻轻呼气和亲吻，传递爱意", duration: 15, color: "from-pink-500/70 to-rose-500/70" },
+  { text: "雨点轻吻", desc: "像雨点一样在对方脸上落下无数个轻吻", duration: 20, color: "from-pink-500/70 to-rose-500/70" },
+  { text: "贴身慢摇", desc: "紧贴对方，随着想象中的音乐慢慢摇摆", duration: 30, color: "from-pink-500/70 to-rose-500/70" },
 ];
 
 export default function FlightGame() {
@@ -42,6 +42,86 @@ export default function FlightGame() {
   const [editText, setEditText] = useState("");
   const [rules, setRules] = useState({ sixAgain: true, canBump: false });
 
+  // 事件详情弹窗
+  const [showEventModal, setShowEventModal] = useState(false);
+  const [modalEvent, setModalEvent] = useState<typeof defaultEvents[0] | null>(null);
+  const [modalPlayer, setModalPlayer] = useState("");
+  const [modalExtra, setModalExtra] = useState("");
+
+  // 倒计时
+  const [timer, setTimer] = useState(0);
+  const [timerRunning, setTimerRunning] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+
+  // 音效
+  const playSound = useCallback((type: "tick" | "start" | "end" | "dice") => {
+    try {
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      }
+      const ctx = audioCtxRef.current;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (type === "tick") {
+        osc.frequency.value = 800;
+        osc.type = "sine";
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.05);
+      } else if (type === "start") {
+        osc.frequency.value = 523;
+        osc.type = "sine";
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.2);
+      } else if (type === "end") {
+        osc.frequency.setValueAtTime(523, ctx.currentTime);
+        osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+        osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2);
+        osc.type = "sine";
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.4);
+      } else if (type === "dice") {
+        osc.frequency.value = 200 + Math.random() * 400;
+        osc.type = "square";
+        gain.gain.setValueAtTime(0.05, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.05);
+      }
+    } catch (e) {
+      // 静默失败
+    }
+  }, []);
+
+  // 倒计时逻辑
+  useEffect(() => {
+    if (timerRunning && timer > 0) {
+      timerRef.current = setInterval(() => {
+        setTimer((t) => {
+          if (t <= 1) {
+            setTimerRunning(false);
+            playSound("end");
+            return 0;
+          }
+          if (t <= 4) playSound("tick");
+          return t - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [timerRunning, timer, playSound]);
+
   const addLog = (msg: string) => setLogs((p) => [msg, ...p].slice(0, 20));
 
   const rollDice = useCallback(() => {
@@ -51,6 +131,7 @@ export default function FlightGame() {
     let count = 0;
     const anim = setInterval(() => {
       setDice(Math.floor(Math.random() * 6) + 1);
+      playSound("dice");
       count++;
       if (count >= 8) {
         clearInterval(anim);
@@ -65,6 +146,10 @@ export default function FlightGame() {
             else { setP2Out(true); setP2Pos(0); }
             setCurrentEvent(`${name}掷出6，飞机起飞！`);
             addLog(`🎲 ${name}掷出6，出列！`);
+            setModalEvent({ text: "飞机起飞！", desc: `${name}掷出6点，飞机成功起飞，进入棋盘！`, duration: 0, color: "from-green-500/70 to-emerald-500/70" });
+            setModalPlayer(name);
+            setModalExtra("");
+            setShowEventModal(true);
           } else {
             setCurrentEvent(`${name}掷出${final}，需要掷出6才能出发`);
             addLog(`🎲 ${name}掷出${final}，未出列`);
@@ -74,18 +159,29 @@ export default function FlightGame() {
           const curPos = turn === 1 ? p1Pos : p2Pos;
           const newPos = (curPos + final) % events.length;
           if (turn === 1) setP1Pos(newPos); else setP2Pos(newPos);
-          setCurrentEvent(events[newPos].text);
-          addLog(`🎲 ${name}掷出${final}：${events[newPos].text}`);
+          const event = events[newPos];
+          setCurrentEvent(event.text);
+          addLog(`🎲 ${name}掷出${final}：${event.text}`);
+
+          // 弹出事件详情
+          setModalEvent(event);
+          setModalPlayer(name);
+          setModalExtra(final === 6 && rules.sixAgain ? "掷出6，再来一次！" : "");
+          setTimer(event.duration);
+          setTimerRunning(false);
+          setShowEventModal(true);
+
           if (final !== 6 || !rules.sixAgain) setTurn(turn === 1 ? 2 : 1);
           else addLog(`✨ ${name}掷出6，再掷一次！`);
         }
       }
     }, 80);
-  }, [rolling, turn, p1Out, p2Out, p1Pos, p2Pos, editMode, events, rules]);
+  }, [rolling, turn, p1Out, p2Out, p1Pos, p2Pos, editMode, events, rules, playSound]);
 
   const reset = () => {
     setP1Out(false); setP2Out(false); setP1Pos(0); setP2Pos(0);
     setTurn(1); setDice(0); setCurrentEvent("掷出6开始游戏"); setLogs([]);
+    setShowEventModal(false); setTimer(0); setTimerRunning(false);
   };
 
   const openEdit = (idx: number) => {
@@ -108,18 +204,39 @@ export default function FlightGame() {
     setEditingIdx(null);
   };
 
+  const formatTime = (s: number) => {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${m}:${sec.toString().padStart(2, "0")}`;
+  };
+
+  const toggleTimer = () => {
+    if (timer > 0) {
+      setTimerRunning(!timerRunning);
+      if (!timerRunning) playSound("start");
+    }
+  };
+
+  const adjustTimer = (delta: number) => {
+    setTimer((t) => Math.max(0, t + delta));
+  };
+
+  const closeModal = () => {
+    setShowEventModal(false);
+    setTimerRunning(false);
+    if (timerRef.current) clearInterval(timerRef.current);
+  };
+
   const diceFaces = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
 
-  // 6x6棋盘，外围20格
   const getBoardIdx = (row: number, col: number): number => {
-    if (row === 0) return col; // 顶部 0-5
-    if (col === 5) return 5 + (row - 1); // 右侧 6-9
-    if (row === 5) return 9 + (5 - col); // 底部 10-15 (从右到左)
-    if (col === 0) return 15 + (5 - row); // 左侧 16-19 (从下到上)
+    if (row === 0) return col;
+    if (col === 5) return 5 + (row - 1);
+    if (row === 5) return 9 + (5 - col);
+    if (col === 0) return 15 + (5 - row);
     return -1;
   };
 
-  // 中间通道（第2-3列，第1-4行）
   const isCenterPath = (row: number, col: number) => {
     return row >= 1 && row <= 4 && col >= 2 && col <= 3;
   };
@@ -133,14 +250,12 @@ export default function FlightGame() {
         </div>
 
         <div className="game-container !p-3 sm:!p-5">
-          {/* 标题 */}
           <div className="text-center mb-3 sm:mb-5">
             <h1 className="game-title !text-2xl sm:!text-4xl">情侣飞行棋</h1>
             <div className="game-title-underline" />
             <p className="mt-2 text-xs text-white/60 sm:text-sm">🎲 掷出6开始游戏，体验每个格子的刺激事件</p>
           </div>
 
-          {/* 顶部按钮 */}
           <div className="flex flex-wrap justify-center gap-2 mb-3">
             <button onClick={() => setEditMode(!editMode)} className={`rounded-full border px-3 py-1.5 text-xs transition ${editMode ? "border-pink-400 bg-pink-500/20 text-pink-200" : "border-white/10 bg-white/5 text-white/80 hover:bg-white/10"}`}>
               ✏️ {editMode ? "退出编辑" : "进入编辑模式"}
@@ -156,7 +271,6 @@ export default function FlightGame() {
             </div>
           )}
 
-          {/* 顶部图例 */}
           <div className="mb-3 flex flex-wrap justify-center gap-3 text-[10px] text-white/50 sm:text-xs">
             <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-400" />男方</span>
             <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-pink-400" />女方</span>
@@ -165,15 +279,12 @@ export default function FlightGame() {
             <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-gray-500/60" />休息一回合</span>
           </div>
 
-          {/* 大棋盘 - 动画彩色渐变边框 */}
           <div className="relative mx-auto aspect-square w-full max-w-2xl rounded-xl p-[3px] animated-border">
             <div className="relative h-full w-full rounded-lg bg-black/90 p-1.5 sm:p-2">
               <div className="grid h-full grid-cols-6 grid-rows-6 gap-0.5 sm:gap-1">
                 {Array.from({ length: 36 }).map((_, i) => {
                   const row = Math.floor(i / 6), col = i % 6;
                   const idx = getBoardIdx(row, col);
-
-                  // 中间通道
                   if (isCenterPath(row, col)) {
                     const isPathCol = col === 2 || col === 3;
                     const showPlane = isPathCol && row >= 1 && row <= 3;
@@ -183,8 +294,6 @@ export default function FlightGame() {
                       </div>
                     );
                   }
-
-                  // 中间空白（心形）
                   if (idx === -1) {
                     return (
                       <div key={i} className="flex items-center justify-center">
@@ -192,13 +301,11 @@ export default function FlightGame() {
                       </div>
                     );
                   }
-
                   const event = events[idx];
                   const p1Here = p1Out && p1Pos === idx;
                   const p2Here = p2Out && p2Pos === idx;
-                  const isP1Start = idx === 0; // 男方起点（左上角）
-                  const isP2Start = idx === 10; // 女方起点（右下角附近）
-
+                  const isP1Start = idx === 0;
+                  const isP2Start = idx === 10;
                   return (
                     <div key={i} className="cell-wrapper relative">
                       <button
@@ -213,14 +320,12 @@ export default function FlightGame() {
                         {isP1Start && <span className="absolute -top-1 -right-1 text-[7px] bg-purple-500 rounded px-0.5">男起</span>}
                         {isP2Start && <span className="absolute -top-1 -right-1 text-[7px] bg-red-500 rounded px-0.5">女起</span>}
                       </button>
-                      {/* hover详情 */}
-                      <div className="cell-tooltip">{event.text} - 第{idx + 1}格</div>
+                      <div className="cell-tooltip">{event.text} - 第{idx + 1}格 ({event.duration}秒)</div>
                     </div>
                   );
                 })}
               </div>
 
-              {/* 中间浮动操作面板 */}
               <div className="absolute left-1/2 top-1/2 z-10 w-[38%] -translate-x-1/2 -translate-y-1/2 rounded-xl border border-white/20 bg-black/95 p-2 text-center shadow-2xl backdrop-blur-xl sm:p-3">
                 <div className="mb-1 text-[10px] text-white/60 sm:text-xs">
                   {turn === 1 ? "♂ 男方" : "♀ 女方"} 当前行动
@@ -242,9 +347,7 @@ export default function FlightGame() {
             </div>
           </div>
 
-          {/* 底部信息面板 */}
           <div className="mt-4 space-y-3">
-            {/* 当前玩家 */}
             <div className="rounded-xl border border-white/10 bg-black/30 p-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-white/50 flex items-center gap-1">
@@ -254,16 +357,10 @@ export default function FlightGame() {
                 <span className="text-sm font-semibold">{turn === 1 ? "男方" : "女方"}</span>
               </div>
             </div>
-
-            {/* 当前事件 */}
             <div className="rounded-xl border border-pink-300/20 bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-3">
-              <div className="text-xs text-white/50 mb-1 flex items-center gap-1">
-                <span>🎯</span> 当前事件
-              </div>
+              <div className="text-xs text-white/50 mb-1 flex items-center gap-1"><span>🎯</span> 当前事件</div>
               <div className="text-sm font-semibold text-pink-100">{currentEvent}</div>
             </div>
-
-            {/* 玩家状态 */}
             <div className="grid grid-cols-2 gap-2 text-center text-xs">
               <div className={`rounded-lg border p-2 ${turn === 1 ? "border-blue-400/50 bg-blue-500/10" : "border-white/10 bg-white/5"}`}>
                 <div className="font-semibold">♂ 男方</div>
@@ -274,8 +371,6 @@ export default function FlightGame() {
                 <div className="text-white/50 text-[10px]">{p2Out ? `位置 ${p2Pos + 1}` : "未出列"}</div>
               </div>
             </div>
-
-            {/* 游戏记录 */}
             {logs.length > 0 && (
               <div className="rounded-xl border border-white/10 bg-black/30 p-3">
                 <div className="text-xs font-semibold text-white/50 mb-2 flex items-center gap-1">
@@ -294,6 +389,83 @@ export default function FlightGame() {
           <p className="text-[10px] sm:text-xs">请在充分沟通界限的前提下玩乐，确保每一步都建立在积极同意之上。</p>
         </div>
       </div>
+
+      {/* 事件详情弹窗 - 全屏 */}
+      {showEventModal && modalEvent && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm" onClick={closeModal}>
+          <div className="relative mx-4 w-full max-w-lg rounded-2xl border border-white/20 bg-gradient-to-br from-zinc-900 to-black p-6 text-center shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            {/* 玩家标签 */}
+            <div className="mb-4">
+              <span className={`inline-block rounded-full px-4 py-1 text-sm font-semibold ${turn === 1 ? "bg-blue-500/30 text-blue-200" : "bg-pink-500/30 text-pink-200"}`}>
+                {modalPlayer}
+              </span>
+            </div>
+
+            {/* 事件标题 */}
+            <h2 className="mb-3 text-2xl font-bold text-white sm:text-3xl">{modalEvent.text}</h2>
+
+            {/* 事件描述 */}
+            <p className="mb-6 text-base text-white/80 sm:text-lg">{modalEvent.desc}</p>
+
+            {/* 额外提示 */}
+            {modalExtra && (
+              <p className="mb-4 text-sm font-semibold text-yellow-300">✨ {modalExtra}</p>
+            )}
+
+            {/* 倒计时器 */}
+            {modalEvent.duration > 0 && (
+              <div className="mb-6">
+                <div className="flex items-center justify-center gap-3">
+                  <button
+                    onClick={() => adjustTimer(-10)}
+                    className="rounded-full border border-white/20 bg-white/5 px-3 py-2 text-xs text-white/70 hover:bg-white/10 transition"
+                  >
+                    -10s
+                  </button>
+                  <button
+                    onClick={toggleTimer}
+                    className="flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-6 py-3 text-xl font-bold text-white hover:bg-white/20 transition"
+                  >
+                    {timerRunning ? "⏸" : "▶"} {formatTime(timer)}
+                  </button>
+                  <button
+                    onClick={() => adjustTimer(10)}
+                    className="rounded-full border border-white/20 bg-white/5 px-3 py-2 text-xs text-white/70 hover:bg-white/10 transition"
+                  >
+                    +10s
+                  </button>
+                </div>
+                {timer === 0 && !timerRunning && (
+                  <p className="mt-2 text-xs text-green-400">⏰ 时间到！任务完成</p>
+                )}
+              </div>
+            )}
+
+            {/* 底部按钮 */}
+            <div className="flex justify-center gap-3">
+              <button
+                onClick={closeModal}
+                className="rounded-full bg-gradient-to-r from-pink-500 to-purple-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:from-pink-400 hover:to-purple-400"
+              >
+                知道了
+              </button>
+              <button
+                onClick={() => {
+                  if (navigator.share) {
+                    navigator.share({ title: "情侣飞行棋", text: `快来玩情侣飞行棋！${modalEvent.text}`, url: window.location.href });
+                  } else {
+                    navigator.clipboard.writeText(window.location.href);
+                    alert("链接已复制！");
+                  }
+                }}
+                className="rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm text-white/70 hover:bg-white/10 transition"
+              >
+                🔗 分享
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 编辑事件弹窗 */}
       {editingIdx !== null && (
