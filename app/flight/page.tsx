@@ -112,12 +112,12 @@ export default function FlightGame() {
         </div>
 
         <div className="game-container">
-          <div className="text-center mb-4">
+          <div className="text-center mb-4 sm:mb-6">
             <h1 className="game-title">情侣飞行棋</h1>
             <div className="game-title-underline" />
             <p className="mt-3 text-sm text-white/60 sm:text-base">🎲 掷出6开始游戏，体验每个格子的刺激事件</p>
           </div>
-          <div className="border-t border-white/10 my-4" />
+          <div className="border-t border-white/10 my-6" />
 
           <div className="flex flex-wrap justify-center gap-2">
             <button onClick={() => setEditMode(!editMode)} className={`rounded-full border px-4 py-2 text-xs transition ${editMode ? "border-pink-400 bg-pink-500/20 text-pink-200" : "border-white/10 bg-white/5 text-white/80 hover:bg-white/10"}`}>
@@ -186,7 +186,7 @@ export default function FlightGame() {
 
           <div className="flex flex-col items-center gap-4">
             <div className={`text-6xl sm:text-7xl ${rolling ? "dice-rolling" : ""}`}>{dice > 0 ? diceFaces[dice] : "🎲"}</div>
-            <div className="flex gap-3">
+            <div className="flex gap-3 sm:gap-4">
               <button onClick={rollDice} disabled={rolling || editMode} className="rounded-full bg-pink-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400 disabled:opacity-50">
                 {rolling ? "掷骰中..." : `🎲 ${turn === 1 ? "男方" : "女方"}掷骰子`}
               </button>

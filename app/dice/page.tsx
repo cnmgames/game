@@ -113,16 +113,16 @@ export default function DiceGame() {
         {/* 主游戏容器 */}
         <div className="game-container">
           {/* 标题 */}
-          <div className="text-center mb-4">
+          <div className="text-center mb-4 sm:mb-6">
             <h1 className="game-title">情趣骰子</h1>
             <div className="game-title-underline" />
             <p className="mt-3 text-sm text-white/60 sm:text-base">喝酒助兴必备。挑战上家的点数，输了就喝酒或大冒险。</p>
           </div>
 
-          <div className="border-t border-white/10 my-4" />
+          <div className="border-t border-white/10 my-6" />
 
           {/* 左右分栏 */}
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
             {/* 左侧主游戏区 */}
             <div className="md:col-span-2">
               <div className="relative rounded-2xl border border-white/10 bg-zinc-900/50 p-4 dot-pattern overflow-hidden">

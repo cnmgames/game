@@ -93,33 +93,36 @@ export default function MonopolyGame() {
     <>
       <div className="bg-aurora" />
       <div className="relative z-10 mx-auto min-h-screen w-full max-w-3xl px-3.5 py-4 sm:px-6 sm:py-10">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4">
           <Link href="/" className="back-btn">← 返回游戏列表</Link>
         </div>
 
         <div className="game-container">
+          {/* 标题 */}
           <div className="text-center mb-4">
             <h1 className="game-title">午夜大富翁</h1>
             <div className="game-title-underline" />
             <p className="mt-3 text-sm text-white/60 sm:text-base">绕着棋盘冒险，每一站都有欲望事件等待完成。</p>
           </div>
-          <div className="border-t border-white/10 my-4" />
-
+          <div className="border-t border-white/10 my-6" />
 
           {/* 开发中提示 */}
           {showDev && (
-            <div className="rounded-xl border border-yellow-300/30 bg-yellow-500/10 p-3 text-center text-sm text-yellow-200">
-              ⚠️ 功能开发中，当前为体验版。完整版本欢迎加入 Discord 催更
-              <button onClick={() => setShowDev(false)} className="ml-2 text-xs underline">知道了</button>
+            <div className="mb-5 flex items-center justify-between gap-3 rounded-xl border border-yellow-300/30 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-200">
+              <span>⚠️ 功能开发中，当前为体验版。完整版本欢迎加入 Discord 催更</span>
+              <button onClick={() => setShowDev(false)} className="shrink-0 rounded-full bg-yellow-500/20 px-3 py-1 text-xs font-semibold text-yellow-100 hover:bg-yellow-500/30 transition">知道了</button>
             </div>
           )}
 
-          <div className="text-center">
-            <span className="rounded-full bg-white/10 px-4 py-2 text-sm">当前位置：<span className="font-bold text-pink-300">{pos}</span> / {boardEvents.length - 1}</span>
+          {/* 当前位置 */}
+          <div className="mb-6 text-center">
+            <span className="inline-block rounded-full border border-white/15 bg-black/40 px-5 py-2 text-sm">
+              当前位置：<span className="font-bold text-pink-300">{pos}</span> / {boardEvents.length - 1}
+            </span>
           </div>
 
           {/* 棋盘 */}
-          <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+          <div className="mb-6 grid grid-cols-4 gap-1.5 sm:gap-2">
             {boardEvents.map((e, i) => (
               <div key={i} className={`relative aspect-square rounded-lg border p-1 text-center text-[9px] sm:text-[11px] flex items-center justify-center transition-all ${
                 i === pos ? "border-pink-400 bg-pink-500/30 ring-2 ring-pink-400/50 scale-105" : e.color
@@ -130,29 +133,32 @@ export default function MonopolyGame() {
             ))}
           </div>
 
+          {/* 触发事件 */}
           {currentEvent && (
-            <div className="rounded-xl border border-pink-300/30 bg-pink-500/10 p-4 text-center fade-in-up">
+            <div className="mb-5 rounded-xl border border-pink-300/30 bg-pink-500/10 p-4 text-center fade-in-up">
               <div className="text-xs text-pink-300 mb-1">触发事件</div>
               <div className="text-base font-semibold">{currentEvent}</div>
             </div>
           )}
 
-          <div className="text-center text-sm text-white/80">{message}</div>
+          {/* 消息 */}
+          <div className="mb-6 text-center text-sm text-white/70">{message}</div>
 
-          <div className="flex flex-col items-center gap-4">
+          {/* 骰子和按钮 */}
+          <div className="mb-8 flex flex-col items-center gap-5">
             <div className={`text-6xl sm:text-7xl ${rolling ? "dice-rolling" : ""}`}>{dice > 0 ? diceFaces[dice] : "🎲"}</div>
             <div className="flex gap-3">
-              <button onClick={roll} disabled={rolling} className="rounded-full bg-pink-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 hover:bg-pink-400 disabled:opacity-50">
+              <button onClick={roll} disabled={rolling} className="rounded-full bg-pink-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 hover:bg-pink-400 disabled:opacity-50 transition">
                 {rolling ? "掷骰中..." : "🎲 掷骰子前进"}
               </button>
-              <button onClick={reset} className="rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/80 hover:bg-white/10">重新开始</button>
+              <button onClick={reset} className="rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/80 hover:bg-white/10 transition">重新开始</button>
             </div>
           </div>
 
           {/* Discord 催更 */}
-          <div className="rounded-xl border border-white/10 bg-black/20 p-4 text-center">
-            <p className="text-sm text-white/60 mb-2">完整功能开发中，欢迎加入 Discord 催更</p>
-            <button className="rounded-full bg-indigo-500 px-6 py-2 text-sm font-semibold text-white hover:bg-indigo-400">加入 Discord</button>
+          <div className="rounded-xl border border-white/10 bg-black/20 p-5 text-center">
+            <p className="mb-3 text-sm text-white/60">完整功能开发中，欢迎加入 Discord 催更</p>
+            <button className="rounded-full bg-indigo-500 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-400 transition">加入 Discord</button>
           </div>
         </div>
 

@@ -86,17 +86,17 @@ export default function SlotGame() {
         <div className="mb-4"><Link href="/" className="back-btn">← 返回游戏列表</Link></div>
 
         <div className="game-container">
-          <div className="text-center mb-4">
+          <div className="text-center mb-4 sm:mb-6">
             <h1 className="game-title">桃色老虎机</h1>
             <div className="game-title-underline" />
             <p className="mt-3 text-sm text-white/60 sm:text-base">一拉定情。地点、动作、部位，随机组合你的下一个亲密时刻。</p>
           </div>
-          <div className="border-t border-white/10 my-4" />
+          <div className="border-t border-white/10 my-6" />
 
 
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
             {/* 老虎机 */}
-            <div className="md:col-span-2 flex flex-col items-center gap-4">
+            <div className="md:col-span-2 flex flex-col items-center gap-5 sm:gap-6">
               <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-2 text-center">
                 <span className="text-xs text-white/50">结果：</span>
                 <span className="text-pink-300 font-semibold ml-1">{players[currentPlayer].name}</span>
@@ -122,7 +122,7 @@ export default function SlotGame() {
               {result && <div className="w-full rounded-xl border border-pink-300/30 bg-pink-500/10 p-4 text-center fade-in-up"><div className="text-xs text-pink-300 mb-1">本次组合</div><div className="text-base font-semibold">{result}</div></div>}
               {winner && <div className="w-full rounded-xl border border-yellow-300/30 bg-yellow-500/10 p-4 text-center fade-in-up"><div className="text-lg font-bold text-yellow-300">{winner}</div></div>}
 
-              <div className="flex gap-3">
+              <div className="flex gap-3 sm:gap-4">
                 <button onClick={spin} disabled={anySpinning} className="rounded-full bg-pink-500 px-10 py-3 text-base font-semibold text-white shadow-lg shadow-pink-500/40 hover:bg-pink-400 disabled:opacity-50">{anySpinning ? "旋转中..." : "🎰 开始旋转"}</button>
                 <button onClick={reset} className="rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/80 hover:bg-white/10">再玩一局</button>
               </div>

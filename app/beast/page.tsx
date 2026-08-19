@@ -99,15 +99,15 @@ export default function BeastGame() {
         <div className="mb-4"><Link href="/" className="back-btn">← 返回游戏列表</Link></div>
 
         <div className="game-container">
-          <div className="text-center mb-4">
+          <div className="text-center mb-4 sm:mb-6">
             <h1 className="game-title">火辣暗兽棋</h1>
             <div className="game-title-underline" />
             <p className="mt-3 text-sm text-white/60 sm:text-base">翻牌、博弈、宽衣。心跳加速的策略对决。</p>
           </div>
-          <div className="border-t border-white/10 my-4" />
+          <div className="border-t border-white/10 my-6" />
 
 
-          <div className="grid md:grid-cols-4 gap-4">
+          <div className="grid md:grid-cols-4 gap-4 sm:gap-6">
             {/* 红方惩罚记录 */}
             <div className="rounded-xl border border-red-400/30 bg-black/20 p-3">
               <div className="flex items-center justify-between mb-2">
@@ -148,7 +148,7 @@ export default function BeastGame() {
           </div>
 
           {/* 回合指示 */}
-          <div className="flex justify-center gap-4">
+          <div className="flex justify-center gap-3 sm:gap-4">
             <div className={`rounded-full px-4 py-2 text-sm transition ${turn === 1 && !firstFlip ? "bg-orange-500/30 text-orange-200 ring-1 ring-orange-400/50" : "bg-white/5 text-white/50"}`}>🔥 红方 {turn === 1 && !firstFlip && "行动中"}</div>
             <div className={`rounded-full px-4 py-2 text-sm transition ${turn === 2 && !firstFlip ? "bg-blue-500/30 text-blue-200 ring-1 ring-blue-400/50" : "bg-white/5 text-white/50"}`}>❄️ 蓝方 {turn === 2 && !firstFlip && "行动中"}</div>
           </div>

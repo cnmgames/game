@@ -103,16 +103,16 @@ export default function TruthGame() {
         </div>
 
         <div className="game-container">
-          <div className="text-center mb-4">
+          <div className="text-center mb-4 sm:mb-6">
             <h1 className="game-title">真心话大冒险转盘</h1>
             <div className="game-title-underline" />
             <p className="mt-3 text-sm text-white/60 sm:text-base">终极派对游戏。旋转转盘抽取题目，回答劲爆真心话或接受刺激大冒险</p>
           </div>
-          <div className="border-t border-white/10 my-4" />
+          <div className="border-t border-white/10 my-6" />
 
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
             {/* 转盘区域 */}
-            <div className="md:col-span-2 flex flex-col items-center gap-4">
+            <div className="md:col-span-2 flex flex-col items-center gap-5 sm:gap-6">
               <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-center w-full">
                 <div className="text-xs text-white/50">当前回合</div>
                 <div className="text-lg font-semibold text-pink-300">{players[currentPlayer]}</div>
