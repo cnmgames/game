@@ -3,21 +3,65 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 export default function Home() {
-  const [online, setOnline] = useState(128456);
+  const [visitCount, setVisitCount] = useState(0);
   const [showPWA, setShowPWA] = useState(true);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isIOS, setIsIOS] = useState(false);
+  const [showIOSGuide, setShowIOSGuide] = useState(false);
 
+  // 真实访问次数：每次访问+1，存在localStorage
   useEffect(() => {
-    const timer = setInterval(() => {
-      setOnline((prev) => {
-        const delta = Math.floor(Math.random() * 120) - 50;
-        const next = prev + delta;
-        if (next < 98000) return 98000;
-        if (next > 156000) return 156000;
-        return next;
-      });
-    }, 2800);
-    return () => clearInterval(timer);
+    const stored = localStorage.getItem("lovegame_visit_count");
+    const count = stored ? parseInt(stored, 10) : 0;
+    const newCount = count + 1;
+    localStorage.setItem("lovegame_visit_count", String(newCount));
+    setVisitCount(newCount);
   }, []);
+
+  // PWA：监听beforeinstallprompt + 检测iOS + 注册service worker
+  useEffect(() => {
+    // 检测iOS
+    const ua = window.navigator.userAgent.toLowerCase();
+    const ios = /iphone|ipad|ipod/.test(ua) && !(window as any).MSStream;
+    setIsIOS(ios);
+
+    // 监听安装提示
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+
+    // 注册service worker
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/game/sw.js").catch(() => {});
+    }
+
+    // 已安装则隐藏按钮
+    if (window.matchMedia("(display-mode: standalone)").matches) {
+      setShowPWA(false);
+    }
+
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
+
+  const handleInstall = async () => {
+    if (isIOS) {
+      setShowIOSGuide(true);
+      return;
+    }
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === "accepted") {
+        setShowPWA(false);
+      }
+      setDeferredPrompt(null);
+    } else {
+      // 不支持自动安装，显示指引
+      setShowIOSGuide(true);
+    }
+  };
 
   const games = [
     { emoji: "✈️", title: "情侣飞行棋", desc: "经典飞行棋的情趣浪漫升级版，专为情侣设计的增进感情的情趣游戏。", path: "/flight" },
@@ -31,13 +75,34 @@ export default function Home() {
   return (
     <>
       <div className="bg-aurora" />
+
+      {/* PWA安装按钮 */}
       {showPWA && (
         <div className="fixed bottom-[calc(env(safe-area-inset-bottom)+1.25rem)] left-4 z-[70] inline-flex max-w-[calc(100vw-2rem)] sm:left-6">
           <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-2xl bg-red-400/35 opacity-20 pwa-btn-glow" />
-          <button onClick={() => setShowPWA(false)} className="group relative z-10 inline-flex max-w-full items-center justify-center rounded-2xl border border-white/10 bg-zinc-950/95 text-[13px] font-medium text-white/85 shadow-lg shadow-black/30 ring-1 ring-white/5 backdrop-blur-xl transition duration-200 hover:-translate-y-0.5 hover:border-red-200/30 hover:bg-zinc-900/95 hover:text-white min-h-11 gap-2 px-3.5 py-2.5">
+          <button onClick={handleInstall} className="group relative z-10 inline-flex max-w-full items-center justify-center rounded-2xl border border-white/10 bg-zinc-950/95 text-[13px] font-medium text-white/85 shadow-lg shadow-black/30 ring-1 ring-white/5 backdrop-blur-xl transition duration-200 hover:-translate-y-0.5 hover:border-red-200/30 hover:bg-zinc-900/95 hover:text-white min-h-11 gap-2 px-3.5 py-2.5">
             <span className="grid h-7 w-7 shrink-0 place-items-center rounded-xl bg-red-500/10 text-red-100 ring-1 ring-red-200/15">📱</span>
             <span className="whitespace-nowrap">添加到主屏幕</span>
           </button>
+        </div>
+      )}
+
+      {/* iOS安装指引弹窗 */}
+      {showIOSGuide && (
+        <div className="modal-overlay" onClick={() => setShowIOSGuide(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-bold mb-4">添加到主屏幕</h3>
+            <div className="space-y-3 text-sm text-white/80">
+              <p>由于iOS系统限制，请手动添加：</p>
+              <div className="rounded-lg bg-white/5 p-3 space-y-2">
+                <p>1. 点击浏览器底部的 <span className="inline-block text-xl">⎙</span> 分享按钮</p>
+                <p>2. 向下滑动，点击「添加到主屏幕」</p>
+                <p>3. 点击右上角「添加」即可</p>
+              </div>
+              <p className="text-xs text-white/50">添加后可像App一样从桌面打开，全屏体验</p>
+            </div>
+            <button onClick={() => { setShowIOSGuide(false); setShowPWA(false); }} className="w-full mt-4 rounded-full bg-pink-500 py-2 text-sm font-semibold text-white hover:bg-pink-400">我知道了</button>
+          </div>
         </div>
       )}
 
@@ -48,11 +113,10 @@ export default function Home() {
             <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-pink-200 sm:px-4 sm:text-xs">18+ Experience</span>
             <div className="nav-pill">
               <span className="online-dot" />
-              <span className="sm:hidden">{online.toLocaleString()}</span>
-              <span className="hidden sm:inline">当前在线：{online.toLocaleString()}</span>
+              <span className="sm:hidden">访问 {visitCount.toLocaleString()}</span>
+              <span className="hidden sm:inline">累计访问：{visitCount.toLocaleString()} 次</span>
             </div>
           </div>
-
           <div className="max-w-3xl space-y-2.5 text-white sm:space-y-4">
             <h1 className="text-[1.7rem] font-semibold leading-tight sm:text-5xl">燃情此刻，放肆尽兴</h1>
             <p className="text-sm leading-relaxed text-white/80 sm:text-lg">多款氛围火辣的私房游戏，专为敢玩敢爱的亲密情侣而设。</p>
