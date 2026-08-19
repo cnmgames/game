@@ -111,7 +111,7 @@ export default function MonopolyGame() {
           {/* 开发中提示 */}
           {showDev && (
             <div className="mb-5 flex items-center justify-between gap-3 rounded-xl border border-yellow-300/30 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-200">
-              <span>⚠️ 功能开发中，当前为体验版。完整版本欢迎加入 Discord 催更</span>
+              <span>⚠️ 功能开发中，当前为体验版。完整版本欢迎关注 公众号：小坤爱玩</span>
               <button onClick={() => setShowDev(false)} className="shrink-0 rounded-full bg-yellow-500/20 px-3 py-1 text-xs font-semibold text-yellow-100 hover:bg-yellow-500/30 transition">知道了</button>
             </div>
           )}
@@ -157,10 +157,10 @@ export default function MonopolyGame() {
             </div>
           </div>
 
-          {/* Discord 催更 */}
+          {/* 公众号 */}
           <div className="rounded-xl border border-white/10 bg-black/20 p-5 text-center">
-            <p className="mb-3 text-sm text-white/60">完整功能开发中，欢迎加入 Discord 催更</p>
-            <button className="rounded-full bg-indigo-500 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-400 transition">加入 Discord</button>
+            <p className="mb-3 text-sm text-white/60">完整功能开发中，欢迎关注</p>
+            <button className="rounded-full bg-indigo-500 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-400 transition">公众号：小坤爱玩</button>
           </div>
         </div>
 
