@@ -3,30 +3,26 @@ import Link from "next/link";
 import { useState, useCallback } from "react";
 
 const defaultEvents = [
-  { text: "对视10秒不许笑", color: "from-pink-500 to-rose-500" },
-  { text: "夸对方3个优点", color: "from-pink-500 to-rose-500" },
-  { text: "拥抱30秒", color: "from-pink-500 to-rose-500" },
-  { text: "说一句情话", color: "from-pink-500 to-rose-500" },
-  { text: "亲一下额头", color: "from-pink-500 to-rose-500" },
-  { text: "模仿对方动作", color: "from-purple-500 to-violet-500" },
-  { text: "后背写字猜词", color: "from-pink-500 to-rose-500" },
-  { text: "喂对方一口水", color: "from-pink-500 to-rose-500" },
-  { text: "十指相扣1分钟", color: "from-pink-500 to-rose-500" },
-  { text: "说第一次心动瞬间", color: "from-purple-500 to-violet-500" },
-  { text: "按摩肩膀1分钟", color: "from-pink-500 to-rose-500" },
-  { text: "深情告白30秒", color: "from-pink-500 to-rose-500" },
-  { text: "交换一个小秘密", color: "from-pink-500 to-rose-500" },
-  { text: "公主抱或背起", color: "from-yellow-500 to-amber-500" },
-  { text: "鼻尖碰鼻尖10秒", color: "from-pink-500 to-rose-500" },
-  { text: "用眼神传达爱意", color: "from-purple-500 to-violet-500" },
-  { text: "唱一句情歌", color: "from-pink-500 to-rose-500" },
-  { text: "画对方速写", color: "from-pink-500 to-rose-500" },
-  { text: "说最想一起做的事", color: "from-pink-500 to-rose-500" },
-  { text: "感谢对方一件小事", color: "from-blue-500 to-cyan-500" },
-  { text: "许下一个小愿望", color: "from-pink-500 to-rose-500" },
-  { text: "甜蜜拥抱", color: "from-pink-500 to-rose-500" },
-  { text: "说最爱的瞬间", color: "from-pink-500 to-rose-500" },
-  { text: "亲一下手背", color: "from-pink-500 to-rose-500" },
+  { text: "气息交融", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
+  { text: "窒息拥抱", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
+  { text: "掌心听心", color: "from-purple-500/70 to-violet-500/70", type: "special" },
+  { text: "唇线抚触", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
+  { text: "背后温存", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
+  { text: "锁骨流连", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
+  { text: "颈侧印记", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
+  { text: "心灵交换", color: "from-purple-500/70 to-violet-500/70", type: "special" },
+  { text: "感恩此刻", color: "from-blue-500/70 to-cyan-500/70", type: "reward" },
+  { text: "怦然心动", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
+  { text: "唇角试探", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
+  { text: "大胆示爱", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
+  { text: "鼻尖磨蹭", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
+  { text: "后脊依偎", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
+  { text: "唇际掌控", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
+  { text: "十指连心", color: "from-purple-500/70 to-violet-500/70", type: "special" },
+  { text: "肌肤探险", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
+  { text: "颈窝传情", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
+  { text: "雨点轻吻", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
+  { text: "贴身慢摇", color: "from-pink-500/70 to-rose-500/70", type: "normal" },
 ];
 
 export default function FlightGame() {
@@ -114,15 +110,16 @@ export default function FlightGame() {
 
   const diceFaces = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
 
+  // 6x6棋盘，外围20格
   const getBoardIdx = (row: number, col: number): number => {
-    if (row === 0) return col;
-    if (col === 5) return 5 + (row - 1);
-    if (row === 5) return 9 + (5 - col);
-    if (col === 0) return 14 + (5 - row);
+    if (row === 0) return col; // 顶部 0-5
+    if (col === 5) return 5 + (row - 1); // 右侧 6-9
+    if (row === 5) return 9 + (5 - col); // 底部 10-15 (从右到左)
+    if (col === 0) return 15 + (5 - row); // 左侧 16-19 (从下到上)
     return -1;
   };
 
-  // 中间通道的格子（第2-4行，第2-3列）
+  // 中间通道（第2-3列，第1-4行）
   const isCenterPath = (row: number, col: number) => {
     return row >= 1 && row <= 4 && col >= 2 && col <= 3;
   };
@@ -130,7 +127,7 @@ export default function FlightGame() {
   return (
     <>
       <div className="bg-aurora" />
-      <div className="relative z-10 mx-auto min-h-screen w-full max-w-5xl px-2 py-3 sm:px-4 sm:py-6">
+      <div className="relative z-10 mx-auto min-h-screen w-full max-w-4xl px-2 py-3 sm:px-4 sm:py-6">
         <div className="mb-3">
           <Link href="/" className="back-btn">← 返回游戏列表</Link>
         </div>
@@ -159,19 +156,18 @@ export default function FlightGame() {
             </div>
           )}
 
-          {/* 玩家状态 */}
-          <div className="mb-3 flex justify-center gap-4 text-xs">
-            <span className={`flex items-center gap-1 ${turn === 1 ? "text-blue-300" : "text-white/50"}`}>
-              <span className="w-2 h-2 rounded-full bg-blue-400" /> 男方 {p1Out ? `(${p1Pos + 1})` : "(未出)"}
-            </span>
-            <span className={`flex items-center gap-1 ${turn === 2 ? "text-pink-300" : "text-white/50"}`}>
-              <span className="w-2 h-2 rounded-full bg-pink-400" /> 女方 {p2Out ? `(${p2Pos + 1})` : "(未出)"}
-            </span>
+          {/* 顶部图例 */}
+          <div className="mb-3 flex flex-wrap justify-center gap-3 text-[10px] text-white/50 sm:text-xs">
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-400" />男方</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-pink-400" />女方</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-blue-500/60" />前进两格</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-red-500/60" />后退两格</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-gray-500/60" />休息一回合</span>
           </div>
 
-          {/* 大棋盘 - 彩色渐变边框 */}
-          <div className="relative mx-auto aspect-square w-full max-w-3xl rounded-xl p-[3px] bg-gradient-to-br from-red-500 via-purple-500 to-green-500">
-            <div className="relative h-full w-full rounded-lg bg-black p-1.5 sm:p-2">
+          {/* 大棋盘 - 动画彩色渐变边框 */}
+          <div className="relative mx-auto aspect-square w-full max-w-2xl rounded-xl p-[3px] animated-border">
+            <div className="relative h-full w-full rounded-lg bg-black/90 p-1.5 sm:p-2">
               <div className="grid h-full grid-cols-6 grid-rows-6 gap-0.5 sm:gap-1">
                 {Array.from({ length: 36 }).map((_, i) => {
                   const row = Math.floor(i / 6), col = i % 6;
@@ -180,16 +176,15 @@ export default function FlightGame() {
                   // 中间通道
                   if (isCenterPath(row, col)) {
                     const isPathCol = col === 2 || col === 3;
-                    const planePositions = [1, 2, 3]; // 中间行显示飞机
-                    const showPlane = isPathCol && planePositions.includes(row - 1);
+                    const showPlane = isPathCol && row >= 1 && row <= 3;
                     return (
-                      <div key={i} className={`flex items-center justify-center ${isPathCol ? "bg-gradient-to-b from-pink-500/20 to-purple-500/20" : ""}`}>
-                        {showPlane && <span className="text-lg sm:text-2xl opacity-60">✈️</span>}
+                      <div key={i} className={`flex items-center justify-center ${isPathCol ? "bg-gradient-to-b from-pink-500/15 to-purple-500/15" : ""}`}>
+                        {showPlane && <span className="text-base sm:text-xl opacity-50">✈️</span>}
                       </div>
                     );
                   }
 
-                  // 中间空白（心形区域）
+                  // 中间空白（心形）
                   if (idx === -1) {
                     return (
                       <div key={i} className="flex items-center justify-center">
@@ -201,29 +196,32 @@ export default function FlightGame() {
                   const event = events[idx];
                   const p1Here = p1Out && p1Pos === idx;
                   const p2Here = p2Out && p2Pos === idx;
-                  const isStart = idx === 0;
-                  const isEnd = idx === events.length - 1;
+                  const isP1Start = idx === 0; // 男方起点（左上角）
+                  const isP2Start = idx === 10; // 女方起点（右下角附近）
 
                   return (
-                    <button
-                      key={i}
-                      onClick={() => editMode && openEdit(idx)}
-                      className={`relative flex items-center justify-center rounded bg-gradient-to-br ${event.color} p-0.5 text-center text-[8px] leading-tight text-white shadow-md transition-all hover:scale-105 hover:shadow-lg sm:text-[10px] ${
-                        p1Here || p2Here ? "ring-2 ring-white ring-offset-1 ring-offset-black scale-105" : ""
-                      } ${isStart ? "ring-2 ring-green-400" : ""} ${isEnd ? "ring-2 ring-yellow-400" : ""} ${editMode ? "cursor-pointer" : ""}`}
-                    >
-                      <span className="line-clamp-3 px-0.5 font-medium drop-shadow">{event.text}</span>
-                      {p1Here && <span className="absolute -top-1 -left-1 text-sm sm:text-base">✈️</span>}
-                      {p2Here && <span className="absolute -bottom-1 -right-1 text-sm sm:text-base">✈️</span>}
-                      {isStart && <span className="absolute -top-1 -right-1 text-[8px] bg-green-500 rounded px-1">起</span>}
-                      {isEnd && <span className="absolute -top-1 -right-1 text-[8px] bg-yellow-500 rounded px-1">终</span>}
-                    </button>
+                    <div key={i} className="cell-wrapper relative">
+                      <button
+                        onClick={() => editMode && openEdit(idx)}
+                        className={`relative flex h-full w-full items-center justify-center rounded bg-gradient-to-br ${event.color} p-0.5 text-center text-[8px] leading-tight text-white shadow-md transition-all hover:scale-105 hover:shadow-lg hover:brightness-125 sm:text-[10px] ${
+                          p1Here || p2Here ? "ring-2 ring-white ring-offset-1 ring-offset-black scale-105 brightness-150" : ""
+                        } ${isP1Start ? "ring-2 ring-purple-400" : ""} ${isP2Start ? "ring-2 ring-red-400" : ""} ${editMode ? "cursor-pointer" : ""}`}
+                      >
+                        <span className="line-clamp-3 px-0.5 font-medium drop-shadow">{event.text}</span>
+                        {p1Here && <span className="absolute -top-1 -left-1 text-sm sm:text-base">✈️</span>}
+                        {p2Here && <span className="absolute -bottom-1 -right-1 text-sm sm:text-base">✈️</span>}
+                        {isP1Start && <span className="absolute -top-1 -right-1 text-[7px] bg-purple-500 rounded px-0.5">男起</span>}
+                        {isP2Start && <span className="absolute -top-1 -right-1 text-[7px] bg-red-500 rounded px-0.5">女起</span>}
+                      </button>
+                      {/* hover详情 */}
+                      <div className="cell-tooltip">{event.text} - 第{idx + 1}格</div>
+                    </div>
                   );
                 })}
               </div>
 
               {/* 中间浮动操作面板 */}
-              <div className="absolute left-1/2 top-1/2 z-10 w-[38%] -translate-x-1/2 -translate-y-1/2 rounded-xl border border-white/20 bg-black/90 p-2 text-center shadow-2xl backdrop-blur-xl sm:p-3">
+              <div className="absolute left-1/2 top-1/2 z-10 w-[38%] -translate-x-1/2 -translate-y-1/2 rounded-xl border border-white/20 bg-black/95 p-2 text-center shadow-2xl backdrop-blur-xl sm:p-3">
                 <div className="mb-1 text-[10px] text-white/60 sm:text-xs">
                   {turn === 1 ? "♂ 男方" : "♀ 女方"} 当前行动
                 </div>
@@ -244,32 +242,51 @@ export default function FlightGame() {
             </div>
           </div>
 
-          {/* 游戏记录 */}
-          {logs.length > 0 && (
-            <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-3">
-              <div className="mb-2 text-xs font-semibold text-white/60">📚 游戏记录</div>
-              <div className="max-h-24 space-y-1 overflow-y-auto">
-                {logs.map((log, i) => <div key={i} className="text-[10px] text-white/70 sm:text-xs">{log}</div>)}
+          {/* 底部信息面板 */}
+          <div className="mt-4 space-y-3">
+            {/* 当前玩家 */}
+            <div className="rounded-xl border border-white/10 bg-black/30 p-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-white/50 flex items-center gap-1">
+                  <span className={`w-2 h-2 rounded-full ${turn === 1 ? "bg-blue-400" : "bg-pink-400"}`} />
+                  当前玩家
+                </span>
+                <span className="text-sm font-semibold">{turn === 1 ? "男方" : "女方"}</span>
               </div>
             </div>
-          )}
-        </div>
 
-        {/* 底部介绍 */}
-        <div className="mt-8 space-y-8 sm:mt-12 sm:space-y-12">
-          <div>
-            <h2 className="mb-4 text-lg font-bold text-pink-400 sm:text-xl">什么是情侣飞行棋？</h2>
-            <p className="text-xs leading-relaxed text-white/70 sm:text-sm">
-              情侣飞行棋（Couples Ludo）是经典飞行棋的浪漫升级版，专为情侣、夫妻和亲密伴侣设计。棋盘上的每一个格子都藏着精心设计的互动任务，从真心话大冒险到亲密肢体接触，旨在打破隔阂、升温感情。游戏支持自定义事件库，无需下载APP，打开网页即可即时体验。
-            </p>
-          </div>
-          <div>
-            <h2 className="mb-4 text-lg font-bold text-pink-400 sm:text-xl">游戏规则</h2>
-            <ul className="space-y-2 text-xs text-white/70 sm:text-sm">
-              <li className="flex gap-2"><span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-pink-400" /><span><strong className="text-white/90">掷骰子：</strong>玩家轮流掷骰子，只有掷出6点才能起飞。</span></li>
-              <li className="flex gap-2"><span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-pink-400" /><span><strong className="text-white/90">行进与任务：</strong>根据点数移动棋子，停在哪个格子就执行对应任务。</span></li>
-              <li className="flex gap-2"><span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-pink-400" /><span><strong className="text-white/90">特殊机制：</strong>掷出6点可再掷一次（可在规则选项中关闭）。</span></li>
-            </ul>
+            {/* 当前事件 */}
+            <div className="rounded-xl border border-pink-300/20 bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-3">
+              <div className="text-xs text-white/50 mb-1 flex items-center gap-1">
+                <span>🎯</span> 当前事件
+              </div>
+              <div className="text-sm font-semibold text-pink-100">{currentEvent}</div>
+            </div>
+
+            {/* 玩家状态 */}
+            <div className="grid grid-cols-2 gap-2 text-center text-xs">
+              <div className={`rounded-lg border p-2 ${turn === 1 ? "border-blue-400/50 bg-blue-500/10" : "border-white/10 bg-white/5"}`}>
+                <div className="font-semibold">♂ 男方</div>
+                <div className="text-white/50 text-[10px]">{p1Out ? `位置 ${p1Pos + 1}` : "未出列"}</div>
+              </div>
+              <div className={`rounded-lg border p-2 ${turn === 2 ? "border-pink-400/50 bg-pink-500/10" : "border-white/10 bg-white/5"}`}>
+                <div className="font-semibold">♀ 女方</div>
+                <div className="text-white/50 text-[10px]">{p2Out ? `位置 ${p2Pos + 1}` : "未出列"}</div>
+              </div>
+            </div>
+
+            {/* 游戏记录 */}
+            {logs.length > 0 && (
+              <div className="rounded-xl border border-white/10 bg-black/30 p-3">
+                <div className="text-xs font-semibold text-white/50 mb-2 flex items-center gap-1">
+                  <span>📚</span> 游戏记录
+                  <span className="text-[10px] text-white/30 ml-1">追踪每一步的精彩时刻</span>
+                </div>
+                <div className="max-h-24 space-y-1 overflow-y-auto">
+                  {logs.map((log, i) => <div key={i} className="text-[10px] text-white/60 sm:text-xs">{log}</div>)}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
