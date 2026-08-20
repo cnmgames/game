@@ -1,5 +1,5 @@
 const CACHE_NAME = "lovegame-v1";
-const urlsToCache = ["/game/", "/game/manifest.json"];
+const urlsToCache = ["/", "/manifest.json"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

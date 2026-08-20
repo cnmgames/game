@@ -301,9 +301,8 @@ export default function FlightGame() {
                 {timer === 0 && !timerRunning && (<p className="mt-2 text-xs text-green-400">⏰ 时间到！任务完成</p>)}
               </div>
             )}
-            <div className="flex justify-center gap-3">
-              <button onClick={closeModal} className="rounded-full bg-gradient-to-r from-pink-500 to-purple-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:from-pink-400 hover:to-purple-400">知道了</button>
-              <button onClick={() => { if (navigator.share) { navigator.share({ title: "情侣飞行棋", text: `快来玩情侣飞行棋！${modalEvent.text}`, url: window.location.href }); } else { navigator.clipboard.writeText(window.location.href); alert("链接已复制！"); } }} className="rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm text-white/70 hover:bg-white/10 transition">🔗 分享</button>
+            <div className="flex justify-center">
+              <button onClick={closeModal} className="rounded-full bg-gradient-to-r from-pink-500 to-purple-500 px-10 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:from-pink-400 hover:to-purple-400">知道了</button>
             </div>
           </div>
         </div>

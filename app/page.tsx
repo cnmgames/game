@@ -34,7 +34,7 @@ export default function Home() {
 
     // 注册service worker
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/game/sw.js").catch(() => {});
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
     }
 
     // 已安装则隐藏按钮
