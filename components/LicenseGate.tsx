@@ -79,6 +79,15 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
               >
                 立即激活
               </button>
+              <a
+                href="https://weidian.com/?userid=1388425837"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-full items-center justify-center rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 py-3 text-base font-semibold text-white shadow-lg shadow-yellow-500/30 hover:from-yellow-400 hover:to-orange-400 transition"
+              >
+                🛒 购买激活码（全部通用）
+              </a>
+              <p className="text-center text-xs text-yellow-200/60">一个激活码解锁全部5个游戏</p>
 
               {result && (
                 <div className={`rounded-xl p-3 text-center text-sm ${
@@ -88,15 +97,11 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
                 </div>
               )}
 
-              <div className="text-center">
-                <Link href="/activate" className="text-sm text-pink-400 hover:text-pink-300 underline">
-                  前往激活页面 →
-                </Link>
-              </div>
+
             </div>
 
-            <div className="mt-6 text-center text-xs text-white/40">
-              <p>支持天卡 / 周卡 / 月卡 / 季卡</p>
+            <div className="mt-4 text-center text-xs text-white/40">
+              <p>支持天卡 / 周卡 / 月卡 / 季卡 · 飞行棋永久免费</p>
             </div>
           </div>
         </div>
