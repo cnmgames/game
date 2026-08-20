@@ -73,6 +73,15 @@ export default function ActivatePage() {
               立即激活
             </button>
 
+            <a
+              href="https://weidian.com/?userid=1388425837"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 flex w-full items-center justify-center rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 py-3 text-base font-semibold text-white shadow-lg shadow-yellow-500/30 hover:from-yellow-400 hover:to-orange-400 transition"
+            >
+              🛒 购买激活码
+            </a>
+
             {result && (
               <div className={`rounded-xl p-3 text-center text-sm ${
                 result.success ? "border border-green-400/30 bg-green-500/10 text-green-200" : "border border-red-400/30 bg-red-500/10 text-red-200"

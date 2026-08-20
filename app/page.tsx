@@ -152,6 +152,9 @@ export default function Home() {
           <Link href="/activate" className="rounded-full border border-pink-400/40 bg-pink-500/10 px-6 py-2.5 text-sm font-semibold text-pink-200 hover:bg-pink-500/20 transition">
             🔑 激活游戏
           </Link>
+          <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" className="rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-yellow-500/30 hover:from-yellow-400 hover:to-orange-400 transition">
+            🛒 购买激活码
+          </a>
         </div>
 
         {/* 底部声明 */}
