@@ -91,9 +91,16 @@ export default function ActivatePage() {
             )}
           </div>
 
-          <div className="mt-6 text-center text-xs text-white/40">
-            <p>激活码支持：天卡 / 周卡 / 月卡 / 季卡</p>
-            <p className="mt-1">飞行棋永久免费，无需激活</p>
+          <div className="mt-6 text-center">
+            <a
+              href="https://weidian.com/?userid=1388425837"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-yellow-400/40 bg-yellow-500/10 px-6 py-2 text-sm font-semibold text-yellow-200 hover:bg-yellow-500/20 transition"
+            >
+              🛒 购买激活码
+            </a>
+            <p className="mt-3 text-xs text-white/40">飞行棋永久免费，无需激活</p>
           </div>
         </div>
       </div>
