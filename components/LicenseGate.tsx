@@ -17,12 +17,13 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
     setChecking(false);
   }, []);
 
-  const handleActivate = () => {
+  const handleActivate = async () => {
     if (!code.trim()) {
       setResult({ success: false, message: "请输入激活码" });
       return;
     }
-    const res = activateCode(code);
+    setResult({ success: false, message: "验证中..." });
+    const res = await activateCode(code);
     setResult(res);
     if (res.success) {
       const status = checkActivation();
