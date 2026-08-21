@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 export default function Home() {
   const [visitCount, setVisitCount] = useState(0);
-  const [onlineCount, setOnlineCount] = useState(0);
+  const [onlineCount, setOnlineCount] = useState(-1);
   const [showPWA, setShowPWA] = useState(true);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isIOS, setIsIOS] = useState(false);
@@ -13,16 +13,27 @@ export default function Home() {
   // 云端真实在线人数：上报访问 + 定时查询
   useEffect(() => {
     const API_BASE = "https://license-check.yellowjiba.workers.dev";
-    // 上报访问
-    fetch(`${API_BASE}/online/visit`, { method: "POST" }).catch(() => {});
+    let retryCount = 0;
+    // 上报访问（no-cors模式，确保手机端也能成功）
+    fetch(`${API_BASE}/online/visit`, { method: "POST", mode: "no-cors" }).catch(() => {});
     // 查询在线人数
     const fetchOnline = () => {
-      fetch(`${API_BASE}/online/count`)
+      fetch(`${API_BASE}/online/count`, { cache: "no-store" })
         .then((r) => r.json())
-        .then((data) => setOnlineCount(data.online || 0))
-        .catch(() => {});
+        .then((data) => {
+          setOnlineCount(data.online || 0);
+          retryCount = 0;
+        })
+        .catch(() => {
+          // 失败时重试最多3次，每次间隔5秒
+          if (retryCount < 3) {
+            retryCount++;
+            setTimeout(fetchOnline, 5000);
+          }
+        });
     };
-    fetchOnline();
+    // 延迟1秒后首次查询，确保页面加载完成
+    setTimeout(fetchOnline, 1000);
     // 每30秒刷新一次
     const timer = setInterval(fetchOnline, 30000);
     return () => clearInterval(timer);
@@ -132,8 +143,8 @@ export default function Home() {
             <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-pink-200 sm:px-4 sm:text-xs">18+ Experience</span>
             <div className="nav-pill">
               <span className="online-dot" />
-              <span className="sm:hidden">在线 {onlineCount}</span>
-              <span className="hidden sm:inline">当前在线：{onlineCount} 人</span>
+              <span className="sm:hidden">在线 {onlineCount === -1 ? "--" : onlineCount}</span>
+              <span className="hidden sm:inline">当前在线：{onlineCount === -1 ? "--" : onlineCount} 人</span>
             </div>
           </div>
           <div className="max-w-3xl space-y-2.5 text-white sm:space-y-4">
