@@ -30,7 +30,6 @@ export default function MonopolyGame() {
   const [message, setMessage] = useState("双骰出击，囤积亲密互动");
   const [currentEvent, setCurrentEvent] = useState("");
   const [skipTurn, setSkipTurn] = useState(false);
-  const [showDev, setShowDev] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [editingIdx, setEditingIdx] = useState<number | null>(null);
   const [editText, setEditText] = useState("");
@@ -148,13 +147,6 @@ export default function MonopolyGame() {
             </div>
           )}
 
-          {showDev && (
-            <div className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-yellow-300/30 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-200">
-              <span>⚠️ 功能开发中，当前为体验版。完整版本欢迎加入 Discord 催更</span>
-              <button onClick={() => setShowDev(false)} className="shrink-0 rounded-full bg-yellow-500/20 px-3 py-1 text-xs font-semibold text-yellow-100 hover:bg-yellow-500/30 transition">知道了</button>
-            </div>
-          )}
-
           <div className="mb-6 text-center">
             <span className="inline-block rounded-full border border-white/15 bg-black/40 px-5 py-2 text-sm">
               当前位置：<span className="font-bold text-pink-300">{pos}</span> / {events.length - 1}
@@ -196,10 +188,6 @@ export default function MonopolyGame() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-black/20 p-5 text-center">
-            <p className="mb-3 text-sm text-white/60">完整功能开发中，欢迎加入 Discord 催更</p>
-            <button className="rounded-full bg-indigo-500 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-400 transition">加入 Discord</button>
-          </div>
         </div>
 
         <div className="footer-card">
