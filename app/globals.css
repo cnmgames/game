@@ -280,3 +280,95 @@ html[data-theme="light"] select {
 html[data-theme="light"] .btn-primary {
   @apply bg-pink-500 text-white hover:bg-pink-600;
 }
+
+/* ============================================
+   白天模式补充样式 - 修复白色文字看不到的问题
+   ============================================ */
+html[data-theme="light"] .text-white {
+  color: #1f2937 !important;
+}
+
+html[data-theme="light"] .text-white\/50,
+html[data-theme="light"] .text-white\/60,
+html[data-theme="light"] .text-white\/70,
+html[data-theme="light"] .text-white\/80,
+html[data-theme="light"] .text-white\/90 {
+  color: #4b5563 !important;
+}
+
+html[data-theme="light"] .text-white\/30,
+html[data-theme="light"] .text-white\/40 {
+  color: #9ca3af !important;
+}
+
+html[data-theme="light"] .text-pink-100,
+html[data-theme="light"] .text-pink-200 {
+  color: #be185d !important;
+}
+
+html[data-theme="light"] .text-zinc-100,
+html[data-theme="light"] .text-zinc-200,
+html[data-theme="light"] .text-zinc-300 {
+  color: #374151 !important;
+}
+
+/* 按钮上的白色文字保持白色 */
+html[data-theme="light"] .btn-primary.text-white,
+html[data-theme="light"] button.bg-pink-500 .text-white,
+html[data-theme="light"] a.bg-pink-500 .text-white,
+html[data-theme="light"] [class*="bg-pink-500"] .text-white,
+html[data-theme="light"] [class*="bg-gradient"] .text-white {
+  color: #fff !important;
+}
+
+/* 游戏页面通用容器 */
+html[data-theme="light"] .game-container h1,
+html[data-theme="light"] .game-container h2,
+html[data-theme="light"] .game-container h3,
+html[data-theme="light"] .game-container p,
+html[data-theme="light"] .game-container span,
+html[data-theme="light"] .game-container div {
+  color: inherit;
+}
+
+/* 首页标题 */
+html[data-theme="light"] h1.text-white,
+html[data-theme="light"] h2.text-white,
+html[data-theme="light"] h3.text-white {
+  color: #1f2937 !important;
+}
+
+/* 游戏卡片内的文字 */
+html[data-theme="light"] .game-card .text-white,
+html[data-theme="light"] .game-card h3,
+html[data-theme="light"] .game-card p {
+  color: #1f2937 !important;
+}
+
+/* 游戏卡片描述文字 */
+html[data-theme="light"] .game-card-desc {
+  color: #6b7280 !important;
+}
+
+/* 记录页面文字 */
+html[data-theme="light"] .font-mono {
+  color: #be185d !important;
+}
+
+/* 滑块样式 */
+html[data-theme="light"] input[type="range"] {
+  accent-color: #ec4899;
+}
+
+/* 弹窗/模态框 */
+html[data-theme="light"] [class*="bg-black"],
+html[data-theme="light"] [class*="bg-zinc-900"],
+html[data-theme="light"] [class*="bg-zinc-800"] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  color: #1f2937 !important;
+}
+
+/* 边框 */
+html[data-theme="light"] [class*="border-white"] {
+  border-color: rgba(236, 72, 153, 0.2) !important;
+}
