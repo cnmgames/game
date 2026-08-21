@@ -282,56 +282,33 @@ html[data-theme="light"] .btn-primary {
 }
 
 
+
 /* ============================================
-   白天模式补充样式 - 简化版（避免循环依赖）
+   白天模式补充样式 - 最简化版（彻底避免循环依赖）
    ============================================ */
-html[data-theme="light"] .text-white {
-  color: #1f2937 !important;
+/* 所有白色文字改成深色 */
+html[data-theme="light"] {
+  color: #1f2937;
 }
 
-html[data-theme="light"] .text-white\/50,
-html[data-theme="light"] .text-white\/60,
-html[data-theme="light"] .text-white\/70,
-html[data-theme="light"] .text-white\/80,
-html[data-theme="light"] .text-white\/90 {
-  color: #4b5563 !important;
+html[data-theme="light"] * {
+  color: inherit;
 }
 
-html[data-theme="light"] .text-white\/30,
-html[data-theme="light"] .text-white\/40 {
-  color: #9ca3af !important;
-}
-
-html[data-theme="light"] .text-pink-100,
-html[data-theme="light"] .text-pink-200 {
-  color: #be185d !important;
-}
-
-html[data-theme="light"] .text-zinc-100,
-html[data-theme="light"] .text-zinc-200,
-html[data-theme="light"] .text-zinc-300 {
-  color: #374151 !important;
-}
-
-/* 按钮上的白色文字保持白色 */
+/* 按钮保持白色文字 */
 html[data-theme="light"] .btn-primary,
-html[data-theme="light"] [class*="bg-pink-500"],
-html[data-theme="light"] [class*="bg-gradient"] {
+html[data-theme="light"] button[class*="bg-pink"],
+html[data-theme="light"] a[class*="bg-pink"],
+html[data-theme="light"] [class*="bg-gradient-to-r"] {
   color: #fff !important;
 }
 
-html[data-theme="light"] .btn-primary .text-white,
-html[data-theme="light"] [class*="bg-pink-500"] .text-white,
-html[data-theme="light"] [class*="bg-gradient"] .text-white {
-  color: #fff !important;
-}
-
-/* 游戏卡片描述文字 */
+/* 游戏卡片描述 */
 html[data-theme="light"] .game-card-desc {
   color: #6b7280 !important;
 }
 
-/* 记录页面代码文字 */
+/* 代码文字 */
 html[data-theme="light"] .font-mono {
   color: #be185d !important;
 }
@@ -339,4 +316,9 @@ html[data-theme="light"] .font-mono {
 /* 滑块 */
 html[data-theme="light"] input[type="range"] {
   accent-color: #ec4899;
+}
+
+/* 在线人数点 */
+html[data-theme="light"] .online-dot {
+  background-color: #22c55e !important;
 }
