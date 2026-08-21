@@ -133,7 +133,7 @@ export default function Home() {
             <div className="nav-pill">
               <span className="online-dot" />
               <span className="sm:hidden">在线 {onlineCount}</span>
-              <span className="hidden sm:inline">👥 当前在线：{onlineCount} 人</span>
+              <span className="hidden sm:inline">当前在线：{onlineCount} 人</span>
             </div>
           </div>
           <div className="max-w-3xl space-y-2.5 text-white sm:space-y-4">
@@ -171,7 +171,7 @@ export default function Home() {
           <Link href="/activate" className="rounded-full border border-pink-400/40 bg-pink-500/10 px-6 py-2.5 text-sm font-semibold text-pink-200 hover:bg-pink-500/20 transition">
             🔑 激活游戏
           </Link>
-          <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" className="rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-yellow-500/30 hover:from-yellow-400 hover:to-orange-400 transition">
+          <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" className="rounded-full bg-gradient-to-r from-pink-500 to-purple-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-pink-500/50 hover:from-pink-400 hover:to-purple-500 hover:shadow-pink-500/70 transition animate-pulse">
             🛒 购买激活码
           </a>
         </div>

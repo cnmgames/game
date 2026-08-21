@@ -78,11 +78,11 @@ export default function ActivatePage() {
               href="https://weidian.com/?userid=1388425837"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 flex w-full items-center justify-center rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 py-3 text-base font-semibold text-white shadow-lg shadow-yellow-500/30 hover:from-yellow-400 hover:to-orange-400 transition"
+              className="mt-3 flex w-full items-center justify-center rounded-full bg-gradient-to-r from-pink-500 to-purple-600 py-3 text-base font-bold text-white shadow-lg shadow-pink-500/50 hover:from-pink-400 hover:to-purple-500 hover:shadow-pink-500/70 transition animate-pulse"
             >
               🛒 购买激活码（全部通用）
             </a>
-            <p className="mt-2 text-center text-xs text-yellow-200/60">一个激活码解锁全部5个游戏，永久有效</p>
+            <p className="mt-2 text-center text-xs text-pink-200/70">一个激活码解锁全部5个游戏，永久有效</p>
 
             {result && (
               <div className={`rounded-xl p-3 text-center text-sm ${
