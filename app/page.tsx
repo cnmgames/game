@@ -12,7 +12,7 @@ export default function Home() {
 
   // 云端真实在线人数：上报访问 + 定时查询
   useEffect(() => {
-    const API_BASE = "https://license-check.yellowjiba.workers.dev";
+    const API_BASE = "https://api.ttla.top";
     let retryCount = 0;
     // 上报访问（no-cors模式，确保手机端也能成功）
     fetch(`${API_BASE}/online/visit`, { method: "POST", mode: "no-cors" }).catch(() => {});
