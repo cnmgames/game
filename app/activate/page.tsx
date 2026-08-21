@@ -62,7 +62,7 @@ export default function ActivatePage() {
                 value={code}
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
                 onKeyDown={(e) => e.key === "Enter" && handleActivate()}
-                placeholder="XXXX-XXXX-XXXXX"
+                placeholder="7位激活码"
                 className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-center text-lg font-mono tracking-wider text-white placeholder:text-white/30 focus:outline-none focus:border-pink-400/50"
               />
             </div>
