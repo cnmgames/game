@@ -137,7 +137,7 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
               )}
             </div>
             <div className="mt-4 text-center text-xs text-white/40">
-              <p>支持天卡 / 周卡 / 月卡 / 季卡 · 飞行棋永久免费</p>
+              <p>支持周卡 / 月卡 / 季卡 / 年卡 · 飞行棋永久免费</p>
             </div>
           </div>
         </div>
