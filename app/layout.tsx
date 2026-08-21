@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
+import AntiDebugProvider from '../components/AntiDebugProvider'
 
 export const metadata: Metadata = {
   title: '情侣互动小游戏合集 | 约会之夜前戏必备',
@@ -22,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body>
-        {children}
+        <AntiDebugProvider>
+          {children}
+        </AntiDebugProvider>
         <script
           dangerouslySetInnerHTML={{
             __html: `
