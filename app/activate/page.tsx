@@ -47,7 +47,7 @@ export default function ActivatePage() {
               <div className="text-lg font-bold text-green-300 mb-2">✅ 已激活</div>
               <div className="text-sm text-white/70 space-y-1">
                 <div>类型：{TYPE_NAMES[activation.type!]}</div>
-                <div>剩余：{activation.daysLeft} 天</div>
+                <div>剩余：{activation.timeLeftText}</div>
                 <div>过期：{formatDate(activation.expireAt!)}</div>
               </div>
             </div>

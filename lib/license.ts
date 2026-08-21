@@ -184,7 +184,7 @@ export function activateCode(code: string): Promise<{ success: boolean; message:
 }
 
 // 检查是否已激活且未过期
-export function checkActivation(): { active: boolean; type?: number; expireAt?: number; daysLeft?: number } {
+export function checkActivation(): { active: boolean; type?: number; expireAt?: number; daysLeft?: number; timeLeftText?: string } {
   if (typeof window === "undefined") {
     return { active: false };
   }
@@ -196,12 +196,28 @@ export function checkActivation(): { active: boolean; type?: number; expireAt?: 
     if (now > activation.expireAt) {
       return { active: false };
     }
-    const daysLeft = Math.ceil((activation.expireAt - now) / (24 * 60 * 60 * 1000));
+    const msLeft = activation.expireAt - now;
+    const daysLeft = Math.ceil(msLeft / (24 * 60 * 60 * 1000));
+    // 智能时间显示
+    let timeLeftText: string;
+    if (msLeft < 60 * 60 * 1000) {
+      // 小于1小时，显示分钟
+      const minutesLeft = Math.max(1, Math.ceil(msLeft / (60 * 1000)));
+      timeLeftText = `${minutesLeft} 分钟`;
+    } else if (msLeft < 24 * 60 * 60 * 1000) {
+      // 小于1天，显示小时
+      const hoursLeft = Math.ceil(msLeft / (60 * 60 * 1000));
+      timeLeftText = `${hoursLeft} 小时`;
+    } else {
+      // 大于1天，显示天
+      timeLeftText = `${daysLeft} 天`;
+    }
     return {
       active: true,
       type: activation.type,
       expireAt: activation.expireAt,
       daysLeft,
+      timeLeftText,
     };
   } catch {
     return { active: false };
