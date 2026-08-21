@@ -18,6 +18,7 @@ export const TYPE_NAMES: Record<number, string> = {
   2: "月卡",
   3: "季卡",
   4: "年卡",
+  5: "测试卡",
 };
 
 // 类型数字到字母的映射
@@ -26,6 +27,7 @@ const TYPE_NUM_TO_CHAR: Record<number, string> = {
   2: "B",
   3: "C",
   4: "D",
+  5: "T",
 };
 
 // 类型字母到数字的映射
@@ -34,6 +36,7 @@ const TYPE_CHAR_TO_NUM: Record<string, number> = {
   B: 2,
   C: 3,
   D: 4,
+  T: 5,
 };
 
 // 可用字符（去掉易混淆的I/O/0/1）
@@ -152,9 +155,18 @@ export function activateCode(code: string): Promise<{ success: boolean; message:
       } catch {}
     }
     // 保存激活信息到本地
-    const days = TYPE_DAYS[clean[0]] || 7;
     const now = Date.now();
-    const expireAt = now + days * 24 * 60 * 60 * 1000;
+    let expireAt: number;
+    let durationText: string;
+    if (clean[0] === "T") {
+      // 测试卡：5分钟
+      expireAt = now + 5 * 60 * 1000;
+      durationText = "5分钟";
+    } else {
+      const days = TYPE_DAYS[clean[0]] || 7;
+      expireAt = now + days * 24 * 60 * 60 * 1000;
+      durationText = `${days}天`;
+    }
     const activation = {
       code: clean,
       type: parsed.type,
@@ -164,7 +176,7 @@ export function activateCode(code: string): Promise<{ success: boolean; message:
     localStorage.setItem("lg_activation", JSON.stringify(activation));
     return {
       success: true,
-      message: `激活成功！${TYPE_NAMES[parsed.type]}有效期，${days}天后过期`,
+      message: `激活成功！${TYPE_NAMES[parsed.type]}有效期，${durationText}后过期`,
       type: parsed.type,
       expireAt,
     };
