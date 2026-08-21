@@ -23,21 +23,6 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              // 主题初始化（在页面渲染前执行，避免闪烁）
-              (function() {
-                try {
-                  var savedTheme = localStorage.getItem("lg_theme");
-                  if (savedTheme === "light") {
-                    document.documentElement.setAttribute("data-theme", "light");
-                  }
-                } catch(e) {}
-              })();
-            `,
-          }}
-        />
         <AntiDebugProvider>
           {children}
         </AntiDebugProvider>

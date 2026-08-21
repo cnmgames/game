@@ -1,5 +1,4 @@
 "use client";
-import ThemeToggle from "../components/ThemeToggle";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
@@ -142,13 +141,10 @@ export default function Home() {
         <div className="game-container">
           <div className="flex items-center justify-between gap-2 mb-6">
             <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-pink-200 sm:px-4 sm:text-xs">18+ Experience</span>
-            <div className="flex items-center gap-2">
-              <ThemeToggle />
-              <div className="nav-pill">
+            <div className="nav-pill">
                 <span className="online-dot" />
                 <span className="sm:hidden">在线 {onlineCount === -1 ? "--" : onlineCount}</span>
                 <span className="hidden sm:inline">当前在线：{onlineCount === -1 ? "--" : onlineCount} 人</span>
-              </div>
             </div>
           </div>
           <div className="max-w-3xl space-y-2.5 text-white sm:space-y-4">
