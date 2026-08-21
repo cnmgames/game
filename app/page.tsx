@@ -4,12 +4,31 @@ import { useState, useEffect } from "react";
 
 export default function Home() {
   const [visitCount, setVisitCount] = useState(0);
+  const [onlineCount, setOnlineCount] = useState(0);
   const [showPWA, setShowPWA] = useState(true);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isIOS, setIsIOS] = useState(false);
   const [showIOSGuide, setShowIOSGuide] = useState(false);
 
-  // 真实访问次数：每次访问+1，存在localStorage
+  // 云端真实在线人数：上报访问 + 定时查询
+  useEffect(() => {
+    const API_BASE = "https://license-check.yellowjiba.workers.dev";
+    // 上报访问
+    fetch(`${API_BASE}/online/visit`, { method: "POST" }).catch(() => {});
+    // 查询在线人数
+    const fetchOnline = () => {
+      fetch(`${API_BASE}/online/count`)
+        .then((r) => r.json())
+        .then((data) => setOnlineCount(data.online || 0))
+        .catch(() => {});
+    };
+    fetchOnline();
+    // 每30秒刷新一次
+    const timer = setInterval(fetchOnline, 30000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // 本地累计访问次数（保留）
   useEffect(() => {
     const stored = localStorage.getItem("lovegame_visit_count");
     const count = stored ? parseInt(stored, 10) : 0;
@@ -113,8 +132,8 @@ export default function Home() {
             <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-pink-200 sm:px-4 sm:text-xs">18+ Experience</span>
             <div className="nav-pill">
               <span className="online-dot" />
-              <span className="sm:hidden">访问 {visitCount.toLocaleString()}</span>
-              <span className="hidden sm:inline">累计访问：{visitCount.toLocaleString()} 次</span>
+              <span className="sm:hidden">在线 {onlineCount}</span>
+              <span className="hidden sm:inline">👥 当前在线：{onlineCount} 人</span>
             </div>
           </div>
           <div className="max-w-3xl space-y-2.5 text-white sm:space-y-4">
