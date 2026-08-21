@@ -8,12 +8,13 @@ export default function ActivatePage() {
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
   const [activation, setActivation] = useState(checkActivation());
 
-  const handleActivate = () => {
+  const handleActivate = async () => {
     if (!code.trim()) {
       setResult({ success: false, message: "请输入激活码" });
       return;
     }
-    const res = activateCode(code);
+    setResult({ success: false, message: "验证中..." });
+    const res = await activateCode(code);
     setResult(res);
     if (res.success) {
       setActivation(checkActivation());
