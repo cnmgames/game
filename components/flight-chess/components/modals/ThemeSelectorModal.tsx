@@ -1,6 +1,6 @@
 "use client";
 import { Theme } from '../../types';
-import { Check } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import { useEffect } from 'react';
 
 interface ThemeSelectorModalProps {
@@ -41,44 +41,60 @@ export function ThemeSelectorModal({
         right: 0,
         bottom: 0,
         zIndex: 99999,
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
         display: 'flex',
-        alignItems: 'flex-end',
+        alignItems: 'center',
         justifyContent: 'center',
-        padding: '0 16px'
+        padding: '16px'
       }}
     >
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
           width: '100%',
-          maxWidth: '448px',
+          maxWidth: '400px',
           backgroundColor: '#1C1C1E',
-          borderTopLeftRadius: '24px',
-          borderTopRightRadius: '24px',
+          borderRadius: '20px',
           padding: '20px',
-          paddingBottom: 'calc(20px + env(safe-area-inset-bottom))',
-          maxHeight: '70vh',
+          maxHeight: '75vh',
           display: 'flex',
           flexDirection: 'column',
-          borderTop: '1px solid rgba(255,255,255,0.1)',
-          animation: 'fcModalUp 0.3s ease-out'
+          border: '1px solid rgba(255,255,255,0.12)',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+          animation: 'fcModalFade 0.25s ease-out'
         }}
       >
         <div style={{
-          width: '40px',
-          height: '4px',
-          backgroundColor: 'rgba(255,255,255,0.3)',
-          borderRadius: '2px',
-          margin: '0 auto 16px'
-        }} />
-        <h3 style={{
-          fontSize: '18px',
-          fontWeight: 'bold',
-          color: 'white',
-          marginBottom: '16px',
-          textAlign: 'center'
-        }}>选择主题</h3>
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '16px'
+        }}>
+          <h3 style={{
+            fontSize: '18px',
+            fontWeight: 'bold',
+            color: 'white',
+            margin: 0
+          }}>选择主题</h3>
+          <button
+            onClick={onClose}
+            style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(255,255,255,0.1)',
+              border: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: 'rgba(255,255,255,0.6)',
+              padding: 0
+            }}
+          >
+            <X size={18} />
+          </button>
+        </div>
         <div style={{
           overflowY: 'auto',
           flex: 1,
@@ -104,22 +120,31 @@ export function ThemeSelectorModal({
                   alignItems: 'center',
                   cursor: 'pointer',
                   border: isSelected ? '2px solid rgba(10,132,255,0.6)' : '1px solid rgba(255,255,255,0.1)',
-                  touchAction: 'manipulation'
+                  touchAction: 'manipulation',
+                  textAlign: 'left'
                 }}
               >
                 <span style={{ color: 'white', fontWeight: 500, fontSize: '15px' }}>{theme.name}</span>
                 {isSelected && (
-                  <Check style={{ color: '#0A84FF' }} size={20} />
+                  <Check style={{ color: '#0A84FF', flexShrink: 0 }} size={20} />
                 )}
               </div>
             );
           })}
         </div>
+        <div style={{
+          marginTop: '12px',
+          textAlign: 'center',
+          fontSize: '12px',
+          color: 'rgba(255,255,255,0.4)'
+        }}>
+          点击空白处关闭
+        </div>
       </div>
       <style>{`
-        @keyframes fcModalUp {
-          from { transform: translateY(100%); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
+        @keyframes fcModalFade {
+          from { transform: scale(0.92); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
         }
       `}</style>
     </div>
