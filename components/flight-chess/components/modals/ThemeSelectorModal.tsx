@@ -1,3 +1,4 @@
+"use client";
 import { Theme } from '../../types';
 import { Check, X } from 'lucide-react';
 import { useEffect } from 'react';
@@ -29,16 +30,20 @@ export function ThemeSelectorModal({
     };
   }, [isOpen]);
 
-  if (!isOpen || typeof window === 'undefined') return null;
+  if (!isOpen || typeof document === 'undefined') return null;
 
-  const modalContent = (
-    <div className="fixed inset-0 z-[9999] flex items-end justify-center">
-      <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-md"
-        onClick={onClose}
-      />
-      <div className="relative w-full max-w-md bg-gradient-to-b from-[#2C2C2E] to-[#1C1C1E] rounded-t-[28px] p-5 pb-8 shadow-2xl border-t border-white/10 animate-slide-up">
-        <div className="w-10 h-1 bg-gray-500 rounded-full mx-auto mb-4" />
+  return createPortal(
+    <div 
+      className="fixed inset-0 z-[9999] flex items-end justify-center"
+      style={{ backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+      onClick={onClose}
+    >
+      <div 
+        className="w-full max-w-md bg-gradient-to-b from-[#2C2C2E] to-[#1C1C1E] rounded-t-[28px] p-5 pb-8 shadow-2xl border-t border-white/10"
+        style={{ animation: 'fcModalSlideUp 0.3s ease-out' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="w-10 h-1.5 bg-gray-500 rounded-full mx-auto mb-4" />
         <div className="flex justify-between items-center mb-5">
           <h3 className="text-xl font-bold text-white">选择主题</h3>
           <button
@@ -48,7 +53,7 @@ export function ThemeSelectorModal({
             <X size={18} />
           </button>
         </div>
-        <div className="flex flex-col gap-2 max-h-[55vh] overflow-y-auto no-scrollbar">
+        <div className="flex flex-col gap-2 max-h-[55vh] overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {themes.map(theme => {
             const isSelected = selectedThemeId === theme.id;
             return (
@@ -78,7 +83,7 @@ export function ThemeSelectorModal({
                   </div>
                 </div>
                 {isSelected && (
-                  <div className="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center">
+                  <div className="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center shrink-0">
                     <Check className="text-white" size={16} />
                   </div>
                 )}
@@ -87,8 +92,13 @@ export function ThemeSelectorModal({
           })}
         </div>
       </div>
-    </div>
+      <style jsx>{`
+        @keyframes fcModalSlideUp {
+          from { transform: translateY(100%); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+      `}</style>
+    </div>,
+    document.body
   );
-
-  return createPortal(modalContent, document.body);
 }
