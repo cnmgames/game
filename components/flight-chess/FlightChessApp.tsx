@@ -101,19 +101,19 @@ export default function FlightChessApp() {
       </div>
 
       <div className="relative z-10 w-full max-w-md min-h-screen flex flex-col bg-black/20 mx-auto">
-        <header className="pt-4 pb-2 px-4 shrink-0 flex justify-between items-center">
-          <a href="/" className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-zinc-900/80 px-3 py-1.5 text-xs text-white/80 backdrop-blur transition hover:border-white/25 hover:bg-zinc-800/80 hover:text-white">
+        <header className="pt-10 pb-3 px-4 shrink-0 flex justify-between items-center">
+          <a href="/" className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-zinc-900/80 px-3 py-1.5 text-xs text-white/80 backdrop-blur transition hover:border-white/25 hover:bg-zinc-800/80 hover:text-white z-10">
             ← 返回
           </a>
           <div className="text-right">
             <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">
               Couple's Game
             </div>
-            <h1 className="text-xl font-bold text-white tracking-tight">情侣飞行棋Pro</h1>
+            <h1 className="text-lg font-bold text-white tracking-tight">情侣飞行棋Pro</h1>
           </div>
         </header>
 
-        <main className="flex-1 min-h-0 overflow-auto px-4 py-4">
+        <main className="flex-1 overflow-auto px-4 py-2">
           {state.view === 'home' && (
             <HomeView
               players={state.players}
