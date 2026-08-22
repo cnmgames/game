@@ -103,9 +103,6 @@ export function ThemeEditorModal({
         }}
       />
       <div
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
         style={{
           position: 'absolute',
           bottom: 0,
@@ -122,13 +119,27 @@ export function ThemeEditorModal({
           flexDirection: 'column'
         }}
       >
-        <div style={{
-          width: '48px',
-          height: '4px',
-          backgroundColor: 'rgba(255,255,255,0.3)',
-          borderRadius: '2px',
-          margin: '0 auto 24px'
-        }} />
+        <div
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          style={{
+            width: '100%',
+            paddingTop: '8px',
+            paddingBottom: '16px',
+            display: 'flex',
+            justifyContent: 'center',
+            cursor: 'grab',
+            touchAction: 'none'
+          }}
+        >
+          <div style={{
+            width: '48px',
+            height: '4px',
+            backgroundColor: 'rgba(255,255,255,0.3)',
+            borderRadius: '2px'
+          }} />
+        </div>
         <div className="flex justify-between items-center mb-5">
           <h3 className="text-xl font-bold text-white">编辑主题</h3>
           <button
