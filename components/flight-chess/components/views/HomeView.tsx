@@ -57,12 +57,55 @@ export function HomeView({ players, themes, onSelectTheme, onStartGame }: HomeVi
       </div>
 
       <button
-        className="w-full h-12 bg-white rounded-full text-black font-semibold text-base shadow-lg flex items-center justify-center gap-2 mt-2 active:scale-[0.98] transition-transform"
+        style={{
+          width: '70%',
+          height: '52px',
+          backgroundColor: 'white',
+          borderRadius: '999px',
+          color: 'black',
+          fontWeight: 600,
+          fontSize: '16px',
+          boxShadow: '0 4px 20px rgba(255,255,255,0.2)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '8px',
+          marginTop: '8px',
+          border: 'none',
+          cursor: 'pointer'
+        }}
         onClick={onStartGame}
       >
         <span>开始游戏</span>
         <ChevronRight size={18} />
       </button>
+
+      <div style={{
+        marginTop: '24px',
+        textAlign: 'center',
+        padding: '16px 20px',
+        background: 'linear-gradient(135deg, rgba(255,55,95,0.1) 0%, rgba(191,90,242,0.1) 100%)',
+        borderRadius: '16px',
+        border: '1px solid rgba(255,255,255,0.08)'
+      }}>
+        <div style={{
+          fontSize: '14px',
+          fontWeight: 600,
+          background: 'linear-gradient(90deg, #FF375F, #BF5AF2)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          marginBottom: '6px'
+        }}>
+          💕 玩的愉快 💕
+        </div>
+        <div style={{
+          fontSize: '12px',
+          color: 'rgba(255,255,255,0.5)',
+          lineHeight: 1.5
+        }}>
+          愿你们在游戏中升温感情，留下甜蜜回忆
+        </div>
+      </div>
     </div>
   );
 }
