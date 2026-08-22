@@ -94,29 +94,27 @@ export default function FlightChessApp() {
   };
 
   return (
-    <div className="flight-chess-app h-screen w-screen overflow-hidden flex justify-center bg-black">
-      <div className="fixed inset-0 z-0">
+    <div className="flight-chess-app min-h-screen w-full bg-black text-white overflow-x-hidden">
+      <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="w-full h-full bg-gradient-to-br from-gray-900 via-black to-gray-900 opacity-60" />
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
       </div>
 
-      <div className="relative z-10 w-full max-w-[430px] h-full flex flex-col bg-black/20">
-        <header className="pt-12 pb-2 px-6 shrink-0 flex justify-between items-start relative">
-          <a href="/" className="absolute left-4 top-4 z-20 inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/50 px-3 py-1.5 text-xs text-white/80 backdrop-blur transition hover:border-white/25 hover:bg-black/70 hover:text-white">
+      <div className="relative z-10 w-full max-w-md mx-auto min-h-screen flex flex-col bg-black/30">
+        <header className="pt-6 pb-4 px-5 shrink-0 flex items-center justify-between gap-3">
+          <a href="/" className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/50 px-3 py-1.5 text-xs text-white/80 backdrop-blur transition hover:border-white/25 hover:bg-black/70 hover:text-white shrink-0">
             ← 返回
           </a>
-          
-          <div>
-            <div className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-1">
+          <div className="text-center flex-1 min-w-0">
+            <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-0.5">
               Couple's Game
             </div>
-            <h1 className="text-3xl font-bold text-white tracking-tight">情侣飞行棋</h1>
+            <h1 className="text-xl font-bold text-white tracking-tight truncate">情侣飞行棋Pro</h1>
           </div>
-          <div className="flex flex-col items-end gap-2 mt-1">
-          </div>
+          <div className="w-16 shrink-0"></div>
         </header>
 
-        <main className="flex-1 min-h-0 overflow-auto px-6 pt-6 pb-6">
+        <main className="flex-1 overflow-auto px-5 py-4">
           {state.view === 'home' && (
             <HomeView
               players={state.players}
