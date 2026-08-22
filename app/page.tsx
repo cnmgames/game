@@ -188,6 +188,28 @@ export default function Home() {
           </a>
         </div>
 
+        {/* 清理缓存按钮 */}
+        <div className="flex justify-center">
+          <button
+            onClick={() => {
+              if (confirm('确定要清理所有本地缓存吗？这将清除游戏进度和激活状态。')) {
+                localStorage.clear();
+                sessionStorage.clear();
+                if (window.caches) {
+                  caches.keys().then(keys => {
+                    keys.forEach(key => caches.delete(key));
+                  });
+                }
+                alert('缓存已清理，页面即将刷新');
+                setTimeout(() => window.location.reload(), 500);
+              }
+            }}
+            className="rounded-full border border-white/20 bg-white/5 px-5 py-2 text-xs text-white/60 hover:bg-white/10 hover:text-white/80 transition"
+          >
+            🗑️ 清理缓存
+          </button>
+        </div>
+
         {/* 底部声明 */}
         <div className="footer-card">
           <p>请在充分沟通界限的前提下玩乐，确保每一步都建立在积极同意之上。</p>

@@ -1,5 +1,5 @@
 import { Theme } from '../../types';
-import { Check } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import { useEffect } from 'react';
 
 interface ThemeSelectorModalProps {
@@ -31,32 +31,59 @@ export function ThemeSelectorModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100]">
+    <div className="fixed inset-0 z-[200] flex items-end justify-center">
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+        className="absolute inset-0 bg-black/70 backdrop-blur-md"
         onClick={onClose}
       />
-      <div className="absolute bottom-0 left-0 right-0 bg-[#1C1C1E] rounded-t-[32px] p-6 transform transition-transform duration-300">
-        <div className="w-12 h-1 bg-gray-600 rounded-full mx-auto mb-6" />
-        <div className="flex justify-between items-center mb-6">
+      <div className="relative w-full max-w-md bg-gradient-to-b from-[#2C2C2E] to-[#1C1C1E] rounded-t-[28px] p-5 pb-8 shadow-2xl border-t border-white/10 animate-slide-up">
+        <div className="w-10 h-1 bg-gray-500 rounded-full mx-auto mb-4" />
+        <div className="flex justify-between items-center mb-5">
           <h3 className="text-xl font-bold text-white">选择主题</h3>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/20 transition-colors"
+          >
+            <X size={18} />
+          </button>
         </div>
-        <div className="space-y-2 max-h-[50vh] overflow-y-auto no-scrollbar pb-8">
-          {themes.map(theme => (
-            <div
-              key={theme.id}
-              onClick={() => {
-                onSelect(theme.id);
-                onClose();
-              }}
-              className="p-4 bg-[#2C2C2E] rounded-xl flex justify-between items-center active:bg-[#3A3A3C] transition-colors cursor-pointer"
-            >
-              <span className="text-white font-medium">{theme.name}</span>
-              {selectedThemeId === theme.id && (
-                <Check className="text-[#0A84FF]" size={20} />
-              )}
-            </div>
-          ))}
+        <div className="flex flex-col gap-2 max-h-[55vh] overflow-y-auto no-scrollbar">
+          {themes.map(theme => {
+            const isSelected = selectedThemeId === theme.id;
+            return (
+              <div
+                key={theme.id}
+                onClick={() => {
+                  onSelect(theme.id);
+                  onClose();
+                }}
+                className={`p-4 rounded-2xl flex justify-between items-center cursor-pointer transition-all active:scale-[0.98] ${
+                  isSelected
+                    ? 'bg-gradient-to-r from-blue-500/20 to-pink-500/20 border-2 border-blue-400/50'
+                    : 'bg-white/5 border border-white/10 hover:bg-white/10'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                    isSelected ? 'bg-blue-500/30' : 'bg-white/10'
+                  }`}>
+                    <span className="text-lg">🎯</span>
+                  </div>
+                  <div>
+                    <div className="text-white font-semibold">{theme.name}</div>
+                    <div className="text-xs text-gray-400 mt-0.5">
+                      {theme.tasks?.length || 0} 个任务
+                    </div>
+                  </div>
+                </div>
+                {isSelected && (
+                  <div className="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center">
+                    <Check className="text-white" size={16} />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

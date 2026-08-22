@@ -213,3 +213,25 @@
 .flight-chess-app .flip-card-inner.flipped {
   transform: rotateY(180deg);
 }
+
+/* 弹窗动画 */
+.flight-chess-app .animate-slide-up {
+  animation: fc-slide-up 0.3s ease-out;
+}
+@keyframes fc-slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.flight-chess-app .no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.flight-chess-app .no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

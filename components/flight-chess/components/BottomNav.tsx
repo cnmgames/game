@@ -10,7 +10,7 @@ export function BottomNav({ activeView, onNavigate }: BottomNavProps) {
   const isThemesActive = activeView === 'themes';
 
   return (
-    <nav className="h-16 ios-glass border-t border-white/10 flex items-center justify-around px-4 shrink-0 z-50 pb-1">
+    <nav className="ios-glass border-t border-white/10 flex items-center justify-around px-4 shrink-0 z-50 pt-2 pb-[max(8px,env(safe-area-inset-bottom))]">
       <button
         className={`flex flex-col items-center gap-1 px-8 py-1.5 rounded-xl transition-all ${
           isGameActive
