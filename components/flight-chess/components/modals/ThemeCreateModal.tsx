@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Theme } from '../../types';
+import { X } from 'lucide-react';
 
 interface ThemeCreateModalProps {
   isOpen: boolean;
@@ -43,49 +44,147 @@ export function ThemeCreateModal({ isOpen, onClose, onCreate }: ThemeCreateModal
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[99999]">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="absolute bottom-0 left-0 right-0 bg-[#1C1C1E] rounded-t-[32px] p-6">
-        <div className="w-12 h-1 bg-gray-600 rounded-full mx-auto mb-6" />
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-bold text-white">新建主题</h3>
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 999999
+    }}>
+      <div
+        onClick={onClose}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.7)',
+          backdropFilter: 'blur(4px)',
+          WebkitBackdropFilter: 'blur(4px)'
+        }}
+      />
+      <div style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: '#1C1C1E',
+        borderTopLeftRadius: '24px',
+        borderTopRightRadius: '24px',
+        padding: '20px',
+        maxHeight: '85vh',
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
+        <div style={{
+          width: '40px',
+          height: '4px',
+          backgroundColor: 'rgba(255,255,255,0.3)',
+          borderRadius: '2px',
+          margin: '0 auto 16px'
+        }} />
+
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '20px'
+        }}>
+          <h3 style={{
+            fontSize: '18px',
+            fontWeight: 'bold',
+            color: 'white',
+            margin: 0
+          }}>新建主题</h3>
+          <button
+            onClick={onClose}
+            style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(255,255,255,0.1)',
+              border: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer'
+            }}
+          >
+            <X size={16} color="white" />
+          </button>
         </div>
 
-        <div className="space-y-4 pb-8">
-          <div className="space-y-2">
-            <div className="text-xs text-gray-400">主题名称</div>
+        <div style={{
+          flex: 1,
+          overflowY: 'auto',
+          paddingBottom: '16px'
+        }}>
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', marginBottom: '8px' }}>主题名称</div>
             <input
               value={name}
               onChange={e => setName(e.target.value)}
-              className="w-full h-11 px-4 rounded-xl bg-[#2C2C2E] text-white outline-none border border-white/5 focus:border-white/20"
+              style={{
+                width: '100%',
+                height: '44px',
+                paddingLeft: '14px',
+                paddingRight: '14px',
+                borderRadius: '10px',
+                backgroundColor: '#2C2C2E',
+                color: 'white',
+                outline: 'none',
+                border: '1px solid rgba(255,255,255,0.05)',
+                fontSize: '14px',
+                boxSizing: 'border-box'
+              }}
               placeholder="例如：甜蜜互动"
               maxLength={24}
             />
           </div>
 
-          <div className="space-y-2">
-            <div className="text-xs text-gray-400">描述（可选）</div>
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', marginBottom: '8px' }}>描述（可选）</div>
             <input
               value={desc}
               onChange={e => setDesc(e.target.value)}
-              className="w-full h-11 px-4 rounded-xl bg-[#2C2C2E] text-white outline-none border border-white/5 focus:border-white/20"
+              style={{
+                width: '100%',
+                height: '44px',
+                paddingLeft: '14px',
+                paddingRight: '14px',
+                borderRadius: '10px',
+                backgroundColor: '#2C2C2E',
+                color: 'white',
+                outline: 'none',
+                border: '1px solid rgba(255,255,255,0.05)',
+                fontSize: '14px',
+                boxSizing: 'border-box'
+              }}
               placeholder="例如：日常小甜饼、轻量互动"
               maxLength={60}
             />
           </div>
 
-          <div className="space-y-2">
-            <div className="text-xs text-gray-400">适用对象</div>
-            <div className="grid grid-cols-3 gap-2">
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', marginBottom: '8px' }}>适用对象</div>
+            <div style={{ display: 'flex', gap: '8px' }}>
               {audienceOptions.map(opt => (
                 <button
                   key={opt.value}
-                  className={`h-10 rounded-xl text-sm font-semibold ios-btn border ${
-                    audience === opt.value
-                      ? 'bg-white text-black border-white'
-                      : 'bg-[#2C2C2E] text-gray-200 border-white/5'
-                  }`}
                   onClick={() => setAudience(opt.value)}
+                  style={{
+                    flex: 1,
+                    height: '40px',
+                    borderRadius: '10px',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    border: 'none',
+                    cursor: 'pointer',
+                    backgroundColor: audience === opt.value ? 'white' : '#2C2C2E',
+                    color: audience === opt.value ? 'black' : 'rgba(255,255,255,0.7)'
+                  }}
                 >
                   {opt.label}
                 </button>
@@ -93,32 +192,52 @@ export function ThemeCreateModal({ isOpen, onClose, onCreate }: ThemeCreateModal
             </div>
           </div>
 
-          {error && <div className="text-sm text-[#FF453A]">{error}</div>}
+          {error && <div style={{ fontSize: '13px', color: '#FF453A', marginBottom: '12px' }}>{error}</div>}
+        </div>
 
-          <div className="flex gap-3 pt-2">
-            <button
-              className="flex-1 h-12 rounded-full bg-[#3A3A3C] text-gray-200 font-bold text-sm ios-btn"
-              onClick={onClose}
-            >
-              取消
-            </button>
-            <button
-              className="flex-1 h-12 rounded-full bg-gradient-to-r from-[#0A84FF] to-[#007AFF] text-white font-bold text-sm ios-btn shadow-lg disabled:opacity-40"
-              disabled={!canSubmit}
-              onClick={() => {
-                if (!name.trim()) {
-                  setError('请输入主题名称');
-                  return;
-                }
-                onCreate({ name: name.trim(), desc: desc.trim(), audience });
-              }}
-            >
-              创建并编辑
-            </button>
-          </div>
+        <div style={{ display: 'flex', gap: '12px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          <button
+            onClick={onClose}
+            style={{
+              flex: 1,
+              height: '44px',
+              borderRadius: '999px',
+              backgroundColor: '#3A3A3C',
+              color: 'rgba(255,255,255,0.8)',
+              fontSize: '14px',
+              fontWeight: 'bold',
+              border: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            取消
+          </button>
+          <button
+            disabled={!canSubmit}
+            onClick={() => {
+              if (!name.trim()) {
+                setError('请输入主题名称');
+                return;
+              }
+              onCreate({ name: name.trim(), desc: desc.trim(), audience });
+            }}
+            style={{
+              flex: 1,
+              height: '44px',
+              borderRadius: '999px',
+              background: canSubmit ? 'linear-gradient(90deg, #0A84FF, #007AFF)' : '#3A3A3C',
+              color: 'white',
+              fontSize: '14px',
+              fontWeight: 'bold',
+              border: 'none',
+              cursor: canSubmit ? 'pointer' : 'not-allowed',
+              opacity: canSubmit ? 1 : 0.5
+            }}
+          >
+            创建并编辑
+          </button>
         </div>
       </div>
     </div>
   );
 }
-
