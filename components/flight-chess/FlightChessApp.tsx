@@ -10,8 +10,8 @@ import { TaskCardModal } from './components/modals/TaskCardModal';
 import { WinModal } from './components/modals/WinModal';
 import { BottomNav } from './components/BottomNav';
 import { ThemeCreateModal } from './components/modals/ThemeCreateModal';
+import { ThemesView } from './components/views/ThemesView';
 import { ThemeEditorModal } from './components/modals/ThemeEditorModal';
-import { ThemesModal } from './components/modals/ThemesModal';
 import { AiImportModal } from './components/modals/AiImportModal';
 
 export default function FlightChessApp() {
@@ -40,7 +40,6 @@ export default function FlightChessApp() {
   const [isCreateThemeModalOpen, setIsCreateThemeModalOpen] = useState(false);
   const [editingThemeId, setEditingThemeId] = useState<string | null>(null);
   const [aiImportThemeId, setAiImportThemeId] = useState<string | null>(null);
-  const [isThemesModalOpen, setIsThemesModalOpen] = useState(false);
 
   const handleSelectTheme = (playerId: number) => {
     setSelectedPlayerId(playerId);
@@ -84,11 +83,7 @@ export default function FlightChessApp() {
   };
 
   const handleNavigate = (view: 'home' | 'themes') => {
-    if (view === 'themes') {
-      setIsThemesModalOpen(true);
-    } else {
-      switchView(view);
-    }
+    switchView(view);
   };
 
   const handleBackFromGame = () => {
@@ -160,19 +155,6 @@ export default function FlightChessApp() {
         }}
       />
 
-      <ThemesModal
-        isOpen={isThemesModalOpen}
-        themes={state.themes}
-        onCreateTheme={() => {
-          setIsThemesModalOpen(false);
-          setIsCreateThemeModalOpen(true);
-        }}
-        onEditTheme={themeId => {
-          setIsThemesModalOpen(false);
-          setEditingThemeId(themeId);
-        }}
-        onClose={() => setIsThemesModalOpen(false)}
-      />
 
       <ThemeCreateModal
         isOpen={isCreateThemeModalOpen}

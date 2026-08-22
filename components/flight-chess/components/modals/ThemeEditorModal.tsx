@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Plus, Trash2, Wand2 } from 'lucide-react';
 import { Theme } from '../../types';
 
@@ -31,6 +31,9 @@ export function ThemeEditorModal({
   const [desc, setDesc] = useState('');
   const [audience, setAudience] = useState<Theme['audience']>('common');
   const [taskText, setTaskText] = useState('');
+  const [dragY, setDragY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const startYRef = useRef(0);
 
   useEffect(() => {
     if (!isOpen || !theme) return;
@@ -51,6 +54,28 @@ export function ThemeEditorModal({
     };
   }, [isOpen]);
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    startYRef.current = e.touches[0].clientY;
+    setIsDragging(true);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging) return;
+    const deltaY = e.touches[0].clientY - startYRef.current;
+    if (deltaY > 0) {
+      setDragY(deltaY);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (dragY > 100) {
+      onClose();
+    } else {
+      setDragY(0);
+    }
+    setIsDragging(false);
+  };
+
   const canSave = useMemo(() => name.trim().length > 0, [name]);
 
   if (!isOpen || !theme) return null;
@@ -58,8 +83,33 @@ export function ThemeEditorModal({
   return (
     <div className="fixed inset-0 z-[99999]">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="absolute bottom-0 left-0 right-0 bg-[#1C1C1E] rounded-t-[32px] p-6">
-        <div className="w-12 h-1 bg-gray-600 rounded-full mx-auto mb-6" />
+      <div
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: '#1C1C1E',
+          borderTopLeftRadius: '32px',
+          borderTopRightRadius: '32px',
+          padding: '24px',
+          transform: `translateY(${dragY}px)`,
+          transition: isDragging ? 'none' : 'transform 0.3s ease',
+          maxHeight: '85vh',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
+        <div style={{
+          width: '48px',
+          height: '4px',
+          backgroundColor: 'rgba(255,255,255,0.3)',
+          borderRadius: '2px',
+          margin: '0 auto 24px'
+        }} />
         <div className="flex justify-between items-center mb-5">
           <h3 className="text-xl font-bold text-white">编辑主题</h3>
           <button
@@ -74,7 +124,7 @@ export function ThemeEditorModal({
           </button>
         </div>
 
-        <div className="space-y-4 max-h-[70vh] overflow-y-auto no-scrollbar pb-10">
+        <div style={{ flex: 1, overflowY: "auto", paddingBottom: "20px" }} className="space-y-4">
           <div className="space-y-2">
             <div className="text-xs text-gray-400">主题名称</div>
             <input
