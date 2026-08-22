@@ -94,14 +94,14 @@ export function GameView({
   const turnNumber = Math.floor(Math.max(...players.map(p => p.step)) / 4) + 1;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black flex flex-col">
+    <div className="absolute inset-0 z-50 bg-black flex flex-col">
       <div className="absolute inset-0 z-0">
         <div className="w-full h-full bg-gradient-to-br from-gray-900 via-black to-gray-900 opacity-60" />
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
       </div>
 
       <div className="relative z-10 flex flex-col h-full max-w-[430px] mx-auto w-full">
-        <header className="pt-12 pb-2 px-4 flex items-center gap-4 shrink-0">
+        <header className="pt-4 pb-2 px-4 flex items-center gap-4 shrink-0">
           <button
             onClick={onBack}
             className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center ios-btn border border-white/5"
@@ -147,9 +147,9 @@ export function GameView({
           />
         </div>
 
-        <div className="h-[260px] w-full ios-glass rounded-t-[32px] flex flex-col items-center pt-8 pb-8 px-6 border-t border-white/10 shadow-2xl shrink-0">
+        <div className="h-[220px] w-full ios-glass rounded-t-[32px] flex flex-col items-center pt-6 pb-6 px-6 border-t border-white/10 shadow-2xl shrink-0">
           <div
-            className={`text-sm font-medium mb-6 text-center animate-pulse ${
+            className={`text-sm font-medium mb-4 text-center animate-pulse ${
               currentTurn === 0 ? 'text-[#0A84FF]' : 'text-[#FF375F]'
             }`}
           >

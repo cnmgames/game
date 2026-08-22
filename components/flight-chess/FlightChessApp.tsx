@@ -94,7 +94,7 @@ export default function FlightChessApp() {
   };
 
   return (
-    <div className="flight-chess-app min-h-screen w-full bg-black text-white overflow-x-hidden">
+    <div className="flight-chess-app relative min-h-screen w-full bg-black text-white overflow-x-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="w-full h-full bg-gradient-to-br from-gray-900 via-black to-gray-900 opacity-60" />
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
