@@ -43,7 +43,7 @@ export function ThemeCreateModal({ isOpen, onClose, onCreate }: ThemeCreateModal
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[120]">
+    <div className="fixed inset-0 z-[99999]">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       <div className="absolute bottom-0 left-0 right-0 bg-[#1C1C1E] rounded-t-[32px] p-6">
         <div className="w-12 h-1 bg-gray-600 rounded-full mx-auto mb-6" />

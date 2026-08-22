@@ -44,10 +44,10 @@ export function generateBoardMap(): TileType[] {
     [availableIndices[i], availableIndices[j]] = [availableIndices[j], availableIndices[i]];
   }
 
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 20; i++) {
     boardMap[availableIndices[i]] = 'lucky';
   }
-  for (let i = 16; i < 32; i++) {
+  for (let i = 20; i < 40; i++) {
     boardMap[availableIndices[i]] = 'trap';
   }
 

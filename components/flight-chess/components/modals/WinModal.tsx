@@ -8,7 +8,7 @@ export function WinModal({ isOpen, winnerName, onRestart }: WinModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/95">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/95">
       <div className="text-center animate-pulse">
         <div className="text-7xl mb-6">👑</div>
         <h2 className="text-5xl font-bold text-white mb-2">{winnerName}</h2>
