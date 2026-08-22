@@ -94,13 +94,13 @@ export default function FlightChessApp() {
   };
 
   return (
-    <div className="flight-chess-app min-h-screen w-full bg-black text-white overflow-auto flex justify-center">
+    <div className="flight-chess-app min-h-screen w-full bg-black text-white overflow-x-hidden overflow-y-auto flex justify-center">
       <div className="fixed inset-0 z-0">
         <div className="w-full h-full bg-gradient-to-br from-gray-900 via-black to-gray-900 opacity-60" />
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
       </div>
 
-      <div className="relative z-10 w-full max-w-[430px] min-h-screen flex flex-col bg-black/20">
+      <div className="relative z-10 w-full max-w-md min-h-screen flex flex-col bg-black/20 mx-auto">
         <header className="pt-12 pb-2 px-6 shrink-0 flex justify-between items-start">
           <div>
             <div className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-1">
