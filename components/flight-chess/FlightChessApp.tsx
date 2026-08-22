@@ -116,35 +116,22 @@ export default function FlightChessApp() {
           </div>
         </header>
 
-        <main className="flex-1 min-h-0 relative overflow-hidden">
-          <div
-            className={`absolute inset-0 flex flex-col px-6 pt-10 pb-10 transition-all duration-500 ease-in-out ${
-              state.view === 'home'
-                ? 'translate-x-0 opacity-100'
-                : 'opacity-0 pointer-events-none -translate-x-full'
-            }`}
-          >
+        <main className="flex-1 min-h-0 overflow-auto px-6 pt-6 pb-6">
+          {state.view === 'home' && (
             <HomeView
               players={state.players}
               themes={state.themes}
               onSelectTheme={handleSelectTheme}
               onStartGame={handleStartGame}
             />
-          </div>
-
-          <div
-            className={`absolute inset-0 flex flex-col min-h-0 px-6 pt-4 transition-all duration-500 ease-in-out ${
-              state.view === 'themes'
-                ? 'translate-x-0 opacity-100'
-                : 'opacity-0 pointer-events-none translate-x-full'
-            }`}
-          >
+          )}
+          {state.view === 'themes' && (
             <ThemesView
               themes={state.themes}
               onCreateTheme={() => setIsCreateThemeModalOpen(true)}
               onEditTheme={themeId => setEditingThemeId(themeId)}
             />
-          </div>
+          )}
         </main>
 
         <BottomNav activeView={state.view} onNavigate={handleNavigate} />
