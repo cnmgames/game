@@ -12,41 +12,135 @@ const audienceLabel: Record<Theme['audience'], string> = {
   female: '仅女方'
 };
 
+const themeColors = [
+  { bg: 'rgba(255,55,95,0.1)', border: 'rgba(255,55,95,0.3)', icon: '💕' },
+  { bg: 'rgba(255,159,10,0.1)', border: 'rgba(255,159,10,0.3)', icon: '🔥' },
+  { bg: 'rgba(191,90,242,0.1)', border: 'rgba(191,90,242,0.3)', icon: '💜' },
+  { bg: 'rgba(10,132,255,0.1)', border: 'rgba(10,132,255,0.3)', icon: '💙' },
+  { bg: 'rgba(48,209,88,0.1)', border: 'rgba(48,209,88,0.3)', icon: '💚' },
+];
+
 export function ThemesView({ themes, onCreateTheme, onEditTheme }: ThemesViewProps) {
   return (
-    <div className="flex-1 min-h-0 flex flex-col overflow-y-auto no-scrollbar pb-24">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-white">任务主题库</h2>
+    <div style={{
+      flex: 1,
+      minHeight: 0,
+      display: 'flex',
+      flexDirection: 'column',
+      overflowY: 'auto',
+      paddingBottom: '24px'
+    }}>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: '20px'
+      }}>
+        <h2 style={{
+          fontSize: '24px',
+          fontWeight: 'bold',
+          color: 'white',
+          margin: 0
+        }}>任务主题库</h2>
         <button
-          className="h-9 px-4 rounded-full bg-white text-black text-sm font-semibold ios-btn"
+          style={{
+            height: '36px',
+            paddingLeft: '16px',
+            paddingRight: '16px',
+            borderRadius: '999px',
+            backgroundColor: 'white',
+            color: 'black',
+            fontSize: '14px',
+            fontWeight: 600,
+            border: 'none',
+            cursor: 'pointer'
+          }}
           onClick={onCreateTheme}
         >
           新建主题
         </button>
       </div>
-      <div className="space-y-3">
-        {themes.map(theme => (
-          <div
-            key={theme.id}
-            className="ios-card p-4 border border-white/5 ios-btn cursor-pointer"
-            onClick={() => onEditTheme(theme.id)}
-          >
-            <div className="flex justify-between items-start">
-              <div>
-                <div className="text-white font-semibold">{theme.name}</div>
-                <div className="text-xs text-gray-500 mt-1">{theme.desc}</div>
-                <div className="mt-2 inline-flex items-center gap-2">
-                  <div className="bg-white/10 px-2 py-1 rounded text-[10px] text-gray-300">
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px'
+      }}>
+        {themes.map((theme, idx) => {
+          const color = themeColors[idx % themeColors.length];
+          return (
+            <div
+              key={theme.id}
+              onClick={() => onEditTheme(theme.id)}
+              style={{
+                backgroundColor: '#1C1C1E',
+                borderRadius: '16px',
+                padding: '16px',
+                border: `1px solid ${color.border}`,
+                cursor: 'pointer',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                gap: '12px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+              }}
+            >
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '6px'
+                }}>
+                  <span style={{ fontSize: '18px' }}>{color.icon}</span>
+                  <div style={{
+                    fontSize: '16px',
+                    fontWeight: 600,
+                    color: 'white'
+                  }}>{theme.name}</div>
+                </div>
+                <div style={{
+                  fontSize: '12px',
+                  color: 'rgba(255,255,255,0.5)',
+                  marginTop: '4px',
+                  lineHeight: 1.4
+                }}>{theme.desc}</div>
+                <div style={{
+                  marginTop: '8px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}>
+                  <div style={{
+                    backgroundColor: color.bg,
+                    paddingLeft: '8px',
+                    paddingRight: '8px',
+                    paddingTop: '4px',
+                    paddingBottom: '4px',
+                    borderRadius: '6px',
+                    fontSize: '10px',
+                    color: 'rgba(255,255,255,0.7)'
+                  }}>
                     {audienceLabel[theme.audience]}
                   </div>
                 </div>
               </div>
-              <div className="bg-white/10 px-2 py-1 rounded text-[10px] text-gray-300">
+              <div style={{
+                backgroundColor: color.bg,
+                paddingLeft: '8px',
+                paddingRight: '8px',
+                paddingTop: '4px',
+                paddingBottom: '4px',
+                borderRadius: '6px',
+                fontSize: '12px',
+                color: 'rgba(255,255,255,0.8)',
+                fontWeight: 600,
+                flexShrink: 0
+              }}>
                 {theme.tasks.length}卡
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
