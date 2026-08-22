@@ -103,7 +103,6 @@ export default function FlightChessApp() {
       </div>
 
       <div className="relative z-10 w-full max-w-md mx-auto min-h-screen flex flex-col bg-black">
-        {state.view !== 'themes' && (
         <header className="pt-6 pb-4 px-5 shrink-0 flex items-center justify-between gap-3">
           <a href="/" className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/50 px-3 py-1.5 text-xs text-white/80 backdrop-blur transition hover:border-white/25 hover:bg-black/70 hover:text-white shrink-0">
             ← 返回
@@ -139,7 +138,6 @@ export default function FlightChessApp() {
           )}
           {state.view === 'game' && <div style={{ width: '64px', flexShrink: 0 }} />}
         </header>
-        )}
 
         <main className="flex-1 overflow-auto px-5 py-4">
           {state.view === 'home' && (

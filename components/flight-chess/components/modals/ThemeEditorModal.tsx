@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Plus, Trash2, Wand2 } from 'lucide-react';
 import { Theme } from '../../types';
 
@@ -31,9 +31,6 @@ export function ThemeEditorModal({
   const [desc, setDesc] = useState('');
   const [audience, setAudience] = useState<Theme['audience']>('common');
   const [taskText, setTaskText] = useState('');
-  const [dragY, setDragY] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const startYRef = useRef(0);
 
   useEffect(() => {
     if (!isOpen || !theme) return;
@@ -53,28 +50,6 @@ export function ThemeEditorModal({
       document.body.style.overflow = '';
     };
   }, [isOpen]);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    startYRef.current = e.touches[0].clientY;
-    setIsDragging(true);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging) return;
-    const deltaY = e.touches[0].clientY - startYRef.current;
-    if (deltaY > 0) {
-      setDragY(deltaY);
-    }
-  };
-
-  const handleTouchEnd = () => {
-    if (dragY > 100) {
-      onClose();
-    } else {
-      setDragY(0);
-    }
-    setIsDragging(false);
-  };
 
   const canSave = useMemo(() => name.trim().length > 0, [name]);
 
@@ -112,34 +87,18 @@ export function ThemeEditorModal({
           borderTopLeftRadius: '32px',
           borderTopRightRadius: '32px',
           padding: '24px',
-          transform: `translateY(${dragY}px)`,
-          transition: isDragging ? 'none' : 'transform 0.3s ease',
           maxHeight: '85vh',
           display: 'flex',
           flexDirection: 'column'
         }}
       >
-        <div
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          style={{
-            width: '100%',
-            paddingTop: '8px',
-            paddingBottom: '16px',
-            display: 'flex',
-            justifyContent: 'center',
-            cursor: 'grab',
-            touchAction: 'none'
-          }}
-        >
-          <div style={{
-            width: '48px',
-            height: '4px',
-            backgroundColor: 'rgba(255,255,255,0.3)',
-            borderRadius: '2px'
-          }} />
-        </div>
+        <div style={{
+          width: '48px',
+          height: '4px',
+          backgroundColor: 'rgba(255,255,255,0.3)',
+          borderRadius: '2px',
+          margin: '0 auto 24px'
+        }} />
         <div className="flex justify-between items-center mb-5">
           <h3 className="text-xl font-bold text-white">编辑主题</h3>
           <button

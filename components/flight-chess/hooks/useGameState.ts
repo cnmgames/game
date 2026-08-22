@@ -89,7 +89,7 @@ function normalizeGameState(saved: unknown): GameState | null {
   });
 
   return {
-    view: s.view === 'home' || s.view === 'game' || s.view === 'themes' ? s.view : 'home',
+    view: 'home',
     turn: s.turn === 0 || s.turn === 1 ? s.turn : 0,
     players,
     themes,
