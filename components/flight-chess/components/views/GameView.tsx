@@ -1,3 +1,4 @@
+"use client";
 import { useState, useCallback } from 'react';
 import { Player, PathCoord, TileType, TaskEventData } from '../../types';
 import { GameBoard } from '../GameBoard';
@@ -94,51 +95,134 @@ export function GameView({
   const turnNumber = Math.floor(Math.max(...players.map(p => p.step)) / 4) + 1;
 
   return (
-    <div className="absolute inset-0 z-50 bg-black flex flex-col">
-      <div className="absolute inset-0 z-0">
-        <div className="w-full h-full bg-gradient-to-br from-gray-900 via-black to-gray-900 opacity-60" />
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
-      </div>
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 9999,
+      backgroundColor: '#000000',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'linear-gradient(135deg, #1a1a1a 0%, #000000 50%, #1a1a1a 100%)',
+        opacity: 0.6
+      }} />
 
-      <div className="relative z-10 flex flex-col h-full max-w-[430px] mx-auto w-full">
-        <header className="pt-4 pb-2 px-4 flex items-center gap-4 shrink-0">
+      <div style={{
+        position: 'relative',
+        zIndex: 10,
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        width: '100%',
+        maxWidth: '430px',
+        margin: '0 auto'
+      }}>
+        <div style={{
+          paddingTop: '16px',
+          paddingBottom: '8px',
+          paddingLeft: '16px',
+          paddingRight: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          flexShrink: 0
+        }}>
           <button
             onClick={onBack}
-            className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center ios-btn border border-white/5"
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(255,255,255,0.1)',
+              border: '1px solid rgba(255,255,255,0.05)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              flexShrink: 0
+            }}
           >
-            <ArrowLeft className="text-white" size={20} />
+            <ArrowLeft style={{ color: 'white' }} size={20} />
           </button>
-          <div className="flex-1 flex justify-center">
-            <div className="p-1.5 bg-[#1C1C1E] rounded-full flex items-center gap-2 border border-white/10">
-              <div
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-300 ${
-                  currentTurn === 0
-                    ? 'bg-[#0A84FF] text-white shadow-lg shadow-blue-900/50'
-                    : 'text-[#0A84FF] opacity-60'
-                }`}
-              >
+          <div style={{
+            flex: 1,
+            display: 'flex',
+            justifyContent: 'center'
+          }}>
+            <div style={{
+              padding: '6px',
+              backgroundColor: '#1C1C1E',
+              borderRadius: '999px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              border: '1px solid rgba(255,255,255,0.1)'
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                paddingLeft: '12px',
+                paddingRight: '12px',
+                paddingTop: '6px',
+                paddingBottom: '6px',
+                borderRadius: '999px',
+                backgroundColor: currentTurn === 0 ? '#0A84FF' : 'transparent',
+                color: currentTurn === 0 ? 'white' : '#0A84FF',
+                opacity: currentTurn === 0 ? 1 : 0.6,
+                transition: 'all 0.3s ease'
+              }}>
                 <User size={14} />
-                <span className="text-xs font-bold">男方</span>
+                <span style={{ fontSize: '12px', fontWeight: 'bold' }}>男方</span>
               </div>
-              <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-2">
+              <div style={{
+                fontSize: '10px',
+                fontWeight: 'bold',
+                color: 'rgba(255,255,255,0.3)',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                paddingLeft: '8px',
+                paddingRight: '8px'
+              }}>
                 Turn {turnNumber}
               </div>
-              <div
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-300 ${
-                  currentTurn === 1
-                    ? 'bg-[#FF375F] text-white shadow-lg shadow-pink-900/50'
-                    : 'text-[#FF375F] opacity-60'
-                }`}
-              >
-                <span className="text-xs font-bold">女方</span>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                paddingLeft: '12px',
+                paddingRight: '12px',
+                paddingTop: '6px',
+                paddingBottom: '6px',
+                borderRadius: '999px',
+                backgroundColor: currentTurn === 1 ? '#FF375F' : 'transparent',
+                color: currentTurn === 1 ? 'white' : '#FF375F',
+                opacity: currentTurn === 1 ? 1 : 0.6,
+                transition: 'all 0.3s ease'
+              }}>
+                <span style={{ fontSize: '12px', fontWeight: 'bold' }}>女方</span>
                 <UserRound size={14} />
               </div>
             </div>
           </div>
-          <div className="w-10" />
-        </header>
+          <div style={{ width: '40px', flexShrink: 0 }} />
+        </div>
 
-        <div className="flex-1 flex items-center justify-center px-4">
+        <div style={{
+          flex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingLeft: '16px',
+          paddingRight: '16px',
+          minHeight: 0
+        }}>
           <GameBoard
             boardMap={boardMap}
             pathCoords={pathCoords}
@@ -147,15 +231,36 @@ export function GameView({
           />
         </div>
 
-        <div className="h-[220px] w-full ios-glass rounded-t-[32px] flex flex-col items-center pt-6 pb-6 px-6 border-t border-white/10 shadow-2xl shrink-0">
-          <div
-            className={`text-sm font-medium mb-4 text-center animate-pulse ${
-              currentTurn === 0 ? 'text-[#0A84FF]' : 'text-[#FF375F]'
-            }`}
-          >
+        <div style={{
+          height: '200px',
+          width: '100%',
+          backgroundColor: 'rgba(28,28,30,0.75)',
+          backdropFilter: 'blur(25px)',
+          WebkitBackdropFilter: 'blur(25px)',
+          borderTopLeftRadius: '24px',
+          borderTopRightRadius: '24px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          paddingTop: '20px',
+          paddingBottom: '20px',
+          paddingLeft: '24px',
+          paddingRight: '24px',
+          borderTop: '1px solid rgba(255,255,255,0.1)',
+          boxShadow: '0 -4px 20px rgba(0,0,0,0.3)',
+          flexShrink: 0
+        }}>
+          <div style={{
+            fontSize: '14px',
+            fontWeight: 500,
+            marginBottom: '16px',
+            textAlign: 'center',
+            color: currentTurn === 0 ? '#0A84FF' : '#FF375F',
+            animation: 'pulse 2s infinite'
+          }}>
             {activePlayer.name}回合：点击骰子
           </div>
-          <div onClick={handleRoll}>
+          <div onClick={handleRoll} style={{ cursor: 'pointer' }}>
             <Dice
               isRolling={isRolling}
               result={diceResult}
@@ -164,6 +269,12 @@ export function GameView({
           </div>
         </div>
       </div>
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.6; }
+        }
+      `}</style>
     </div>
   );
 }

@@ -14,86 +14,98 @@ export function GameBoard({ boardMap, pathCoords, players, currentTurn }: GameBo
     coordToIndex[`${coord.r},${coord.c}`] = idx;
   });
 
-  const renderTile = (r: number, c: number) => {
-    const idx = coordToIndex[`${r},${c}`];
-    const type = boardMap[idx];
-    const isStart = idx === 0;
-    const isEnd = idx === 48;
+  const getTileColor = (idx: number, type: TileType) => {
+    if (idx === 0) return 'rgba(255,255,255,0.1)';
+    if (idx === 48) return '#FFFFFF';
+    if (type === 'lucky') return 'rgba(255,55,95,0.2)';
+    if (type === 'trap') return 'rgba(191,90,242,0.2)';
+    return '#2C2C2E';
+  };
 
-    let className = 'relative w-full h-full rounded-xl flex items-center justify-center transition-colors duration-300';
-
-    if (isStart) {
-      className += ' bg-white/10 border border-white/20';
-    } else if (isEnd) {
-      className += ' bg-white shadow-lg shadow-white/20';
-    } else if (type === 'lucky') {
-      className += ' bg-[#FF375F]/20';
-    } else if (type === 'trap') {
-      className += ' bg-[#BF5AF2]/20';
-    } else {
-      className += ' bg-[#2C2C2E]';
-    }
-
-    return (
-      <div key={`${r}-${c}`} className={className}>
-        {isStart && <span className="text-[8px] font-bold text-gray-400">START</span>}
-        {isEnd && <Trophy className="text-[#FFD700]" size={18} />}
-        {!isStart && !isEnd && type === 'lucky' && (
-          <Sparkles className="text-[#FF375F]" size={14} fill="currentColor" />
-        )}
-        {!isStart && !isEnd && type === 'trap' && (
-          <Bomb className="text-[#BF5AF2]" size={14} />
-        )}
-      </div>
-    );
+  const getTileBorder = (idx: number) => {
+    if (idx === 0) return '1px solid rgba(255,255,255,0.2)';
+    if (idx === 48) return 'none';
+    return 'none';
   };
 
   return (
-    <div className="w-full max-w-[360px] aspect-square relative">
-      <div className="absolute inset-0 grid grid-cols-7 gap-1.5">
-        {Array.from({ length: 7 }).map((_, r) =>
-          Array.from({ length: 7 }).map((_, c) => renderTile(r, c))
-        )}
-      </div>
-
-      <div className="absolute inset-0 pointer-events-none">
-        {players.map((player) => {
-          const coord = pathCoords[player.step];
-          const playersOnSameTile = players.filter(p => p.step === player.step);
-          const isOverlapping = playersOnSameTile.length > 1;
-          const indexOnTile = playersOnSameTile.findIndex(p => p.id === player.id);
-          
-          let translate = 'translate(0, 0)';
-          if (isOverlapping) {
-            translate = indexOnTile === 0 ? 'translate(-4px, -4px)' : 'translate(4px, 4px)';
-          }
-
-          const isActive = player.id === currentTurn;
-          const isMale = player.id === 0;
+    <div style={{
+      width: '100%',
+      maxWidth: '340px',
+      aspectRatio: '1 / 1',
+      position: 'relative'
+    }}>
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        display: 'grid',
+        gridTemplateColumns: 'repeat(7, 1fr)',
+        gridTemplateRows: 'repeat(7, 1fr)',
+        gap: '6px'
+      }}>
+        {Array.from({ length: 49 }).map((_, idx) => {
+          const coord = pathCoords[idx];
+          if (!coord) return <div key={idx} />;
+          const type = boardMap[idx];
+          const isStart = idx === 0;
+          const isEnd = idx === 48;
           
           return (
-             <div
-              key={player.id}
-              className="absolute w-[14.28%] h-[14.28%] flex items-center justify-center transition-all duration-500 ease-in-out z-20"
+            <div
+              key={idx}
               style={{
-                top: `${(coord.r / 7) * 100}%`,
-                left: `${(coord.c / 7) * 100}%`,
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: getTileColor(idx, type),
+                border: getTileBorder(idx),
+                boxShadow: isEnd ? '0 4px 12px rgba(255,255,255,0.2)' : 'none'
               }}
             >
-              <div 
-                className={`relative flex items-center justify-center w-8 h-8 rounded-full shadow-lg transition-transform duration-300 ${isActive ? 'avatar-pulse scale-110' : ''}`}
-                style={{ 
-                  backgroundColor: player.color,
-                  transform: translate,
-                  border: '2px solid white'
-                }}
-              >
-                {isMale ? (
-                  <User className="text-white w-5 h-5" />
-                ) : (
-                  <UserRound className="text-white w-5 h-5" />
-                )}
-              </div>
+              {isStart && <span style={{ fontSize: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.4)' }}>START</span>}
+              {isEnd && <Trophy style={{ color: '#FFD700' }} size={16} />}
+              {!isStart && !isEnd && type === 'lucky' && <Sparkles style={{ color: '#FF375F' }} size={12} fill="currentColor" />}
+              {!isStart && !isEnd && type === 'trap' && <Bomb style={{ color: '#BF5AF2' }} size={12} />}
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+        {players.map((player, pIdx) => {
+          const coord = pathCoords[player.step];
+          if (!coord) return null;
+          const cellSize = 100 / 7;
+          const gapPercent = (6 * 6) / 340 * 100;
+          const left = (coord.c / 7) * 100 + (cellSize / 2);
+          const top = (coord.r / 7) * 100 + (cellSize / 2);
+          
+          return (
+            <div
+              key={player.id}
+              style={{
+                position: 'absolute',
+                left: `${left}%`,
+                top: `${top}%`,
+                transform: `translate(-50%, -50%) translate(${pIdx * 8 - 4}px, ${pIdx * 8 - 4}px)`,
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                backgroundColor: player.color,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: `0 2px 8px ${player.color}80`,
+                border: '2px solid white',
+                zIndex: pIdx === currentTurn ? 10 : 5,
+                transition: 'all 0.3s ease'
+              }}
+            >
+              {pIdx === 0 ? <User size={12} color="white" /> : <UserRound size={12} color="white" />}
             </div>
           );
         })}
