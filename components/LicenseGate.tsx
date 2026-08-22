@@ -54,8 +54,39 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
         setChecking(false);
       }
     } else {
-      setActivated(false);
-      setChecking(false);
+      // 本地未激活，尝试通过IP查询云端激活状态（清理缓存后恢复）
+      setCloudVerifying(true);
+      fetch(`${API_BASE_URL}/ip-check`, {
+        signal: AbortSignal.timeout(8000),
+      })
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.success && data.code) {
+            // IP已激活，恢复激活状态到本地
+            const activationData = {
+              code: data.code,
+              type: data.type,
+              activatedAt: data.activatedAt,
+              expiresAt: data.expiresAt,
+              active: true
+            };
+            localStorage.setItem("lg_activation", JSON.stringify(activationData));
+            const newStatus = checkActivation();
+            setActivation(newStatus);
+            setActivated(true);
+          } else {
+            // IP未激活，显示激活界面
+            setActivated(false);
+          }
+        })
+        .catch(() => {
+          // 云端不可用时，显示激活界面
+          setActivated(false);
+        })
+        .finally(() => {
+          setCloudVerifying(false);
+          setChecking(false);
+        });
     }
   }, []);
 
