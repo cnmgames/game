@@ -81,8 +81,27 @@ export function ThemeEditorModal({
   if (!isOpen || !theme) return null;
 
   return (
-    <div className="fixed inset-0 z-[99999]">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+    <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 999999
+      }}>
+      <div
+        onClick={onClose}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.7)',
+          backdropFilter: 'blur(4px)',
+          WebkitBackdropFilter: 'blur(4px)'
+        }}
+      />
       <div
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
