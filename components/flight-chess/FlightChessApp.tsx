@@ -125,7 +125,13 @@ export default function FlightChessApp() {
               onStartGame={handleStartGame}
             />
           )}
-          
+          {state.view === 'themes' && (
+            <ThemesView
+              themes={state.themes}
+              onCreateTheme={() => setIsCreateThemeModalOpen(true)}
+              onEditTheme={themeId => setEditingThemeId(themeId)}
+            />
+          )}
         </main>
 
         <BottomNav activeView={state.view} onNavigate={handleNavigate} />
