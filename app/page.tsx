@@ -169,7 +169,7 @@ export default function Home() {
               <Link key={game.path} href={game.path} className="game-card group fade-in-up" style={{ animationDelay: `${i * 0.08}s` }}>
                 <span className="game-card-emoji">{game.emoji}</span>
                 <div className="space-y-2 sm:space-y-4">
-                  <span className="game-card-tag flex items-center gap-2">
+                  <span className="game-card-tag inline-flex items-center gap-2">
                     {game.title}
                     {game.dev && (
                       <span className="rounded-full bg-gradient-to-r from-orange-500 to-red-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-md animate-pulse">
