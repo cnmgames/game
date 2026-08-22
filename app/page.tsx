@@ -95,11 +95,11 @@ export default function Home() {
 
   const games = [
     { emoji: "✈️", title: "情侣飞行棋", desc: "经典飞行棋的情趣浪漫升级版，专为情侣设计的增进感情的情趣游戏。", path: "/flight", type: "free" },
-    { emoji: "🎡", title: "真心话大冒险转盘", desc: "终极派对游戏。旋转转盘抽取题目，回答劲爆的真心话问题或接受刺激大胆的挑战。", path: "/truth", type: "free" },
-    { emoji: "🎲", title: "情趣骰子", desc: "喝酒助兴必备。挑战上家的点数，输了就喝酒或大冒险。", path: "/dice", type: "free" },
-    { emoji: "🦁", title: "火辣暗兽棋", desc: "翻牌、博弈、宽衣。心跳加速的策略对决。", path: "/beast", type: "free" },
-    { emoji: "🎰", title: "桃色老虎机", desc: "一拉定情。地点、动作、部位，随机组合你的下一个亲密时刻。先集满欲望条者胜。", path: "/slot", type: "free" },
-    { emoji: "💎", title: "午夜大富翁", desc: "绕着棋盘冒险，每一站都有欲望事件等待完成。", path: "/monopoly", type: "free" },
+    { emoji: "🎡", title: "真心话大冒险转盘", desc: "终极派对游戏。旋转转盘抽取题目，回答劲爆的真心话问题或接受刺激大胆的挑战。", path: "/truth", type: "paid" },
+    { emoji: "🎲", title: "情趣骰子", desc: "喝酒助兴必备。挑战上家的点数，输了就喝酒或大冒险。", path: "/dice", type: "paid" },
+    { emoji: "🦁", title: "火辣暗兽棋", desc: "翻牌、博弈、宽衣。心跳加速的策略对决。", path: "/beast", type: "paid" },
+    { emoji: "🎰", title: "桃色老虎机", desc: "一拉定情。地点、动作、部位，随机组合你的下一个亲密时刻。先集满欲望条者胜。", path: "/slot", type: "paid" },
+    { emoji: "💎", title: "午夜大富翁", desc: "绕着棋盘冒险，每一站都有欲望事件等待完成。", path: "/monopoly", type: "paid" },
     { emoji: "🚀", title: "情侣飞行棋Pro", desc: "功能增强版飞行棋，支持自定义任务主题、AI智能导入、3D骰子动画，男女双方专属任务包。", path: "/flight-pro", dev: true, type: "paid" },
     { emoji: "💕", title: "姿势大全", desc: "12种经典性爱姿势，详细图文教程，难度分级。", path: "/posture", dev: true, type: "paid" },
   ];
