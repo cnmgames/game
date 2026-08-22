@@ -349,7 +349,7 @@ export default function PostureCardApp() {
             </div>
 
             {/* 适合人群 */}
-            <div style={{ marginBottom: '8px' }}>
+            <div style={{ marginBottom: '14px' }}>
               <div style={{
                 fontSize: '13px',
                 fontWeight: 600,
@@ -365,6 +365,25 @@ export default function PostureCardApp() {
                 backgroundColor: 'rgba(76,175,80,0.1)',
                 borderRadius: '10px'
               }}>{selectedPosture.suitable}</p>
+            </div>
+
+            {/* 为什么推荐 */}
+            <div style={{ marginBottom: '8px' }}>
+              <div style={{
+                fontSize: '13px',
+                fontWeight: 600,
+                color: '#E91E63',
+                marginBottom: '6px'
+              }}>💡 为什么推荐</div>
+              <p style={{
+                fontSize: '13px',
+                color: 'rgba(255,255,255,0.8)',
+                lineHeight: 1.6,
+                margin: 0,
+                padding: '10px',
+                backgroundColor: 'rgba(233,30,99,0.1)',
+                borderRadius: '10px'
+              }}>{selectedPosture.why}</p>
             </div>
           </div>
         </div>
