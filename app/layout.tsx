@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   description: '探索专为情侣夫妻伴侣设计的在线情趣派对游戏，如情趣飞行棋、真心话大冒险、夫妻骰子等，可自定义事件库。',
   manifest: '/manifest.json',
   themeColor: '#000000',
+  viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
@@ -22,10 +23,55 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-CN">
-      <body>
+      <body style={{
+          margin: 0,
+          padding: 0,
+          overflowX: 'hidden',
+          WebkitUserSelect: 'none',
+          userSelect: 'none',
+          WebkitTouchCallout: 'none',
+          touchAction: 'manipulation'
+        }}>
         <AntiDebugProvider>
           {children}
+          {/* 全局底部免责声明 */}
+          <div style={{
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            padding: '8px 16px',
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            backdropFilter: 'blur(10px)',
+            textAlign: 'center',
+            zIndex: 999,
+            pointerEvents: 'none'
+          }}>
+            <p style={{
+              fontSize: '10px',
+              color: 'rgba(255,255,255,0.3)',
+              margin: 0,
+              lineHeight: 1.4
+            }}>
+              ⚠️ 仅供18+成年情侣娱乐 | 请在双方自愿安全前提下进行 | 如有不适请停止
+            </p>
+          </div>
         </AntiDebugProvider>
+        {/* 免责声明 */}
+        <div style={{
+          position: 'fixed',
+          bottom: '8px',
+          left: 0,
+          right: 0,
+          textAlign: 'center',
+          fontSize: '10px',
+          color: 'rgba(255,255,255,0.25)',
+          pointerEvents: 'none',
+          zIndex: 1,
+          padding: '0 16px'
+        }}>
+          本网站仅供18岁以上成年情侣娱乐，请在双方自愿且安全的前提下进行
+        </div>
         <script
           dangerouslySetInnerHTML={{
             __html: `

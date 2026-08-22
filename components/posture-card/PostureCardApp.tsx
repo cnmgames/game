@@ -1,28 +1,25 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { postureList, Posture } from './postureData';
+import { PostureIllustration } from './PostureIllustration';
 import { ArrowLeft, Flame, Clock, Target, X } from 'lucide-react';
 
-// 姿势示意图（用SVG绘制简单示意图）
-const PostureIllustration = ({ emoji, color }: { emoji: string; color: string }) => (
-  <div style={{
-    width: '100%',
-    height: '120px',
-    backgroundColor: color + '15',
-    borderRadius: '12px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: '12px',
-    border: `1px solid ${color}30`
-  }}>
-    <span style={{ fontSize: '60px' }}>{emoji}</span>
-  </div>
-);
+
 
 export default function PostureCardApp() {
   const [selectedPosture, setSelectedPosture] = useState<Posture | null>(null);
   const [filter, setFilter] = useState<'全部' | '简单' | '中等' | '困难'>('全部');
+
+  useEffect(() => {
+    if (selectedPosture) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedPosture]);
 
   const filteredList = filter === '全部' 
     ? postureList 
@@ -134,7 +131,18 @@ export default function PostureCardApp() {
                 textAlign: 'center'
               }}
             >
-              <PostureIllustration emoji={posture.emoji} color={color} />
+              <div style={{
+                width: '100%',
+                height: '100px',
+                backgroundColor: color + '15',
+                borderRadius: '10px',
+                padding: '10px',
+                marginBottom: '10px',
+                border: `1px solid ${color}30`,
+                boxSizing: 'border-box'
+              }}>
+                <PostureIllustration type={posture.id} color={color} />
+              </div>
               <div style={{
                 fontSize: '13px',
                 fontWeight: 600,
@@ -154,6 +162,25 @@ export default function PostureCardApp() {
             </div>
           );
         })}
+      </div>
+
+      {/* 免责声明 */}
+      <div style={{
+        marginTop: '24px',
+        padding: '12px',
+        backgroundColor: 'rgba(255,255,255,0.03)',
+        borderRadius: '10px',
+        border: '1px solid rgba(255,255,255,0.05)',
+        textAlign: 'center'
+      }}>
+        <p style={{
+          fontSize: '11px',
+          color: 'rgba(255,255,255,0.3)',
+          lineHeight: 1.5,
+          margin: 0
+        }}>
+          ⚠️ 本内容仅供18岁以上成年情侣娱乐参考，请在双方自愿、安全、健康的前提下进行。如有不适请立即停止。
+        </p>
       </div>
 
       {/* 详情弹窗 */}
@@ -211,10 +238,18 @@ export default function PostureCardApp() {
 
             {/* 标题 */}
             <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-              <PostureIllustration 
-                emoji={selectedPosture.emoji} 
-                color={getDifficultyColor(selectedPosture.difficulty)} 
-              />
+              <div style={{
+                width: '100%',
+                height: '140px',
+                backgroundColor: getDifficultyColor(selectedPosture.difficulty) + '15',
+                borderRadius: '12px',
+                padding: '15px',
+                marginBottom: '12px',
+                border: `1px solid ${getDifficultyColor(selectedPosture.difficulty)}30`,
+                boxSizing: 'border-box'
+              }}>
+                <PostureIllustration type={selectedPosture.id} color={getDifficultyColor(selectedPosture.difficulty)} />
+              </div>
               <h2 style={{
                 fontSize: '20px',
                 fontWeight: 'bold',

@@ -222,6 +222,16 @@ export default function Home() {
         <div className="footer-card">
           <p>请在充分沟通界限的前提下玩乐，确保每一步都建立在积极同意之上。</p>
         </div>
+        
+        {/* 免责声明 */}
+        <div className="mt-8 text-center">
+          <p className="text-xs text-white/30 leading-relaxed">
+            🔞 本网站所有游戏仅供18岁以上成年情侣在双方自愿前提下娱乐使用
+          </p>
+          <p className="text-xs text-white/20 mt-1">
+            请在安全、健康、互敬的原则下进行，如有不适请立即停止
+          </p>
+        </div>
       </div>
     </>
   );
