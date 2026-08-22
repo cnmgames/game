@@ -47,7 +47,6 @@ export default function FlightProPage() {
               <div className="text-5xl mb-4">🚀</div>
               <h1 className="text-2xl font-bold text-white mb-2">情侣飞行棋Pro</h1>
               <p className="text-sm text-white/60">开发中 · 请输入临时密码进入</p>
-              <p className="text-xs text-orange-300/60 mt-1">临时密码：529</p>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>

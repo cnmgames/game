@@ -100,7 +100,7 @@ export default function Home() {
     { emoji: "🦁", title: "火辣暗兽棋", desc: "翻牌、博弈、宽衣。心跳加速的策略对决。", path: "/beast" },
     { emoji: "🎰", title: "桃色老虎机", desc: "一拉定情。地点、动作、部位，随机组合你的下一个亲密时刻。先集满欲望条者胜。", path: "/slot" },
     { emoji: "💎", title: "午夜大富翁", desc: "绕着棋盘冒险，每一站都有欲望事件等待完成。", path: "/monopoly" },
-    { emoji: "🚀", title: "情侣飞行棋Pro", desc: "功能增强版飞行棋，支持自定义任务主题、AI智能导入、3D骰子动画，男女双方专属任务包。【开发中】", path: "/flight-pro", badge: "开发中" },
+    { emoji: "🚀", title: "情侣飞行棋Pro", desc: "功能增强版飞行棋，支持自定义任务主题、AI智能导入、3D骰子动画，男女双方专属任务包。", path: "/flight-pro", dev: true },
   ];
 
   return (
@@ -166,15 +166,17 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-2 md:gap-6 xl:grid-cols-3">
             {games.map((game, i) => (
-              <Link key={game.path} href={game.path} className="game-card group fade-in-up relative" style={{ animationDelay: `${i * 0.08}s` }}>
-                {game.badge && (
-                  <span className="absolute -top-2 -right-2 z-10 rounded-full bg-gradient-to-r from-orange-500 to-red-500 px-2.5 py-0.5 text-[10px] font-bold text-white shadow-lg animate-pulse">
-                    {game.badge}
-                  </span>
-                )}
+              <Link key={game.path} href={game.path} className="game-card group fade-in-up" style={{ animationDelay: `${i * 0.08}s` }}>
                 <span className="game-card-emoji">{game.emoji}</span>
                 <div className="space-y-2 sm:space-y-4">
-                  <span className="game-card-tag">{game.title}</span>
+                  <span className="game-card-tag flex items-center gap-2">
+                    {game.title}
+                    {game.dev && (
+                      <span className="rounded-full bg-gradient-to-r from-orange-500 to-red-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-md animate-pulse">
+                        开发中
+                      </span>
+                    )}
+                  </span>
                   <p className="game-card-desc">{game.desc}</p>
                 </div>
                 <span className="game-card-link">进入游戏 <span aria-hidden="true">→</span></span>
