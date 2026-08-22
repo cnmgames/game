@@ -1,5 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
+import LicenseGate from "../../components/LicenseGate";
 import "../../components/flight-chess/flight-chess.css";
 
 const FlightChessApp = dynamic(
@@ -8,5 +9,9 @@ const FlightChessApp = dynamic(
 );
 
 export default function FlightProPage() {
-  return <FlightChessApp />;
+  return (
+    <LicenseGate gameName="情侣飞行棋Pro">
+      <FlightChessApp />
+    </LicenseGate>
+  );
 }
