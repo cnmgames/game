@@ -99,20 +99,24 @@ export function TaskCardModal({ isOpen, taskData, onAccept, onReject }: TaskCard
               width: '80px',
               height: '80px',
               borderRadius: '50%',
-              backgroundColor: 'rgba(255,255,255,0.05)',
+              background: 'linear-gradient(135deg, #FF375F 0%, #BF5AF2 50%, #0A84FF 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               marginBottom: '24px',
-              color: iconColor,
-              animation: 'pulse 2s infinite'
+              color: 'white',
+              animation: 'pulse 2s infinite',
+              boxShadow: '0 4px 20px rgba(255,55,95,0.4)'
             }}>
               {iconMap[taskData.icon] || iconMap.favorite}
             </div>
             <h3 style={{
               fontSize: '24px',
               fontWeight: 'bold',
-              color: 'white',
+              background: 'linear-gradient(135deg, #FF375F 0%, #BF5AF2 50%, #0A84FF 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
               margin: 0,
               marginBottom: '12px',
               textAlign: 'center'
@@ -151,13 +155,27 @@ export function TaskCardModal({ isOpen, taskData, onAccept, onReject }: TaskCard
               alignItems: 'center',
               marginBottom: '16px'
             }}>
-              <div style={{ color: iconColor, marginBottom: '12px' }}>
+              <div style={{
+                width: '56px',
+                height: '56px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #FF375F 0%, #BF5AF2 50%, #0A84FF 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '12px',
+                color: 'white',
+                boxShadow: '0 4px 16px rgba(255,55,95,0.3)'
+              }}>
                 {iconMap[taskData.icon] || iconMap.favorite}
               </div>
               <h3 style={{
                 fontSize: '20px',
                 fontWeight: 'bold',
-                color: 'white',
+                background: 'linear-gradient(135deg, #FF375F 0%, #BF5AF2 50%, #0A84FF 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
                 margin: 0,
                 marginBottom: '8px',
                 textAlign: 'center'

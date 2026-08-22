@@ -28,20 +28,44 @@ export function ThemesView({ themes, onCreateTheme, onEditTheme }: ThemesViewPro
       display: 'flex',
       flexDirection: 'column',
       overflowY: 'auto',
-      paddingBottom: '24px'
+      paddingBottom: '24px',
+      backgroundColor: '#000000',
+      position: 'relative',
+      zIndex: 10
     }}>
       <div style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: '20px'
+        marginBottom: '20px',
+        paddingTop: '16px'
       }}>
-        <h2 style={{
-          fontSize: '24px',
-          fontWeight: 'bold',
-          color: 'white',
-          margin: 0
-        }}>任务主题库</h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <button
+            onClick={() => window.history.back()}
+            style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(255,255,255,0.1)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: 'white',
+              fontSize: '16px'
+            }}
+          >
+            ←
+          </button>
+          <h2 style={{
+            fontSize: '24px',
+            fontWeight: 'bold',
+            color: 'white',
+            margin: 0
+          }}>任务主题库</h2>
+        </div>
         <button
           style={{
             height: '36px',

@@ -5,13 +5,13 @@ import { useGameState } from './hooks/useGameState';
 import { TaskEventData } from './types';
 import { HomeView } from './components/views/HomeView';
 import { GameView } from './components/views/GameView';
-import { ThemesView } from './components/views/ThemesView';
 import { ThemeSelectorModal } from './components/modals/ThemeSelectorModal';
 import { TaskCardModal } from './components/modals/TaskCardModal';
 import { WinModal } from './components/modals/WinModal';
 import { BottomNav } from './components/BottomNav';
 import { ThemeCreateModal } from './components/modals/ThemeCreateModal';
 import { ThemeEditorModal } from './components/modals/ThemeEditorModal';
+import { ThemesModal } from './components/modals/ThemesModal';
 import { AiImportModal } from './components/modals/AiImportModal';
 
 export default function FlightChessApp() {
@@ -40,6 +40,7 @@ export default function FlightChessApp() {
   const [isCreateThemeModalOpen, setIsCreateThemeModalOpen] = useState(false);
   const [editingThemeId, setEditingThemeId] = useState<string | null>(null);
   const [aiImportThemeId, setAiImportThemeId] = useState<string | null>(null);
+  const [isThemesModalOpen, setIsThemesModalOpen] = useState(false);
 
   const handleSelectTheme = (playerId: number) => {
     setSelectedPlayerId(playerId);
@@ -83,7 +84,11 @@ export default function FlightChessApp() {
   };
 
   const handleNavigate = (view: 'home' | 'themes') => {
-    switchView(view);
+    if (view === 'themes') {
+      setIsThemesModalOpen(true);
+    } else {
+      switchView(view);
+    }
   };
 
   const handleBackFromGame = () => {
@@ -100,7 +105,8 @@ export default function FlightChessApp() {
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
       </div>
 
-      <div className="relative z-10 w-full max-w-md mx-auto min-h-screen flex flex-col bg-black/30">
+      <div className="relative z-10 w-full max-w-md mx-auto min-h-screen flex flex-col bg-black">
+        {state.view !== 'themes' && (
         <header className="pt-6 pb-4 px-5 shrink-0 flex items-center justify-between gap-3">
           <a href="/" className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/50 px-3 py-1.5 text-xs text-white/80 backdrop-blur transition hover:border-white/25 hover:bg-black/70 hover:text-white shrink-0">
             ← 返回
@@ -113,6 +119,7 @@ export default function FlightChessApp() {
           </div>
           <div className="w-16 shrink-0"></div>
         </header>
+        )}
 
         <main className="flex-1 overflow-auto px-5 py-4">
           {state.view === 'home' && (
@@ -123,13 +130,7 @@ export default function FlightChessApp() {
               onStartGame={handleStartGame}
             />
           )}
-          {state.view === 'themes' && (
-            <ThemesView
-              themes={state.themes}
-              onCreateTheme={() => setIsCreateThemeModalOpen(true)}
-              onEditTheme={themeId => setEditingThemeId(themeId)}
-            />
-          )}
+          
         </main>
 
         <BottomNav activeView={state.view} onNavigate={handleNavigate} />
@@ -157,6 +158,20 @@ export default function FlightChessApp() {
           resetGame();
           setWinnerId(null);
         }}
+      />
+
+      <ThemesModal
+        isOpen={isThemesModalOpen}
+        themes={state.themes}
+        onCreateTheme={() => {
+          setIsThemesModalOpen(false);
+          setIsCreateThemeModalOpen(true);
+        }}
+        onEditTheme={themeId => {
+          setIsThemesModalOpen(false);
+          setEditingThemeId(themeId);
+        }}
+        onClose={() => setIsThemesModalOpen(false)}
       />
 
       <ThemeCreateModal
