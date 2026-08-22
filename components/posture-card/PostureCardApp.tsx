@@ -1,7 +1,24 @@
 "use client";
 import { useState } from 'react';
 import { postureList, Posture } from './postureData';
-import { ArrowLeft, Flame, Clock, Target, Lightbulb, Users, X } from 'lucide-react';
+import { ArrowLeft, Flame, Clock, Target, X } from 'lucide-react';
+
+// 姿势示意图（用SVG绘制简单示意图）
+const PostureIllustration = ({ emoji, color }: { emoji: string; color: string }) => (
+  <div style={{
+    width: '100%',
+    height: '120px',
+    backgroundColor: color + '15',
+    borderRadius: '12px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: '12px',
+    border: `1px solid ${color}30`
+  }}>
+    <span style={{ fontSize: '60px' }}>{emoji}</span>
+  </div>
+);
 
 export default function PostureCardApp() {
   const [selectedPosture, setSelectedPosture] = useState<Posture | null>(null);
@@ -20,25 +37,23 @@ export default function PostureCardApp() {
     }
   };
 
-  const getHeatStars = (heat: number) => {
-    return '🔥'.repeat(heat);
-  };
-
   return (
     <div style={{
       minHeight: '100vh',
       backgroundColor: '#000',
       color: 'white',
-      padding: '20px',
-      boxSizing: 'border-box'
+      padding: '16px',
+      boxSizing: 'border-box',
+      maxWidth: '800px',
+      margin: '0 auto'
     }}>
       {/* 头部 */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: '20px',
-        paddingTop: '20px'
+        marginBottom: '16px',
+        paddingTop: '16px'
       }}>
         <a href="/" style={{
           display: 'flex',
@@ -57,7 +72,7 @@ export default function PostureCardApp() {
           返回
         </a>
         <h1 style={{
-          fontSize: '20px',
+          fontSize: '18px',
           fontWeight: 'bold',
           margin: 0,
           background: 'linear-gradient(90deg, #FF375F, #BF5AF2)',
@@ -73,17 +88,18 @@ export default function PostureCardApp() {
       <div style={{
         display: 'flex',
         gap: '8px',
-        marginBottom: '20px',
-        flexWrap: 'wrap'
+        marginBottom: '16px',
+        flexWrap: 'wrap',
+        justifyContent: 'center'
       }}>
         {(['全部', '简单', '中等', '困难'] as const).map(level => (
           <button
             key={level}
             onClick={() => setFilter(level)}
             style={{
-              padding: '8px 16px',
+              padding: '6px 14px',
               borderRadius: '999px',
-              fontSize: '13px',
+              fontSize: '12px',
               fontWeight: 600,
               border: 'none',
               cursor: 'pointer',
@@ -96,45 +112,48 @@ export default function PostureCardApp() {
         ))}
       </div>
 
-      {/* 姿势列表 */}
+      {/* 姿势列表 - 响应式网格 */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
-        gap: '12px'
+        gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+        gap: '10px'
       }}>
-        {filteredList.map(posture => (
-          <div
-            key={posture.id}
-            onClick={() => setSelectedPosture(posture)}
-            style={{
-              backgroundColor: '#1C1C1E',
-              borderRadius: '16px',
-              padding: '16px',
-              cursor: 'pointer',
-              border: `1px solid rgba(255,255,255,0.08)`,
-              transition: 'transform 0.2s ease',
-              textAlign: 'center'
-            }}
-          >
-            <div style={{ fontSize: '40px', marginBottom: '8px' }}>{posture.emoji}</div>
-            <div style={{
-              fontSize: '14px',
-              fontWeight: 600,
-              color: 'white',
-              marginBottom: '6px'
-            }}>{posture.name}</div>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'center',
-              gap: '8px',
-              fontSize: '11px',
-              color: 'rgba(255,255,255,0.5)'
-            }}>
-              <span style={{ color: getDifficultyColor(posture.difficulty) }}>{posture.difficulty}</span>
-              <span>{getHeatStars(posture.heat)}</span>
+        {filteredList.map(posture => {
+          const color = getDifficultyColor(posture.difficulty);
+          return (
+            <div
+              key={posture.id}
+              onClick={() => setSelectedPosture(posture)}
+              style={{
+                backgroundColor: '#1C1C1E',
+                borderRadius: '14px',
+                padding: '14px',
+                cursor: 'pointer',
+                border: `1px solid ${color}30`,
+                transition: 'transform 0.2s ease',
+                textAlign: 'center'
+              }}
+            >
+              <PostureIllustration emoji={posture.emoji} color={color} />
+              <div style={{
+                fontSize: '13px',
+                fontWeight: 600,
+                color: 'white',
+                marginBottom: '6px'
+              }}>{posture.name}</div>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                gap: '6px',
+                fontSize: '10px',
+                color: 'rgba(255,255,255,0.5)'
+              }}>
+                <span style={{ color }}>{posture.difficulty}</span>
+                <span>🔥{posture.heat}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* 详情弹窗 */}
@@ -146,12 +165,12 @@ export default function PostureCardApp() {
           right: 0,
           bottom: 0,
           zIndex: 999999,
-          backgroundColor: 'rgba(0,0,0,0.8)',
+          backgroundColor: 'rgba(0,0,0,0.85)',
           backdropFilter: 'blur(4px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '20px'
+          padding: '16px'
         }}
         onClick={() => setSelectedPosture(null)}
         >
@@ -159,11 +178,11 @@ export default function PostureCardApp() {
             onClick={(e) => e.stopPropagation()}
             style={{
               width: '100%',
-              maxWidth: '400px',
-              maxHeight: '85vh',
+              maxWidth: '420px',
+              maxHeight: '88vh',
               backgroundColor: '#1C1C1E',
               borderRadius: '20px',
-              padding: '24px',
+              padding: '20px',
               overflowY: 'auto',
               position: 'relative'
             }}
@@ -183,27 +202,32 @@ export default function PostureCardApp() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                zIndex: 10
               }}
             >
               <X size={16} color="white" />
             </button>
 
             {/* 标题 */}
-            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-              <div style={{ fontSize: '60px', marginBottom: '12px' }}>{selectedPosture.emoji}</div>
+            <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+              <PostureIllustration 
+                emoji={selectedPosture.emoji} 
+                color={getDifficultyColor(selectedPosture.difficulty)} 
+              />
               <h2 style={{
-                fontSize: '22px',
+                fontSize: '20px',
                 fontWeight: 'bold',
                 color: 'white',
                 margin: 0,
-                marginBottom: '8px'
+                marginBottom: '10px'
               }}>{selectedPosture.name}</h2>
               <div style={{
                 display: 'flex',
                 justifyContent: 'center',
-                gap: '12px',
-                fontSize: '12px'
+                gap: '8px',
+                fontSize: '11px',
+                flexWrap: 'wrap'
               }}>
                 <span style={{
                   padding: '4px 10px',
@@ -230,21 +254,21 @@ export default function PostureCardApp() {
                   color: '#FF375F'
                 }}>
                   <Flame size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} />
-                  {selectedPosture.heat}星
+                  {selectedPosture.heat}星热度
                 </span>
               </div>
             </div>
 
             {/* 简介 */}
-            <div style={{ marginBottom: '16px' }}>
+            <div style={{ marginBottom: '14px' }}>
               <div style={{
                 fontSize: '13px',
                 fontWeight: 600,
                 color: '#FF375F',
-                marginBottom: '8px'
+                marginBottom: '6px'
               }}>📝 简介</div>
               <p style={{
-                fontSize: '14px',
+                fontSize: '13px',
                 color: 'rgba(255,255,255,0.8)',
                 lineHeight: 1.6,
                 margin: 0
@@ -252,57 +276,57 @@ export default function PostureCardApp() {
             </div>
 
             {/* 怎么做 */}
-            <div style={{ marginBottom: '16px' }}>
+            <div style={{ marginBottom: '14px' }}>
               <div style={{
                 fontSize: '13px',
                 fontWeight: 600,
                 color: '#0A84FF',
-                marginBottom: '8px'
+                marginBottom: '6px'
               }}>🎯 怎么做</div>
               <p style={{
-                fontSize: '14px',
+                fontSize: '13px',
                 color: 'rgba(255,255,255,0.8)',
                 lineHeight: 1.6,
                 margin: 0,
-                padding: '12px',
+                padding: '10px',
                 backgroundColor: 'rgba(10,132,255,0.1)',
                 borderRadius: '10px'
               }}>{selectedPosture.howTo}</p>
             </div>
 
             {/* 小技巧 */}
-            <div style={{ marginBottom: '16px' }}>
+            <div style={{ marginBottom: '14px' }}>
               <div style={{
                 fontSize: '13px',
                 fontWeight: 600,
                 color: '#FF9800',
-                marginBottom: '8px'
+                marginBottom: '6px'
               }}>💡 小技巧</div>
               <p style={{
-                fontSize: '14px',
+                fontSize: '13px',
                 color: 'rgba(255,255,255,0.8)',
                 lineHeight: 1.6,
                 margin: 0,
-                padding: '12px',
+                padding: '10px',
                 backgroundColor: 'rgba(255,152,0,0.1)',
                 borderRadius: '10px'
               }}>{selectedPosture.tips}</p>
             </div>
 
             {/* 适合人群 */}
-            <div style={{ marginBottom: '16px' }}>
+            <div style={{ marginBottom: '8px' }}>
               <div style={{
                 fontSize: '13px',
                 fontWeight: 600,
                 color: '#4CAF50',
-                marginBottom: '8px'
+                marginBottom: '6px'
               }}>👥 适合人群</div>
               <p style={{
-                fontSize: '14px',
+                fontSize: '13px',
                 color: 'rgba(255,255,255,0.8)',
                 lineHeight: 1.6,
                 margin: 0,
-                padding: '12px',
+                padding: '10px',
                 backgroundColor: 'rgba(76,175,80,0.1)',
                 borderRadius: '10px'
               }}>{selectedPosture.suitable}</p>

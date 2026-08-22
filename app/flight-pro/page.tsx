@@ -16,7 +16,6 @@ export default function FlightProPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // 检查本地是否已通过临时密码验证
     const tempAuth = localStorage.getItem("flight_pro_temp_auth");
     if (tempAuth === "true") {
       setAuthenticated(true);
@@ -36,44 +35,83 @@ export default function FlightProPage() {
 
   if (!authenticated) {
     return (
-      <>
-        <div className="bg-aurora" />
-        <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-4 py-8">
-          <div className="mb-6 text-center">
-            <a href="/" className="back-btn inline-flex">← 返回首页</a>
-          </div>
-          <div className="game-container">
-            <div className="text-center mb-6">
-              <div className="text-5xl mb-4">🚀</div>
-              <h1 className="text-2xl font-bold text-white mb-2">情侣飞行棋Pro</h1>
-              <p className="text-sm text-white/60">开发中 · 请输入临时密码进入</p>
-            </div>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm text-white/70 mb-2">临时密码</label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="请输入临时密码"
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-center text-lg font-mono tracking-wider text-white placeholder:text-white/30 focus:outline-none focus:border-pink-400/50"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full rounded-full bg-gradient-to-r from-orange-500 to-red-500 py-3 text-base font-semibold text-white shadow-lg shadow-orange-500/40 hover:from-orange-400 hover:to-red-400 transition"
-              >
-                进入游戏
-              </button>
-              {error && (
-                <div className="rounded-xl border border-red-400/30 bg-red-500/10 p-3 text-center text-sm text-red-200">
-                  {error}
-                </div>
-              )}
-            </form>
-          </div>
+      <div style={{
+        minHeight: '100vh',
+        backgroundColor: '#000',
+        color: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px'
+      }}>
+        <div style={{
+          width: '100%',
+          maxWidth: '360px',
+          backgroundColor: '#1C1C1E',
+          borderRadius: '20px',
+          padding: '32px 24px',
+          textAlign: 'center'
+        }}>
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔒</div>
+          <h2 style={{
+            fontSize: '20px',
+            fontWeight: 'bold',
+            margin: 0,
+            marginBottom: '8px'
+          }}>内容已加密</h2>
+          <p style={{
+            fontSize: '13px',
+            color: 'rgba(255,255,255,0.5)',
+            margin: 0,
+            marginBottom: '24px'
+          }}>请输入访问密码</p>
+          
+          <form onSubmit={handleSubmit}>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="请输入密码"
+              style={{
+                width: '100%',
+                height: '44px',
+                padding: '0 14px',
+                borderRadius: '10px',
+                backgroundColor: '#2C2C2E',
+                color: 'white',
+                border: '1px solid rgba(255,255,255,0.1)',
+                fontSize: '14px',
+                marginBottom: '12px',
+                boxSizing: 'border-box',
+                outline: 'none'
+              }}
+            />
+            {error && (
+              <div style={{
+                fontSize: '12px',
+                color: '#FF453A',
+                marginBottom: '12px'
+              }}>{error}</div>
+            )}
+            <button
+              type="submit"
+              style={{
+                width: '100%',
+                height: '44px',
+                borderRadius: '999px',
+                backgroundColor: 'white',
+                color: 'black',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              确认
+            </button>
+          </form>
         </div>
-      </>
+      </div>
     );
   }
 
