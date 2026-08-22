@@ -8,7 +8,6 @@ import { GameView } from './components/views/GameView';
 import { ThemeSelectorModal } from './components/modals/ThemeSelectorModal';
 import { TaskCardModal } from './components/modals/TaskCardModal';
 import { WinModal } from './components/modals/WinModal';
-import { BottomNav } from './components/BottomNav';
 import { ThemeCreateModal } from './components/modals/ThemeCreateModal';
 import { ThemesView } from './components/views/ThemesView';
 import { ThemeEditorModal } from './components/modals/ThemeEditorModal';
@@ -51,6 +50,9 @@ export default function FlightChessApp() {
   };
 
   const selectedPlayer = state.players.find(p => p.id === selectedPlayerId) || state.players[0];
+  const isThemesView = state.view === 'themes';
+  const navButtonText = isThemesView ? '← 返回游戏' : '题库';
+  const navTarget: 'home' | 'themes' = isThemesView ? 'home' : 'themes';
   const selectableThemes = state.themes.filter(
     t => t.audience === 'common' || t.audience === selectedPlayer.role
   );
@@ -112,7 +114,30 @@ export default function FlightChessApp() {
             </div>
             <h1 className="text-xl font-bold text-white tracking-tight truncate">情侣飞行棋Pro</h1>
           </div>
-          <div className="w-16 shrink-0"></div>
+          {state.view !== 'game' && (
+            <button
+              onClick={() => handleNavigate(navTarget)}
+              style={{
+                height: '32px',
+                paddingLeft: '14px',
+                paddingRight: '14px',
+                borderRadius: '999px',
+                backgroundColor: 'rgba(255,255,255,0.1)',
+                border: '1px solid rgba(255,255,255,0.15)',
+                color: 'white',
+                fontSize: '12px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                flexShrink: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              {navButtonText}
+            </button>
+          )}
+          {state.view === 'game' && <div style={{ width: '64px', flexShrink: 0 }} />}
         </header>
         )}
 
@@ -134,7 +159,6 @@ export default function FlightChessApp() {
           )}
         </main>
 
-        <BottomNav activeView={state.view} onNavigate={handleNavigate} />
       </div>
 
       <ThemeSelectorModal
