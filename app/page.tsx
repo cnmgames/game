@@ -100,6 +100,7 @@ export default function Home() {
     { emoji: "🦁", title: "火辣暗兽棋", desc: "翻牌、博弈、宽衣。心跳加速的策略对决。", path: "/beast" },
     { emoji: "🎰", title: "桃色老虎机", desc: "一拉定情。地点、动作、部位，随机组合你的下一个亲密时刻。先集满欲望条者胜。", path: "/slot" },
     { emoji: "💎", title: "午夜大富翁", desc: "绕着棋盘冒险，每一站都有欲望事件等待完成。", path: "/monopoly" },
+    { emoji: "🚀", title: "情侣飞行棋Pro", desc: "功能增强版飞行棋，支持自定义任务主题、AI智能导入、3D骰子动画，男女双方专属任务包。", path: "/flight-pro" },
   ];
 
   return (
