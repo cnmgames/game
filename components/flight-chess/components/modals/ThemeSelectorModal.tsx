@@ -34,26 +34,25 @@ export function ThemeSelectorModal({
 
   return createPortal(
     <div 
-      className="fixed inset-0 z-[9999] flex items-end justify-center"
-      style={{ backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+      style={{ backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
       onClick={onClose}
     >
       <div 
-        className="w-full max-w-md bg-gradient-to-b from-[#2C2C2E] to-[#1C1C1E] rounded-t-[28px] p-5 pb-8 shadow-2xl border-t border-white/10"
-        style={{ animation: 'fcModalSlideUp 0.3s ease-out' }}
+        className="w-full max-w-md bg-gradient-to-b from-[#2C2C2E] to-[#1C1C1E] rounded-3xl p-5 shadow-2xl border border-white/10"
+        style={{ animation: 'fcModalFadeIn 0.25s ease-out', maxHeight: '80vh' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="w-10 h-1.5 bg-gray-500 rounded-full mx-auto mb-4" />
-        <div className="flex justify-between items-center mb-5">
+        <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-bold text-white">选择主题</h3>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/20 transition-colors"
+            className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/20 transition-colors shrink-0"
           >
             <X size={18} />
           </button>
         </div>
-        <div className="flex flex-col gap-2 max-h-[55vh] overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div className="flex flex-col gap-2 overflow-y-auto pr-1" style={{ maxHeight: 'calc(80vh - 80px)', scrollbarWidth: 'thin', scrollbarColor: 'rgba(255,255,255,0.2) transparent' }}>
           {themes.map(theme => {
             const isSelected = selectedThemeId === theme.id;
             return (
@@ -69,14 +68,14 @@ export function ThemeSelectorModal({
                     : 'bg-white/5 border border-white/10 hover:bg-white/10'
                 }`}
               >
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
                     isSelected ? 'bg-blue-500/30' : 'bg-white/10'
                   }`}>
                     <span className="text-lg">🎯</span>
                   </div>
-                  <div>
-                    <div className="text-white font-semibold">{theme.name}</div>
+                  <div className="min-w-0">
+                    <div className="text-white font-semibold truncate">{theme.name}</div>
                     <div className="text-xs text-gray-400 mt-0.5">
                       {theme.tasks?.length || 0} 个任务
                     </div>
@@ -92,10 +91,10 @@ export function ThemeSelectorModal({
           })}
         </div>
       </div>
-      <style jsx>{`
-        @keyframes fcModalSlideUp {
-          from { transform: translateY(100%); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
+      <style>{`
+        @keyframes fcModalFadeIn {
+          from { transform: scale(0.9); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
         }
       `}</style>
     </div>,
