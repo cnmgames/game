@@ -40,32 +40,12 @@ export function ThemesView({ themes, onCreateTheme, onEditTheme }: ThemesViewPro
         marginBottom: '20px',
         paddingTop: '16px'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <button
-            onClick={() => window.history.back()}
-            style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '50%',
-              backgroundColor: 'rgba(255,255,255,0.1)',
-              border: '1px solid rgba(255,255,255,0.15)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              color: 'white',
-              fontSize: '16px'
-            }}
-          >
-            ←
-          </button>
-          <h2 style={{
-            fontSize: '24px',
-            fontWeight: 'bold',
-            color: 'white',
-            margin: 0
-          }}>任务主题库</h2>
-        </div>
+        <h2 style={{
+          fontSize: '24px',
+          fontWeight: 'bold',
+          color: 'white',
+          margin: 0
+        }}>任务主题库</h2>
         <button
           style={{
             height: '36px',

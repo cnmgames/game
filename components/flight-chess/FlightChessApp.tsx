@@ -50,9 +50,6 @@ export default function FlightChessApp() {
   };
 
   const selectedPlayer = state.players.find(p => p.id === selectedPlayerId) || state.players[0];
-  const isThemesView = state.view === 'themes';
-  const navButtonText = isThemesView ? '← 返回游戏' : '题库';
-  const navTarget: 'home' | 'themes' = isThemesView ? 'home' : 'themes';
   const selectableThemes = state.themes.filter(
     t => t.audience === 'common' || t.audience === selectedPlayer.role
   );
@@ -113,9 +110,9 @@ export default function FlightChessApp() {
             </div>
             <h1 className="text-xl font-bold text-white tracking-tight truncate">情侣飞行棋Pro</h1>
           </div>
-          {state.view !== 'game' && (
+          {state.view === 'home' && (
             <button
-              onClick={() => handleNavigate(navTarget)}
+              onClick={() => handleNavigate('themes')}
               style={{
                 height: '32px',
                 paddingLeft: '14px',
@@ -133,10 +130,10 @@ export default function FlightChessApp() {
                 justifyContent: 'center'
               }}
             >
-              {navButtonText}
+              题库
             </button>
           )}
-          {state.view === 'game' && <div style={{ width: '64px', flexShrink: 0 }} />}
+          {state.view !== 'home' && <div style={{ width: '64px', flexShrink: 0 }} />}
         </header>
 
         <main className="flex-1 overflow-auto px-5 py-4">
