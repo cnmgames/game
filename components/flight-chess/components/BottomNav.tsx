@@ -6,33 +6,56 @@ interface BottomNavProps {
 }
 
 export function BottomNav({ activeView, onNavigate }: BottomNavProps) {
-  const isGameActive = activeView === 'home' || activeView === 'game';
-  const isThemesActive = activeView === 'themes';
-
   return (
-    <nav className="ios-glass border-t border-white/10 flex items-center justify-around px-4 shrink-0 z-50 pt-2 pb-[max(8px,env(safe-area-inset-bottom))]">
+    <nav className="h-[84px] ios-glass border-t border-white/5 flex items-start justify-around pt-3 shrink-0 z-50">
       <button
-        className={`flex flex-col items-center gap-1 px-8 py-1.5 rounded-xl transition-all ${
-          isGameActive
-            ? 'bg-white/15 text-white shadow-md'
-            : 'text-gray-400 hover:text-white hover:bg-white/5'
+        className={`group flex flex-col items-center gap-1 w-16 transition-opacity ${
+          activeView === 'home' || activeView === 'game' ? 'opacity-100' : 'opacity-50'
         }`}
         onClick={() => onNavigate('home')}
       >
-        <GamepadIcon size={22} />
-        <span className="text-[11px] font-medium">游戏</span>
+        <GamepadIcon
+          className={`transition-colors ${
+            activeView === 'home' || activeView === 'game'
+              ? 'text-white'
+              : 'text-gray-400 group-hover:text-white'
+          }`}
+          size={26}
+        />
+        <span
+          className={`text-[10px] font-medium transition-colors ${
+            activeView === 'home' || activeView === 'game'
+              ? 'text-white'
+              : 'text-gray-400 group-hover:text-white'
+          }`}
+        >
+          游戏
+        </span>
       </button>
 
       <button
-        className={`flex flex-col items-center gap-1 px-8 py-1.5 rounded-xl transition-all ${
-          isThemesActive
-            ? 'bg-white/15 text-white shadow-md'
-            : 'text-gray-400 hover:text-white hover:bg-white/5'
+        className={`group flex flex-col items-center gap-1 w-16 transition-opacity ${
+          activeView === 'themes' ? 'opacity-100' : 'opacity-50'
         }`}
         onClick={() => onNavigate('themes')}
       >
-        <Layers size={22} />
-        <span className="text-[11px] font-medium">题库</span>
+        <Layers
+          className={`transition-colors ${
+            activeView === 'themes'
+              ? 'text-white'
+              : 'text-gray-400 group-hover:text-white'
+          }`}
+          size={26}
+        />
+        <span
+          className={`text-[10px] font-medium transition-colors ${
+            activeView === 'themes'
+              ? 'text-white'
+              : 'text-gray-400 group-hover:text-white'
+          }`}
+        >
+          题库
+        </span>
       </button>
     </nav>
   );
