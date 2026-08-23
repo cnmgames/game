@@ -135,9 +135,9 @@ export default function FlightChessApp() {
           )}
         </header>
 
-        <main style={{flex:1,minHeight:0,position:'relative',overflow:'hidden',paddingTop:'80px'}}>
+        <main style={{flex:1,minHeight:0,position:'relative',overflow:'hidden'}}>
           <div style={{
-            position:'absolute',inset:0,display:'flex',flexDirection:'column',padding:'0 24px 8px',
+            position:'absolute',top:'80px',left:0,right:0,bottom:0,display:'flex',flexDirection:'column',padding:'0 24px 8px',
             transition:'all 0.5s ease-in-out',
             transform: state.view === 'home' ? 'translateX(0)' : 'translateX(-100%)',
             opacity: state.view === 'home' ? 1 : 0,
@@ -154,7 +154,7 @@ export default function FlightChessApp() {
           </div>
 
           <div style={{
-            position:'absolute',inset:0,display:'flex',flexDirection:'column',minHeight:0,padding:'0 24px',
+            position:'absolute',top:'80px',left:0,right:0,bottom:0,display:'flex',flexDirection:'column',minHeight:0,padding:'0 24px',
             transition:'all 0.5s ease-in-out',
             transform: state.view === 'themes' ? 'translateX(0)' : 'translateX(100%)',
             opacity: state.view === 'themes' ? 1 : 0,
