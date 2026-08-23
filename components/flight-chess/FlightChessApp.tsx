@@ -127,7 +127,7 @@ export default function FlightChessApp() {
           </div>
           <div style={{marginLeft:'auto',flexShrink:0}}>
             <button onClick={() => switchView(state.view === 'themes' ? 'home' : 'themes')}
-              style={{background:'rgba(255,255,255,0.1)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:999,padding:'6px 12px',color:'#ccc',fontSize:12,fontWeight:600,cursor:'pointer'}}>
+              style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:'999px',color:'rgba(255,255,255,0.85)',fontSize:13,fontWeight:600,cursor:'pointer',padding:'7px 14px',display:'flex',alignItems:'center',gap:4}}>
               {state.view === 'themes' ? '🏠 首页' : '📚 题库'}
             </button>
           </div>
