@@ -41,8 +41,12 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
             }
           })
           .catch(() => {
-            // 云端不可用时，信任本地状态（降级）
-            setActivated(true);
+            // 云端不可用时，信任本地状态（降级，但只信任有code的）
+            if (savedCode) {
+              setActivated(true);
+            } else {
+              setActivated(false);
+            }
           })
           .finally(() => {
             setCloudVerifying(false);
@@ -181,9 +185,11 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
     <>
       {children}
       {/* 激活状态指示器（固定在右上角） */}
-      <div className="fixed top-3 right-3 z-50 rounded-full border border-green-400/30 bg-black/60 px-3 py-1 text-xs text-green-300 backdrop-blur">
-        ✓ {TYPE_NAMES[activation.type!]} · 剩{activation.timeLeftText}
-      </div>
+      {activated && activation && activation.active && (
+        <div className="fixed top-3 right-3 z-50 rounded-full border border-green-400/30 bg-black/60 px-3 py-1 text-xs text-green-300 backdrop-blur whitespace-nowrap">
+          ✓ {activation.type ? TYPE_NAMES[activation.type] : "已激活"} · {activation.timeLeftText ? "剩" + activation.timeLeftText : "永久有效"}
+        </div>
+      )}
     </>
   );
 }
