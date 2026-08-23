@@ -124,14 +124,16 @@ export function GameView({
         margin: '0 auto'
       }}>
         <div style={{
-          paddingTop: '16px',
+          paddingTop: 'max(16px, env(safe-area-inset-top))',
           paddingBottom: '8px',
           paddingLeft: '16px',
           paddingRight: '16px',
           display: 'flex',
           alignItems: 'center',
           gap: '12px',
-          flexShrink: 0
+          flexShrink: 0,
+          position: 'relative',
+          zIndex: 20
         }}>
           <button
             onClick={onBack}
