@@ -26,7 +26,12 @@ export default function Home() {
         });
     };
     setTimeout(fetchOnline, 1000);
-    const timer = setInterval(fetchOnline, 30000);
+    // 10秒实时刷新，页面不可见时暂停
+    const timer = setInterval(() => {
+      if (!document.hidden) {
+        fetchOnline();
+      }
+    }, 10000);
     return () => clearInterval(timer);
   }, []);
 
