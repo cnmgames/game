@@ -116,7 +116,7 @@ export default function FlightChessApp() {
       </div>
 
       <div style={{position:'relative',zIndex:10,width:'100%',maxWidth:430,height:'100%',display:'flex',flexDirection:'column',background:'rgba(0,0,0,0.2)'}}>
-        <header style={{paddingTop:24,paddingBottom:8,paddingLeft:16,paddingRight:16,flexShrink:0,display:'flex',alignItems:'center',gap:8,position:'relative'}}>
+        <header style={{paddingTop:24,paddingBottom:8,paddingLeft:16,paddingRight:16,flexShrink:0,display:'flex',alignItems:'center',gap:8,position:'sticky',top:0,zIndex:100,backgroundColor:'#000',backdropFilter:'blur(10px)',WebkitBackdropFilter:'blur(10px)'}}>
           <button onClick={() => { if (state.view === 'themes') { switchView('home'); } else { window.location.href = '/'; } }}
             style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:'999px',color:'rgba(255,255,255,0.85)',fontSize:13,fontWeight:600,cursor:'pointer',padding:'7px 14px',display:'flex',alignItems:'center',gap:4,flexShrink:0}}>
             <span style={{fontSize:15}}>←</span> 返回
