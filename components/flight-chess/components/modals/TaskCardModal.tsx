@@ -45,7 +45,6 @@ export function TaskCardModal({ isOpen, taskData, onAccept, onReject }: TaskCard
 
   return (
     <div
-      onClick={onReject}
       style={{
         position: 'fixed',
         top: 0,

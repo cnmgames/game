@@ -140,7 +140,7 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
       </div>
 
       {/* 开始按钮 */}
-      <div style={{flexShrink:0,paddingTop:12,paddingBottom:4,background:'transparent',border:'none',boxShadow:'none'}}>
+      <div style={{flexShrink:0,paddingTop:8,paddingBottom:16}}>
         <button onClick={onStartGame} style={{
           width:'100%',height:56,background:'#fff',borderRadius:999,color:'#000',fontWeight:600,fontSize:18,
           border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',gap:8,
@@ -153,8 +153,4 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
     </div>
   );
 }
-
-      <style>{`
-        div::-webkit-scrollbar { display: none; width: 0; height: 0; }
-      `}</style>
     
