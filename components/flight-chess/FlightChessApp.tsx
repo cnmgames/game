@@ -109,7 +109,7 @@ export default function FlightChessApp() {
   };
 
   return (
-    <div className="flight-chess-app" style={{height:'100vh',width:'100vw',overflow:'hidden',overflowX:'hidden',display:'flex',justifyContent:'center',background:'#000',touchAction:'none',userSelect:'none',WebkitUserSelect:'none',overscrollBehavior:'none'}}>
+    <div className="flight-chess-app" style={{height:'100vh',width:'100vw',overflow:'hidden',overflowX:'hidden',display:'flex',justifyContent:'center',background:'#000',touchAction:'pan-y',userSelect:'none',WebkitUserSelect:'none',overscrollBehavior:'none'}}>
       <div style={{position:'fixed',inset:0,zIndex:0}}>
         <div style={{width:'100%',height:'100%',background:'linear-gradient(135deg, #1a1a2e, #000, #1a1a2e)',opacity:0.6}} />
         <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,0.4)',backdropFilter:'blur(2px)'}} />
@@ -117,7 +117,7 @@ export default function FlightChessApp() {
 
       <div style={{position:'relative',zIndex:10,width:'100%',maxWidth:430,height:'100%',display:'flex',flexDirection:'column',background:'rgba(0,0,0,0.2)'}}>
         <header style={{paddingTop:24,paddingBottom:8,paddingLeft:16,paddingRight:16,flexShrink:0,display:'flex',alignItems:'center',gap:8,position:'relative'}}>
-          <button onClick={() => { window.location.href = '/'; }}
+          <button onClick={() => { if (state.view === 'themes') { switchView('home'); } else { window.location.href = '/'; } }}
             style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:'999px',color:'rgba(255,255,255,0.85)',fontSize:13,fontWeight:600,cursor:'pointer',padding:'7px 14px',display:'flex',alignItems:'center',gap:4,flexShrink:0}}>
             <span style={{fontSize:15}}>←</span> 返回
           </button>
@@ -125,12 +125,14 @@ export default function FlightChessApp() {
             <div style={{fontSize:10,fontWeight:600,color:'#666',letterSpacing:2,marginBottom:2}}>Couple&apos;s Game</div>
             <h1 style={{fontSize:22,fontWeight:700,color:'#fff',margin:0,letterSpacing:-0.5,lineHeight:1.2}}>情侣飞行棋</h1>
           </div>
-          <div style={{marginLeft:'auto',flexShrink:0}}>
-            <button onClick={() => switchView(state.view === 'themes' ? 'home' : 'themes')}
-              style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:'999px',color:'rgba(255,255,255,0.85)',fontSize:13,fontWeight:600,cursor:'pointer',padding:'7px 14px',display:'flex',alignItems:'center',gap:4}}>
-              {state.view === 'themes' ? '🏠 首页' : '📚 题库'}
-            </button>
-          </div>
+          {state.view === 'home' && (
+            <div style={{marginLeft:'auto',flexShrink:0}}>
+              <button onClick={() => switchView('themes')}
+                style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:'999px',color:'rgba(255,255,255,0.85)',fontSize:13,fontWeight:600,cursor:'pointer',padding:'7px 14px',display:'flex',alignItems:'center',gap:4}}>
+                📚 题库
+              </button>
+            </div>
+          )}
         </header>
 
         <main style={{flex:1,minHeight:0,position:'relative',overflow:'hidden'}}>
