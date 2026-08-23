@@ -122,16 +122,7 @@ const games = [
                   </div>
                   <p className="game-card-desc">{game.desc}</p>
                 </div>
-                <div style={{
-                      fontSize: '9px',
-                      color: 'rgba(255,255,255,0.35)',
-                      marginTop: '8px',
-                      lineHeight: 1.3,
-                      textAlign: 'left'
-                    }}>
-                      ⚠️ 仅供18+成年情侣娱乐
-                    </div>
-                    <span className="game-card-link">进入游戏 <span aria-hidden="true">→</span></span>
+                <span className="game-card-link">进入游戏 <span aria-hidden="true">→</span></span>
               </Link>
             ))}
           </div>
