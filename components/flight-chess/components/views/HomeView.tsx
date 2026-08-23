@@ -65,7 +65,7 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
 
   return (
     <div style={{display:'flex',flexDirection:'column',height:'100%',minHeight:0}}>
-      <div style={{flex:1,minHeight:0,overflowY:'auto',padding:'8px 0 16px'}}>
+      <div className="no-scrollbar" style={{flex:1,minHeight:0,overflowY:'auto',padding:'8px 0 16px',background:'transparent',scrollbarWidth:'none',msOverflowStyle:'none'}}>
         <div style={{textAlign:'center',marginBottom:16}}>
           <h2 style={{fontSize:20,color:'#ccc',fontWeight:500,margin:0}}>配置游戏角色</h2>
           <p style={{fontSize:13,color:'#666',marginTop:8,margin:'8px 0 0'}}>
@@ -75,9 +75,9 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
 
         {/* 模式选择 */}
         <div style={{position:'relative',marginBottom:20}}>
-          <div ref={scrollerRef} style={{
+          <div ref={scrollerRef} className="no-scrollbar" style={{
             overflowX:'auto',paddingBottom:4,display:'flex',gap:12,scrollSnapType:'x mandatory',
-            scrollbarWidth:'none',msOverflowStyle:'none'
+            scrollbarWidth:'none',msOverflowStyle:'none',WebkitOverflowScrolling:'touch'
           }}>
             {gameModes.map(mode => {
               const isActive = mode.id === gameMode;
@@ -140,7 +140,7 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
       </div>
 
       {/* 开始按钮 */}
-      <div style={{flexShrink:0,paddingTop:12,paddingBottom:4}}>
+      <div style={{flexShrink:0,paddingTop:12,paddingBottom:4,background:'transparent',border:'none',boxShadow:'none'}}>
         <button onClick={onStartGame} style={{
           width:'100%',height:56,background:'#fff',borderRadius:999,color:'#000',fontWeight:600,fontSize:18,
           border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',gap:8,
@@ -153,3 +153,8 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
     </div>
   );
 }
+
+      <style>{`
+        div::-webkit-scrollbar { display: none; width: 0; height: 0; }
+      `}</style>
+    
