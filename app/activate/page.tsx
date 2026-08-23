@@ -46,6 +46,7 @@ export default function ActivatePage() {
             <div className="mb-6 rounded-xl border border-green-400/30 bg-green-500/10 p-4 text-center">
               <div className="text-lg font-bold text-green-300 mb-2">✅ 已激活</div>
               <div className="text-sm text-white/70 space-y-1">
+                <div className="font-mono text-base text-pink-200 tracking-wider">{localStorage.getItem("lg_activation") ? JSON.parse(localStorage.getItem("lg_activation") || "{}").code : ""}</div>
                 <div>类型：{TYPE_NAMES[activation.type!]}</div>
                 <div>剩余：{activation.timeLeftText}</div>
                 <div>过期：{formatDate(activation.expireAt!)}</div>

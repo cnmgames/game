@@ -294,7 +294,7 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
       {children}
       {/* 激活状态指示器（固定在右上角） */}
       {activated && activation && activation.active && (
-        <div className="fixed top-3 right-3 z-50 rounded-full border border-green-400/30 bg-black/60 px-3 py-1 text-xs text-green-300 backdrop-blur whitespace-nowrap">
+        <div className="fixed top-3 right-3 z-50 rounded-full border border-green-400/30 bg-black/60 px-3 py-1 text-xs text-green-300 backdrop-blur whitespace-nowrap max-w-[200px] truncate">
           ✓ {activation.type ? TYPE_NAMES[activation.type] : "已激活"} · {activation.timeLeftText ? "剩" + activation.timeLeftText : "永久有效"}
         </div>
       )}

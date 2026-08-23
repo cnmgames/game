@@ -107,7 +107,7 @@ async function cloudCheck(code: string): Promise<{ used: boolean } | null> {
 }
 
 // 云端激活：标记码为已使用
-async function cloudActivate(code: string): Promise<{ success: boolean; message: string } | null> {
+async function cloudActivate(code: string): Promise<{ success: boolean; message: string; expireAt?: number } | null> {
   if (!API_BASE_URL) return null;
   try {
     const res = await fetch(`${API_BASE_URL}/activate`, {
@@ -118,7 +118,7 @@ async function cloudActivate(code: string): Promise<{ success: boolean; message:
     });
     if (res.ok) {
       const data = await res.json();
-      return { success: !!data.success, message: data.message || "" };
+      return { success: !!data.success, message: data.message || "", expireAt: data.expireAt };
     }
     return null;
   } catch {
@@ -156,16 +156,21 @@ export function activateCode(code: string): Promise<{ success: boolean; message:
     }
     // 保存激活信息到本地
     const now = Date.now();
-    let expireAt: number;
+    // 优先使用云端返回的expireAt（从第一次激活时间算），没有则本地计算
+    let expireAt: number = cloudResult?.expireAt || 0;
     let durationText: string;
-    if (clean[0] === "T") {
-      // 测试卡：5分钟
-      expireAt = now + 5 * 60 * 1000;
-      durationText = "5分钟";
+    if (!expireAt) {
+      if (clean[0] === "T") {
+        expireAt = now + 5 * 60 * 1000;
+        durationText = "5分钟";
+      } else {
+        const days = TYPE_DAYS[clean[0]] || 7;
+        expireAt = now + days * 24 * 60 * 60 * 1000;
+        durationText = `${days}天`;
+      }
     } else {
-      const days = TYPE_DAYS[clean[0]] || 7;
-      expireAt = now + days * 24 * 60 * 60 * 1000;
-      durationText = `${days}天`;
+      const daysLeft = Math.ceil((expireAt - now) / (24 * 60 * 60 * 1000));
+      durationText = daysLeft > 0 ? `${daysLeft}天` : "即将过期";
     }
     const activation = {
       code: clean,
@@ -176,7 +181,7 @@ export function activateCode(code: string): Promise<{ success: boolean; message:
     localStorage.setItem("lg_activation", JSON.stringify(activation));
     return {
       success: true,
-      message: `激活成功！${TYPE_NAMES[parsed.type]}有效期，${durationText}后过期`,
+      message: `激活成功！${TYPE_NAMES[parsed.type]}，剩余${durationText}`,
       type: parsed.type,
       expireAt,
     };
@@ -184,7 +189,7 @@ export function activateCode(code: string): Promise<{ success: boolean; message:
 }
 
 // 检查是否已激活且未过期
-export function checkActivation(): { active: boolean; type?: number; expireAt?: number; daysLeft?: number; timeLeftText?: string } {
+export function checkActivation(): { active: boolean; type?: number; expireAt?: number; daysLeft?: number; timeLeftText?: string; code?: string } {
   if (typeof window === "undefined") {
     return { active: false };
   }
@@ -220,6 +225,7 @@ export function checkActivation(): { active: boolean; type?: number; expireAt?: 
       expireAt: expireAt,
       daysLeft,
       timeLeftText,
+      code: activation.code,
     };
   } catch {
     return { active: false };
