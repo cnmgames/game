@@ -80,7 +80,7 @@ export default function FlightProPage() {
                 backgroundColor: '#2C2C2E',
                 color: 'white',
                 border: '1px solid rgba(255,255,255,0.1)',
-                fontSize: '14px',
+                fontSize: '16px',
                 marginBottom: '12px',
                 boxSizing: 'border-box',
                 outline: 'none'
