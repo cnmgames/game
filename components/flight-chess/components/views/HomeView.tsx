@@ -141,7 +141,7 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
       </div>
 
       {/* 开始按钮 */}
-      <div style={{flexShrink:0,paddingTop:0,paddingBottom:4}}>
+      <div style={{flexShrink:0,paddingTop:0,paddingBottom:0}}>
         <button onClick={onStartGame} style={{
           width:'100%',height:56,background:'#fff',borderRadius:999,color:'#000',fontWeight:600,fontSize:18,
           border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',gap:8,

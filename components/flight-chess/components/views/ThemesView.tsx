@@ -75,7 +75,7 @@ export function ThemesView({ themes, onCreateTheme, onEditTheme }: ThemesViewPro
   const totalTasks = themes.reduce((sum, t) => sum + t.tasks.length, 0);
 
   return (
-    <div style={{
+    <div className="no-scrollbar" style={{
       flex: 1,
       minHeight: 0,
       display: 'flex',
@@ -84,7 +84,9 @@ export function ThemesView({ themes, onCreateTheme, onEditTheme }: ThemesViewPro
       paddingBottom: '24px',
       backgroundColor: '#000000',
       position: 'relative',
-      zIndex: 10
+      zIndex: 10,
+      scrollbarWidth: 'none',
+      msOverflowStyle: 'none'
     }}>
       {/* 标题栏 */}
       <div style={{
@@ -309,3 +311,8 @@ export function ThemesView({ themes, onCreateTheme, onEditTheme }: ThemesViewPro
     </div>
   );
 }
+
+    <style>{`
+      .no-scrollbar::-webkit-scrollbar { display: none; width: 0; height: 0; }
+      .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+    `}</style>
