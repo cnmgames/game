@@ -5,18 +5,12 @@ import { useState, useEffect } from "react";
 export default function Home() {
   const [visitCount, setVisitCount] = useState(0);
   const [onlineCount, setOnlineCount] = useState(-1);
-  const [showPWA, setShowPWA] = useState(true);
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [isIOS, setIsIOS] = useState(false);
-  const [showIOSGuide, setShowIOSGuide] = useState(false);
 
   // 云端真实在线人数：上报访问 + 定时查询
   useEffect(() => {
     const API_BASE = "https://api.ttla.top";
     let retryCount = 0;
-    // 上报访问（no-cors模式，确保手机端也能成功）
     fetch(`${API_BASE}/online/visit`, { method: "POST", mode: "no-cors" }).catch(() => {});
-    // 查询在线人数
     const fetchOnline = () => {
       fetch(`${API_BASE}/online/count`, { cache: "no-store" })
         .then((r) => r.json())
@@ -25,21 +19,18 @@ export default function Home() {
           retryCount = 0;
         })
         .catch(() => {
-          // 失败时重试最多3次，每次间隔5秒
           if (retryCount < 3) {
             retryCount++;
             setTimeout(fetchOnline, 5000);
           }
         });
     };
-    // 延迟1秒后首次查询，确保页面加载完成
     setTimeout(fetchOnline, 1000);
-    // 每30秒刷新一次
     const timer = setInterval(fetchOnline, 30000);
     return () => clearInterval(timer);
   }, []);
 
-  // 本地累计访问次数（保留）
+  // 本地累计访问次数
   useEffect(() => {
     const stored = localStorage.getItem("lovegame_visit_count");
     const count = stored ? parseInt(stored, 10) : 0;
@@ -48,52 +39,7 @@ export default function Home() {
     setVisitCount(newCount);
   }, []);
 
-  // PWA：监听beforeinstallprompt + 检测iOS + 注册service worker
-  useEffect(() => {
-    // 检测iOS
-    const ua = window.navigator.userAgent.toLowerCase();
-    const ios = /iphone|ipad|ipod/.test(ua) && !(window as any).MSStream;
-    setIsIOS(ios);
-
-    // 监听安装提示
-    const handler = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-    };
-    window.addEventListener("beforeinstallprompt", handler);
-
-    // 注册service worker
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js").catch(() => {});
-    }
-
-    // 已安装则隐藏按钮
-    if (window.matchMedia("(display-mode: standalone)").matches) {
-      setShowPWA(false);
-    }
-
-    return () => window.removeEventListener("beforeinstallprompt", handler);
-  }, []);
-
-  const handleInstall = async () => {
-    if (isIOS) {
-      setShowIOSGuide(true);
-      return;
-    }
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === "accepted") {
-        setShowPWA(false);
-      }
-      setDeferredPrompt(null);
-    } else {
-      // 不支持自动安装，显示指引
-      setShowIOSGuide(true);
-    }
-  };
-
-  const games = [
+const games = [
     { emoji: "✈️", title: "情侣飞行棋", desc: "经典飞行棋的情趣浪漫升级版，专为情侣设计的增进感情的情趣游戏。", path: "/flight", type: "free" },
     { emoji: "🎡", title: "真心话大冒险转盘", desc: "终极派对游戏。旋转转盘抽取题目，回答劲爆的真心话问题或接受刺激大胆的挑战。", path: "/truth", type: "paid" },
     { emoji: "🎲", title: "情趣骰子", desc: "喝酒助兴必备。挑战上家的点数，输了就喝酒或大冒险。", path: "/dice", type: "paid" },
@@ -107,36 +53,6 @@ export default function Home() {
   return (
     <>
       <div className="bg-aurora" />
-
-      {/* PWA安装按钮 */}
-      {showPWA && (
-        <div className="fixed bottom-[calc(env(safe-area-inset-bottom)+1.25rem)] left-4 z-[70] inline-flex max-w-[calc(100vw-2rem)] sm:left-6">
-          <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-2xl bg-red-400/35 opacity-20 pwa-btn-glow" />
-          <button onClick={handleInstall} className="group relative z-10 inline-flex max-w-full items-center justify-center rounded-2xl border border-white/10 bg-zinc-950/95 text-[13px] font-medium text-white/85 shadow-lg shadow-black/30 ring-1 ring-white/5 backdrop-blur-xl transition duration-200 hover:-translate-y-0.5 hover:border-red-200/30 hover:bg-zinc-900/95 hover:text-white min-h-11 gap-2 px-3.5 py-2.5">
-            <span className="grid h-7 w-7 shrink-0 place-items-center rounded-xl bg-red-500/10 text-red-100 ring-1 ring-red-200/15">📱</span>
-            <span className="whitespace-nowrap">添加到主屏幕</span>
-          </button>
-        </div>
-      )}
-
-      {/* iOS安装指引弹窗 */}
-      {showIOSGuide && (
-        <div className="modal-overlay" onClick={() => setShowIOSGuide(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-lg font-bold mb-4">添加到主屏幕</h3>
-            <div className="space-y-3 text-sm text-white/80">
-              <p>由于iOS系统限制，请手动添加：</p>
-              <div className="rounded-lg bg-white/5 p-3 space-y-2">
-                <p>1. 点击浏览器底部的 <span className="inline-block text-xl">⎙</span> 分享按钮</p>
-                <p>2. 向下滑动，点击「添加到主屏幕」</p>
-                <p>3. 点击右上角「添加」即可</p>
-              </div>
-              <p className="text-xs text-white/50">添加后可像App一样从桌面打开，全屏体验</p>
-            </div>
-            <button onClick={() => { setShowIOSGuide(false); setShowPWA(false); }} className="w-full mt-4 rounded-full bg-pink-500 py-2 text-sm font-semibold text-white hover:bg-pink-400">我知道了</button>
-          </div>
-        </div>
-      )}
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-7 px-3.5 py-4 sm:gap-12 sm:px-6 sm:py-10 lg:gap-16 lg:px-10 lg:py-12">
         {/* 顶部卡片 */}
@@ -171,7 +87,24 @@ export default function Home() {
                 <span className="game-card-emoji">{game.emoji}</span>
                 <div className="space-y-2 sm:space-y-4">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="game-card-tag">{game.title}</span>
+                    <span className="game-card-tag" style={{
+                      position: 'relative',
+                      display: 'inline-block',
+                      paddingBottom: '4px'
+                    }}>
+                      {game.title}
+                      <span style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: '60%',
+                        height: '3px',
+                        background: 'linear-gradient(90deg, transparent, #FF375F, #BF5AF2, transparent)',
+                        borderRadius: '2px',
+                        boxShadow: '0 0 8px rgba(255,55,95,0.5)'
+                      }} />
+                    </span>
                     {game.type === "free" ? (
                       <span className="inline-flex items-center rounded-full bg-gradient-to-r from-green-500 to-emerald-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-md">
                         免费
@@ -189,7 +122,16 @@ export default function Home() {
                   </div>
                   <p className="game-card-desc">{game.desc}</p>
                 </div>
-                <span className="game-card-link">进入游戏 <span aria-hidden="true">→</span></span>
+                <div style={{
+                      fontSize: '9px',
+                      color: 'rgba(255,255,255,0.35)',
+                      marginTop: '8px',
+                      lineHeight: 1.3,
+                      textAlign: 'left'
+                    }}>
+                      ⚠️ 仅供18+成年情侣娱乐
+                    </div>
+                    <span className="game-card-link">进入游戏 <span aria-hidden="true">→</span></span>
               </Link>
             ))}
           </div>

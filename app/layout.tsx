@@ -34,28 +34,7 @@ export default function RootLayout({
         }}>
         <AntiDebugProvider>
           {children}
-          {/* 全局底部免责声明 */}
-          <div style={{
-            position: 'fixed',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            padding: '8px 16px',
-            backgroundColor: 'rgba(0,0,0,0.8)',
-            backdropFilter: 'blur(10px)',
-            textAlign: 'center',
-            zIndex: 999,
-            pointerEvents: 'none'
-          }}>
-            <p style={{
-              fontSize: '10px',
-              color: 'rgba(255,255,255,0.3)',
-              margin: 0,
-              lineHeight: 1.4
-            }}>
-              ⚠️ 仅供18+成年情侣娱乐 | 请在双方自愿安全前提下进行 | 如有不适请停止
-            </p>
-          </div>
+
         </AntiDebugProvider>
         {/* 免责声明 */}
         <div style={{
@@ -75,6 +54,25 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
+              // 禁止双指缩放
+              document.addEventListener('gesturestart', function(e) {
+                e.preventDefault();
+              });
+              document.addEventListener('gesturechange', function(e) {
+                e.preventDefault();
+              });
+              document.addEventListener('gestureend', function(e) {
+                e.preventDefault();
+              });
+              // 禁止双击缩放
+              var lastTouchEnd = 0;
+              document.addEventListener('touchend', function(e) {
+                var now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                  e.preventDefault();
+                }
+                lastTouchEnd = now;
+              }, false);
               // 移动端滑动误触检测
               (function() {
                 let touchStartX = 0, touchStartY = 0, touchMoved = false, touchStartTime = 0;
