@@ -77,7 +77,8 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
         <div style={{position:'relative',marginBottom:20}}>
           <div ref={scrollerRef} className="no-scrollbar" style={{
             overflowX:'auto',paddingBottom:4,display:'flex',gap:12,scrollSnapType:'x mandatory',
-            scrollbarWidth:'none',msOverflowStyle:'none',WebkitOverflowScrolling:'touch'
+            scrollbarWidth:'none',msOverflowStyle:'none',WebkitOverflowScrolling:'touch',
+            touchAction:'pan-x'
           }}>
             {gameModes.map(mode => {
               const isActive = mode.id === gameMode;
@@ -100,10 +101,10 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
             })}
           </div>
           {scrollHint.left && (
-            <button onClick={() => handleArrow(-1)} style={{position:'absolute',left:-2,top:0,bottom:4,width:64,display:'flex',alignItems:'center',justifyContent:'flex-start',paddingLeft:4,background:'linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.7), transparent)',border:'none',cursor:'pointer',color:'#fff'}}>‹</button>
+            <button onClick={() => handleArrow(-1)} style={{position:'absolute',left:-2,top:0,bottom:4,width:64,display:'flex',alignItems:'center',justifyContent:'flex-start',paddingLeft:4,background:'linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.7), transparent)',border:'none',cursor:'pointer',color:'#fff',zIndex:5,pointerEvents:'auto'}}>‹</button>
           )}
           {scrollHint.right && (
-            <button onClick={() => handleArrow(1)} style={{position:'absolute',right:-2,top:0,bottom:4,width:64,display:'flex',alignItems:'center',justifyContent:'flex-end',paddingRight:4,background:'linear-gradient(to left, rgba(0,0,0,0.9), rgba(0,0,0,0.7), transparent)',border:'none',cursor:'pointer',color:'#fff'}}>›</button>
+            <button onClick={() => handleArrow(1)} style={{position:'absolute',right:-2,top:0,bottom:4,width:64,display:'flex',alignItems:'center',justifyContent:'flex-end',paddingRight:4,background:'linear-gradient(to left, rgba(0,0,0,0.9), rgba(0,0,0,0.7), transparent)',border:'none',cursor:'pointer',color:'#fff',zIndex:5,pointerEvents:'auto'}}>›</button>
           )}
         </div>
 
