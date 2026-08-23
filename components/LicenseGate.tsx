@@ -131,6 +131,9 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
       const status = checkActivation();
       setActivation(status);
       setActivated(true);
+      setBanned(false);
+      setBanMessage("");
+      setBannedMessage("");
       setCode("");
     }
   };
