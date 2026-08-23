@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 @layer components {
   .game-card {
     @apply relative flex min-h-[9.25rem] flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-3.5 text-white shadow-lg shadow-black/30 backdrop-blur-xl transition-all duration-300 hover:border-pink-300/60 hover:bg-black/5 hover:-translate-y-1 sm:min-h-0 sm:rounded-3xl sm:p-6;

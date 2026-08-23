@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useGameState } from './hooks/useGameState';
 import { MineTaskChoice, TaskEventData, ThemeMode } from './types';
 import { HomeView } from './components/views/HomeView';
@@ -109,17 +109,23 @@ export default function FlightChessApp() {
   };
 
   return (
-    <div className="flight-chess-app" style={{height:'100vh',width:'100vw',overflow:'hidden',display:'flex',justifyContent:'center',background:'#000'}}>
+    <div className="flight-chess-app" style={{height:'100vh',width:'100vw',overflow:'hidden',overflowX:'hidden',display:'flex',justifyContent:'center',background:'#000'}}>
       <div style={{position:'fixed',inset:0,zIndex:0}}>
         <div style={{width:'100%',height:'100%',background:'linear-gradient(135deg, #1a1a2e, #000, #1a1a2e)',opacity:0.6}} />
         <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,0.4)',backdropFilter:'blur(2px)'}} />
       </div>
 
       <div style={{position:'relative',zIndex:10,width:'100%',maxWidth:430,height:'100%',display:'flex',flexDirection:'column',background:'rgba(0,0,0,0.2)'}}>
-        <header style={{paddingTop:48,paddingBottom:8,paddingLeft:24,paddingRight:24,flexShrink:0,display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
-          <div>
-            <div style={{fontSize:11,fontWeight:600,color:'#666',letterSpacing:2,marginBottom:4}}>Couple&apos;s Game</div>
-            <h1 style={{fontSize:30,fontWeight:700,color:'#fff',margin:0,letterSpacing:-0.5}}>情侣飞行棋</h1>
+        <header style={{paddingTop:48,paddingBottom:8,paddingLeft:16,paddingRight:24,flexShrink:0,display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:8}}>
+          <div style={{display:'flex',alignItems:'flex-start',gap:8,flex:1,minWidth:0}}>
+            <button onClick={() => { window.location.href = '/'; }}
+              style={{width:36,height:36,borderRadius:'50%',background:'rgba(255,255,255,0.1)',border:'1px solid rgba(255,255,255,0.1)',color:'#fff',fontSize:18,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginTop:4}}>
+              ‹
+            </button>
+            <div style={{minWidth:0}}>
+              <div style={{fontSize:11,fontWeight:600,color:'#666',letterSpacing:2,marginBottom:4}}>Couple&apos;s Game</div>
+              <h1 style={{fontSize:28,fontWeight:700,color:'#fff',margin:0,letterSpacing:-0.5,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>情侣飞行棋</h1>
+            </div>
           </div>
           <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:8,marginTop:4}}>
             <button onClick={() => switchView(state.view === 'themes' ? 'home' : 'themes')}

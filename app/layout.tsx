@@ -38,7 +38,7 @@ export default function RootLayout({
 
         </AntiDebugProvider>
         {/* 免责声明 */}
-        <div style={{
+        <div className="global-disclaimer" style={{
           position: 'fixed',
           bottom: 0,
           left: 0,
