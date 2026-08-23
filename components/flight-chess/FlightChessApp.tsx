@@ -118,8 +118,8 @@ export default function FlightChessApp() {
       <div style={{position:'relative',zIndex:10,width:'100%',maxWidth:430,height:'100%',display:'flex',flexDirection:'column',background:'rgba(0,0,0,0.2)'}}>
         <header style={{paddingTop:24,paddingBottom:8,paddingLeft:16,paddingRight:16,flexShrink:0,display:'flex',alignItems:'center',gap:8,position:'relative'}}>
           <button onClick={() => { window.location.href = '/'; }}
-            style={{background:'none',border:'none',color:'rgba(255,255,255,0.7)',fontSize:14,fontWeight:500,cursor:'pointer',padding:'6px 0',display:'flex',alignItems:'center',gap:4,flexShrink:0}}>
-            <span style={{fontSize:16}}>←</span> 返回
+            style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:'999px',color:'rgba(255,255,255,0.85)',fontSize:13,fontWeight:600,cursor:'pointer',padding:'7px 14px',display:'flex',alignItems:'center',gap:4,flexShrink:0}}>
+            <span style={{fontSize:15}}>←</span> 返回
           </button>
           <div style={{position:'absolute',left:0,right:0,textAlign:'center',pointerEvents:'none'}}>
             <div style={{fontSize:10,fontWeight:600,color:'#666',letterSpacing:2,marginBottom:2}}>Couple&apos;s Game</div>
