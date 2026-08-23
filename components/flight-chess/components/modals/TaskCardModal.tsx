@@ -1,8 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { TaskEventData } from '../../types';
-import { Heart, Lock, HandshakeIcon } from 'lucide-react';
-
 interface TaskCardModalProps {
   isOpen: boolean;
   taskData: TaskEventData | null;
@@ -10,11 +8,15 @@ interface TaskCardModalProps {
   onReject: () => void;
 }
 
-const iconMap: Record<string, React.ReactNode> = {
-  favorite: <Heart size={36} fill="currentColor" />,
-  lock: <Lock size={36} />,
-  handshake: <HandshakeIcon size={36} />
+// emoji图标映射
+const emojiIconMap: Record<string, string> = {
+  favorite: '❤️', lock: '🔒', handshake: '🤝',
+  sparkles: '✨', 'message-question': '💬', flame: '🔥'
 };
+
+function getTaskIcon(icon: string): string {
+  return emojiIconMap[icon] || icon || '✨';
+}
 
 export function TaskCardModal({ isOpen, taskData, onAccept, onReject }: TaskCardModalProps) {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -33,7 +35,10 @@ export function TaskCardModal({ isOpen, taskData, onAccept, onReject }: TaskCard
 
   if (!isOpen || !taskData) return null;
 
-  const rejectLabel = taskData.type === 'collision' ? '拒绝（回到起点）' : '拒绝（倒退1~3格）';
+  const noPenaltyTypes = ['card', 'mineTruth', 'mineDare', 'mineTheme'];
+  const rejectLabel = taskData.type === 'collision' ? '拒绝（回到起点）'
+    : noPenaltyTypes.includes(taskData.type) ? '拒绝任务'
+    : '拒绝（倒退1~3格）';
   const executorLabel = taskData.executorPlayerId === 0 ? '男方' : '女方';
   const executorColor = taskData.executorPlayerId === 0 ? '#0A84FF' : '#FF375F';
   const iconColor = taskData.color || '#FF375F';
@@ -108,7 +113,7 @@ export function TaskCardModal({ isOpen, taskData, onAccept, onReject }: TaskCard
               animation: 'pulse 2s infinite',
               boxShadow: '0 4px 20px rgba(255,55,95,0.4)'
             }}>
-              {iconMap[taskData.icon] || iconMap.favorite}
+              <span style={{fontSize:'36px'}}>{getTaskIcon(taskData.icon)}</span>
             </div>
             <h3 style={{
               fontSize: '24px',
@@ -167,7 +172,7 @@ export function TaskCardModal({ isOpen, taskData, onAccept, onReject }: TaskCard
                 color: 'white',
                 boxShadow: '0 4px 16px rgba(255,55,95,0.3)'
               }}>
-                {iconMap[taskData.icon] || iconMap.favorite}
+                <span style={{fontSize:'36px'}}>{getTaskIcon(taskData.icon)}</span>
               </div>
               <h3 style={{
                 fontSize: '20px',

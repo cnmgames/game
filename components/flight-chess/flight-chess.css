@@ -213,3 +213,18 @@
 .flight-chess-app .flip-card-inner.flipped {
   transform: rotateY(180deg);
 }
+
+/* 骰子旋转动画 */
+@keyframes diceSpin {
+  0% { transform: translateZ(-38px) rotateX(0deg) rotateY(0deg); }
+  100% { transform: translateZ(-38px) rotateX(360deg) rotateY(360deg); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 隐藏滚动条 */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
