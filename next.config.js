@@ -9,10 +9,6 @@ const nextConfig = {
     unoptimized: true,
     formats: ["image/webp"],
   },
-  // 生产环境优化
-  experimental: {
-    optimizeCss: true,
-  },
   // 静态资源缓存
   async headers() {
     return [
