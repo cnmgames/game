@@ -83,7 +83,6 @@ export default function ActivatePage() {
             >
               🛒 购买激活码（全部通用）
             </a>
-            <p className="mt-2 text-center text-xs text-pink-200/70">一个激活码解锁全部5个游戏，永久有效</p>
 
             {result && (
               <div className={`rounded-xl p-3 text-center text-sm ${
@@ -94,9 +93,6 @@ export default function ActivatePage() {
             )}
           </div>
 
-          <div className="mt-6 text-center text-xs text-white/40">
-            <p>飞行棋永久免费，无需激活</p>
-          </div>
         </div>
       </div>
     </>

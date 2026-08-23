@@ -185,7 +185,6 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
               <div className="text-5xl mb-4">🔒</div>
               <h1 className="text-2xl font-bold text-white mb-2">{gameName}</h1>
               <p className="text-sm text-white/60">该游戏需要激活码才能使用</p>
-              <p className="text-xs text-white/40 mt-1">飞行棋永久免费</p>
             </div>
             <div className="space-y-4">
               {bannedMessage && (
@@ -218,7 +217,6 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
               >
                 🛒 购买激活码（全部通用）
               </a>
-              <p className="text-center text-xs text-yellow-200/60">一个激活码解锁全部5个游戏</p>
               {result && (
                 <div className={`rounded-xl p-3 text-center text-sm ${
                   result.success ? "border border-green-400/30 bg-green-500/10 text-green-200" : "border border-red-400/30 bg-red-500/10 text-red-200"
@@ -226,9 +224,6 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
                   {result.message}
                 </div>
               )}
-            </div>
-            <div className="mt-4 text-center text-xs text-white/40">
-              <p>支持周卡 / 月卡 / 季卡 / 年卡 · 飞行棋永久免费</p>
             </div>
           </div>
         </div>
