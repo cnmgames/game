@@ -141,7 +141,8 @@ export function activateCode(code: string): Promise<{ success: boolean; message:
     const cloudResult = await cloudActivate(clean);
     if (cloudResult !== null) {
       if (!cloudResult.success) {
-        return { success: false, message: cloudResult.message || "该激活码已被使用" };
+        // 云端返回失败（包括被封禁、已使用、已过期），直接返回，不降级
+        return { success: false, message: cloudResult.message || "激活码无效" };
       }
     } else {
       // 云端不可用，降级到本地检查
