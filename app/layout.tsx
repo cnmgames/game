@@ -26,6 +26,7 @@ export default function RootLayout({
       <body style={{
           margin: 0,
           padding: 0,
+          paddingBottom: '48px',
           overflowX: 'hidden',
           WebkitUserSelect: 'none',
           userSelect: 'none',
@@ -39,17 +40,22 @@ export default function RootLayout({
         {/* 免责声明 */}
         <div style={{
           position: 'fixed',
-          bottom: '8px',
+          bottom: 0,
           left: 0,
           right: 0,
           textAlign: 'center',
-          fontSize: '10px',
-          color: 'rgba(255,255,255,0.25)',
+          fontSize: '11px',
+          color: 'rgba(255,255,255,0.6)',
           pointerEvents: 'none',
-          zIndex: 1,
-          padding: '0 16px'
+          zIndex: 99999,
+          padding: '10px 16px',
+          paddingBottom: 'calc(10px + env(safe-area-inset-bottom))',
+          background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 60%, transparent 100%)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+          fontWeight: 500
         }}>
-          本网站仅供18岁以上成年情侣娱乐，请在双方自愿且安全的前提下进行
+          ⚠️ 18+成年情侣娱乐 | 双方自愿安全 | 不适即停
         </div>
         <script
           dangerouslySetInnerHTML={{

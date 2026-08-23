@@ -13,7 +13,10 @@
     @apply relative z-10 inline-flex max-w-full items-center gap-2 rounded-full bg-transparent py-0 text-sm font-semibold leading-tight text-pink-100 sm:bg-white/10 sm:px-3 sm:py-1 sm:text-xs sm:uppercase sm:tracking-widest sm:text-pink-200;
   }
   .game-card-desc {
-    @apply overflow-hidden text-[11px] leading-snug text-white/60 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] sm:block sm:text-sm sm:leading-relaxed sm:text-white/70;
+    @apply text-[11px] leading-snug text-white/60 sm:text-sm sm:leading-relaxed sm:text-white/70;
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+    overflow: visible !important;
   }
   .game-card-link {
     @apply relative z-10 mt-3 inline-flex items-center gap-1.5 rounded-full border border-pink-400/40 bg-pink-500/10 px-4 py-1.5 text-xs font-semibold text-pink-200 transition group-hover:border-pink-300/60 group-hover:bg-pink-500/20 group-hover:text-pink-100 sm:mt-6 sm:gap-2 sm:text-sm;
