@@ -193,10 +193,12 @@ export function checkActivation(): { active: boolean; type?: number; expireAt?: 
   try {
     const activation = JSON.parse(data);
     const now = Date.now();
-    if (now > activation.expireAt) {
+    // 兼容两种字段名：expireAt 和 expiresAt
+    const expireAt = activation.expireAt || activation.expiresAt;
+    if (!expireAt || now > expireAt) {
       return { active: false };
     }
-    const msLeft = activation.expireAt - now;
+    const msLeft = expireAt - now;
     const daysLeft = Math.ceil(msLeft / (24 * 60 * 60 * 1000));
     // 智能时间显示
     let timeLeftText: string;
@@ -215,7 +217,7 @@ export function checkActivation(): { active: boolean; type?: number; expireAt?: 
     return {
       active: true,
       type: activation.type,
-      expireAt: activation.expireAt,
+      expireAt: expireAt,
       daysLeft,
       timeLeftText,
     };
