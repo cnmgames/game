@@ -51,6 +51,36 @@ function hashStr(str: string): number {
   return Math.abs(hash);
 }
 
+// 获取或生成设备唯一ID（一人一码核心）
+export function getDeviceId(): string {
+  if (typeof window === "undefined") return "unknown";
+  let deviceId = localStorage.getItem("lg_device_id");
+  if (!deviceId) {
+    // 生成基于浏览器特征的设备指纹
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    let fingerprint = "";
+    if (ctx) {
+      ctx.textBaseline = "top";
+      ctx.font = "14px Arial";
+      ctx.fillText("fingerprint", 2, 2);
+      fingerprint = canvas.toDataURL();
+    }
+    const raw = [
+      navigator.userAgent,
+      navigator.language,
+      screen.width + "x" + screen.height,
+      screen.colorDepth,
+      new Date().getTimezoneOffset(),
+      fingerprint,
+      Math.random().toString(36).substring(2),
+    ].join("|");
+    deviceId = hashStr(raw).toString(36) + Date.now().toString(36);
+    localStorage.setItem("lg_device_id", deviceId);
+  }
+  return deviceId;
+}
+
 function randomStr(len: number): string {
   let result = "";
   for (let i = 0; i < len; i++) {
@@ -110,10 +140,11 @@ async function cloudCheck(code: string): Promise<{ used: boolean } | null> {
 async function cloudActivate(code: string): Promise<{ success: boolean; message: string; expireAt?: number } | null> {
   if (!API_BASE_URL) return null;
   try {
+    const deviceId = getDeviceId();
     const res = await fetch(`${API_BASE_URL}/activate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code }),
+      body: JSON.stringify({ code, deviceId }),
       signal: AbortSignal.timeout(5000),
     });
     if (res.ok) {
@@ -141,19 +172,12 @@ export function activateCode(code: string): Promise<{ success: boolean; message:
     const cloudResult = await cloudActivate(clean);
     if (cloudResult !== null) {
       if (!cloudResult.success) {
-        // 云端返回失败（包括被封禁、已使用、已过期），直接返回，不降级
+        // 云端返回失败（包括被封禁、已使用、已过期、设备不匹配），直接返回
         return { success: false, message: cloudResult.message || "激活码无效" };
       }
     } else {
-      // 云端不可用，降级到本地检查
-      try {
-        const usedCodes = JSON.parse(localStorage.getItem("lg_used_codes") || "[]");
-        if (usedCodes.includes(clean)) {
-          return { success: false, message: "该激活码已被使用，无法重复激活" };
-        }
-        usedCodes.push(clean);
-        localStorage.setItem("lg_used_codes", JSON.stringify(usedCodes));
-      } catch {}
+      // 云端不可用，拒绝激活（确保一人一码，不允许离线激活）
+      return { success: false, message: "网络异常，请检查网络后重试" };
     }
     // 保存激活信息到本地
     const now = Date.now();
