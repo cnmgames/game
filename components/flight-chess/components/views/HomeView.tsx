@@ -76,7 +76,7 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
         {/* 模式选择 */}
         <div style={{position:'relative',marginBottom:20}}>
           <div ref={scrollerRef} className="no-scrollbar" style={{
-            overflowX:'auto',paddingBottom:4,display:'flex',gap:12,scrollSnapType:'x mandatory',
+            overflowX:'auto',paddingBottom:4,display:'flex',gap:12,
             scrollbarWidth:'none',msOverflowStyle:'none',WebkitOverflowScrolling:'touch',
             touchAction:'pan-x'
           }}>
@@ -85,7 +85,7 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
               return (
                 <button key={mode.id} data-mode-id={mode.id} onClick={() => { onSelectMode(mode.id); scrollModeIntoView(mode.id); }}
                   style={{
-                    minHeight:108,flex:'0 0 calc(50% - 6px)',minWidth:168,scrollSnapAlign:'start',
+                    minHeight:108,flex:'0 0 calc(50% - 6px)',minWidth:168,
                     borderRadius:20,border:`1px solid ${isActive?'#fff':'rgba(255,255,255,0.05)'}`,
                     padding:16,textAlign:'left',cursor:'pointer',transition:'all 0.2s',
                     background:isActive?'#fff':'#1C1C1E',color:isActive?'#000':'#fff'
@@ -141,7 +141,7 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
       </div>
 
       {/* 开始按钮 */}
-      <div style={{flexShrink:0,paddingTop:0,paddingBottom:8}}>
+      <div style={{flexShrink:0,paddingTop:0,paddingBottom:4}}>
         <button onClick={onStartGame} style={{
           width:'100%',height:56,background:'#fff',borderRadius:999,color:'#000',fontWeight:600,fontSize:18,
           border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',gap:8,

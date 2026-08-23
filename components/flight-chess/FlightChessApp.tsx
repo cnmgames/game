@@ -109,7 +109,7 @@ export default function FlightChessApp() {
   };
 
   return (
-    <div className="flight-chess-app" style={{height:'100vh',width:'100vw',overflow:'hidden',overflowX:'hidden',display:'flex',justifyContent:'center',background:'#000'}}>
+    <div className="flight-chess-app" style={{height:'100vh',width:'100vw',overflow:'hidden',overflowX:'hidden',display:'flex',justifyContent:'center',background:'#000',touchAction:'none',userSelect:'none',WebkitUserSelect:'none',overscrollBehavior:'none'}}>
       <div style={{position:'fixed',inset:0,zIndex:0}}>
         <div style={{width:'100%',height:'100%',background:'linear-gradient(135deg, #1a1a2e, #000, #1a1a2e)',opacity:0.6}} />
         <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,0.4)',backdropFilter:'blur(2px)'}} />
