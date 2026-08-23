@@ -64,8 +64,8 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
     : gameMode === 'dice' ? '开始骰子' : gameMode === 'mine' ? '开始扫雷' : '开始游戏';
 
   return (
-    <div style={{display:'flex',flexDirection:'column',height:'100%',minHeight:0}}>
-      <div className="no-scrollbar" style={{flex:1,minHeight:0,overflowY:'auto',padding:'8px 0 16px',background:'transparent',scrollbarWidth:'none',msOverflowStyle:'none'}}>
+    <div style={{height:'100%',minHeight:0}}>
+      <div className="no-scrollbar" style={{height:'100%',minHeight:0,overflowY:'auto',padding:'8px 0 24px',background:'transparent',scrollbarWidth:'none',msOverflowStyle:'none'}}>
         <div style={{textAlign:'center',marginBottom:16}}>
           <h2 style={{fontSize:20,color:'#ccc',fontWeight:500,margin:0}}>配置游戏角色</h2>
           <p style={{fontSize:13,color:'#666',marginTop:8,margin:'8px 0 0'}}>
@@ -138,18 +138,17 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
             })}
           </div>
         )}
-      </div>
-
-      {/* 开始按钮 */}
-      <div style={{flexShrink:0,paddingTop:0,paddingBottom:0}}>
-        <button onClick={onStartGame} style={{
-          width:'100%',height:56,background:'#fff',borderRadius:999,color:'#000',fontWeight:600,fontSize:18,
-          border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',gap:8,
-          boxShadow:'0 10px 15px -3px rgba(0,0,0,0.3)'
-        }}>
-          <span>{startLabel}</span>
-          <span>›</span>
-        </button>
+        {/* 开始按钮 */}
+        <div style={{marginTop:24}}>
+          <button onClick={onStartGame} style={{
+            width:'100%',height:56,background:'#fff',borderRadius:999,color:'#000',fontWeight:600,fontSize:18,
+            border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',gap:8,
+            boxShadow:'0 10px 15px -3px rgba(0,0,0,0.3)'
+          }}>
+            <span>{startLabel}</span>
+            <span>›</span>
+          </button>
+        </div>
       </div>
     </div>
   );
