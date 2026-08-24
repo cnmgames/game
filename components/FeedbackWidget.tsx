@@ -3,15 +3,28 @@ import { useState, useEffect } from "react";
 
 const API_BASE = "https://api.ttla.top";
 
+// 游戏页面路径列表（这些页面不显示悬浮按钮，改用页面内反馈入口）
+const GAME_PATHS = ["/flight", "/truth", "/dice", "/beast", "/slot", "/monopoly", "/flight-pro", "/posture"];
+
 export default function FeedbackWidget() {
   const [open, setOpen] = useState(false);
+  const [isGamePage, setIsGamePage] = useState(false);
+
+  // 检测是否是游戏页面
+  useEffect(() => {
+    const path = window.location.pathname;
+    setIsGamePage(GAME_PATHS.some(p => path.startsWith(p)));
+  }, []);
+
+  // 游戏页面不显示悬浮按钮
+  if (isGamePage) return null;
   const [type, setType] = useState("suggestion");
   const [content, setContent] = useState("");
   const [contact, setContact] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
-  // 弹窗打开时禁用背景滚动
+  // 弹窗打开时禁用背景滚动 + 全局禁用缩放
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -22,10 +35,25 @@ export default function FeedbackWidget() {
       document.body.style.position = "";
       document.body.style.width = "";
     }
+    // 全局禁用双击缩放和捏合缩放
+    const preventZoom = (e: TouchEvent) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    };
+    const preventDoubleTap = (e: Event) => {
+      e.preventDefault();
+    };
+    document.addEventListener("touchmove", preventZoom, { passive: false });
+    document.addEventListener("gesturestart", preventZoom as EventListener);
+    document.addEventListener("dblclick", preventDoubleTap);
     return () => {
       document.body.style.overflow = "";
       document.body.style.position = "";
       document.body.style.width = "";
+      document.removeEventListener("touchmove", preventZoom);
+      document.removeEventListener("gesturestart", preventZoom as EventListener);
+      document.removeEventListener("dblclick", preventDoubleTap);
     };
   }, [open]);
 
@@ -95,6 +123,26 @@ export default function FeedbackWidget() {
       <button
         onClick={() => setOpen(true)}
         aria-label="反馈建议"
+        onTouchStart={(e) => {
+          // 阻止多点触摸（捏合缩放）
+          if (e.touches.length > 1) {
+            e.preventDefault();
+          }
+        }}
+        onTouchMove={(e) => {
+          // 阻止触摸移动时的缩放
+          if (e.touches.length > 1) {
+            e.preventDefault();
+          }
+        }}
+        onDoubleClick={(e) => {
+          // 阻止双击缩放
+          e.preventDefault();
+        }}
+        onGestureStart={(e) => {
+          // 阻止iOS手势缩放
+          e.preventDefault();
+        }}
         style={{
           position: "fixed",
           right: "max(10px, env(safe-area-inset-right))",
@@ -112,13 +160,16 @@ export default function FeedbackWidget() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          // 禁用缩放和闪动
+          // 完全禁用缩放和闪动
           touchAction: "none",
           userSelect: "none",
           WebkitUserSelect: "none",
           WebkitTapHighlightColor: "transparent",
           WebkitTouchCallout: "none",
           outline: "none",
+          // 禁用文本缩放
+          WebkitTextSizeAdjust: "none",
+          textSizeAdjust: "none",
         }}
       >
         💬
@@ -152,10 +203,11 @@ export default function FeedbackWidget() {
               border: "1px solid rgba(255,255,255,0.1)",
               borderRadius: "16px 16px 0 0",
               padding: "16px 16px",
-              paddingBottom: "max(16px, calc(env(safe-area-inset-bottom) + 12px))",
+              // 底部留足够空间，避免被免责声明挡住
+              paddingBottom: "calc(env(safe-area-inset-bottom) + 70px)",
               width: "100%",
               maxWidth: "420px",
-              maxHeight: "80vh",
+              maxHeight: "75vh",
               overflowY: "auto",
               boxShadow: "0 -8px 30px rgba(0,0,0,0.5)",
               WebkitOverflowScrolling: "touch",

@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { checkActivation, activateCode, clearActivation, TYPE_NAMES } from "../lib/license";
+import GameFeedbackButton from "./GameFeedbackButton";
 
 const API_BASE_URL = "https://api.ttla.top";
 
@@ -290,6 +291,8 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
   return (
     <>
       {children}
+      {/* 游戏内反馈按钮 */}
+      <GameFeedbackButton gameName={gameName} />
       {/* 激活状态指示器（固定在右上角） */}
       {activated && activation && activation.active && (
         <div className="fixed top-3 right-3 z-50 rounded-full border border-green-400/30 bg-black/60 px-3 py-1 text-xs text-green-300 backdrop-blur whitespace-nowrap max-w-[200px] truncate">

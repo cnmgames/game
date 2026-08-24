@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import GameFeedbackButton from "../../components/GameFeedbackButton";
 import { useState, useCallback, useRef, useEffect } from "react";
 
 const defaultEvents = [
@@ -330,6 +331,7 @@ export default function FlightGame() {
           </div>
         </div>
       )}
+      <GameFeedbackButton gameName="情侣飞行棋" />
     </>
   );
 }

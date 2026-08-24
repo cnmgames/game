@@ -51,8 +51,8 @@ const games = [
     { emoji: "🦁", title: "火辣暗兽棋", desc: "翻牌、博弈、宽衣，心跳加速的策略对决。记忆与运气的较量，每翻一张牌都可能让对方卸下防备。", path: "/beast", type: "paid" },
     { emoji: "🎰", title: "桃色老虎机", desc: "一拉定情。地点、动作、部位随机组合，摇出你的下一个亲密时刻。先集满欲望条者获胜，体验前所未有的刺激。", path: "/slot", type: "paid" },
     { emoji: "💎", title: "午夜大富翁", desc: "绕着棋盘冒险，每一站都有欲望事件等待完成。买房、收租、触发惊喜，在游戏中一步步点燃激情。", path: "/monopoly", type: "paid" },
-    { emoji: "🚀", title: "情侣飞行棋Pro", desc: "功能增强版飞行棋，支持自定义任务主题、AI智能导入、3D骰子动画，男女双方专属任务包，打造你们的专属游戏。", path: "/flight-pro", dev: true, type: "paid" },
-    { emoji: "💕", title: "姿势大全", desc: "12种经典性爱姿势，详细图文教程与难度分级，从入门到高阶，探索更多亲密可能，让每一晚都充满新鲜感。", path: "/posture", dev: true, type: "paid" },
+    { emoji: "🚀", title: "情侣飞行棋Pro", desc: "功能增强版飞行棋，支持自定义任务主题、AI智能导入、3D骰子动画，男女双方专属任务包，打造你们的专属游戏。", path: "/flight-pro", type: "paid" },
+    { emoji: "💕", title: "姿势大全", desc: "12种经典性爱姿势，详细图文教程与难度分级，从入门到高阶，探索更多亲密可能，让每一晚都充满新鲜感。", path: "/posture", type: "paid" },
   ];
 
   return (
