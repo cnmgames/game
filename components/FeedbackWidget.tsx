@@ -7,8 +7,14 @@ const API_BASE = "https://api.ttla.top";
 const GAME_PATHS = ["/flight", "/truth", "/dice", "/beast", "/slot", "/monopoly", "/flight-pro", "/posture"];
 
 export default function FeedbackWidget() {
+  // 所有state必须在顶层声明，不能在条件判断之后
   const [open, setOpen] = useState(false);
   const [isGamePage, setIsGamePage] = useState(false);
+  const [type, setType] = useState("suggestion");
+  const [content, setContent] = useState("");
+  const [contact, setContact] = useState("");
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
   // 检测是否是游戏页面
   useEffect(() => {
@@ -16,15 +22,7 @@ export default function FeedbackWidget() {
     setIsGamePage(GAME_PATHS.some(p => path.startsWith(p)));
   }, []);
 
-  // 游戏页面不显示悬浮按钮
-  if (isGamePage) return null;
-  const [type, setType] = useState("suggestion");
-  const [content, setContent] = useState("");
-  const [contact, setContact] = useState("");
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [errorMsg, setErrorMsg] = useState("");
-
-  // 弹窗打开时禁用背景滚动 + 全局禁用缩放
+  // 弹窗打开时禁用背景滚动
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -35,25 +33,15 @@ export default function FeedbackWidget() {
       document.body.style.position = "";
       document.body.style.width = "";
     }
-    // 全局禁用双击缩放和捏合缩放
-    const preventZoom = (e: TouchEvent) => {
-      if (e.touches.length > 1) {
-        e.preventDefault();
-      }
-    };
-    const preventDoubleTap = (e: Event) => {
-      e.preventDefault();
-    };
-    document.addEventListener("touchmove", preventZoom, { passive: false });
-    document.addEventListener("dblclick", preventDoubleTap);
     return () => {
       document.body.style.overflow = "";
       document.body.style.position = "";
       document.body.style.width = "";
-      document.removeEventListener("touchmove", preventZoom);
-      document.removeEventListener("dblclick", preventDoubleTap);
     };
   }, [open]);
+
+  // 游戏页面不显示悬浮按钮（必须在所有Hooks之后）
+  if (isGamePage) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,7 +64,6 @@ export default function FeedbackWidget() {
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       };
 
-      // 提交到工单系统，后台就能看到
       const res = await fetch(`${API_BASE}/ticket/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -104,7 +91,7 @@ export default function FeedbackWidget() {
         setStatus("error");
         setErrorMsg(data.message || "提交失败，请重试");
       }
-    } catch (err) {
+    } catch {
       setStatus("error");
       setErrorMsg("网络错误，请检查网络后重试");
     }
@@ -117,26 +104,17 @@ export default function FeedbackWidget() {
 
   return (
     <>
-      {/* 悬浮按钮 - 禁用缩放和闪动 */}
+      {/* 悬浮按钮 */}
       <button
         onClick={() => setOpen(true)}
         aria-label="反馈建议"
         onTouchStart={(e) => {
-          // 阻止多点触摸（捏合缩放）
-          if (e.touches.length > 1) {
-            e.preventDefault();
-          }
+          if (e.touches.length > 1) e.preventDefault();
         }}
         onTouchMove={(e) => {
-          // 阻止触摸移动时的缩放
-          if (e.touches.length > 1) {
-            e.preventDefault();
-          }
+          if (e.touches.length > 1) e.preventDefault();
         }}
-        onDoubleClick={(e) => {
-          // 阻止双击缩放
-          e.preventDefault();
-        }}
+        onDoubleClick={(e) => e.preventDefault()}
         style={{
           position: "fixed",
           right: "max(10px, env(safe-area-inset-right))",
@@ -154,14 +132,12 @@ export default function FeedbackWidget() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          // 完全禁用缩放和闪动
           touchAction: "none",
           userSelect: "none",
           WebkitUserSelect: "none",
           WebkitTapHighlightColor: "transparent",
           WebkitTouchCallout: "none",
           outline: "none",
-          // 禁用文本缩放
           WebkitTextSizeAdjust: "none",
           textSizeAdjust: "none",
         }}
@@ -184,7 +160,6 @@ export default function FeedbackWidget() {
             alignItems: "flex-end",
             justifyContent: "center",
             padding: "0",
-            // 禁用背景滚动
             overflow: "hidden",
             touchAction: "none",
           }}
@@ -197,7 +172,6 @@ export default function FeedbackWidget() {
               border: "1px solid rgba(255,255,255,0.1)",
               borderRadius: "16px 16px 0 0",
               padding: "16px 16px",
-              // 底部留足够空间，避免被免责声明挡住
               paddingBottom: "calc(env(safe-area-inset-bottom) + 70px)",
               width: "100%",
               maxWidth: "420px",
@@ -207,25 +181,18 @@ export default function FeedbackWidget() {
               WebkitOverflowScrolling: "touch",
             }}
           >
-            {/* 顶部拖拽条 */}
             <div style={{ width: "36px", height: "3px", borderRadius: "2px", background: "rgba(255,255,255,0.2)", margin: "0 auto 12px" }} />
 
             {status === "success" ? (
               <div style={{ textAlign: "center", padding: "16px 0" }}>
                 <div style={{ fontSize: "40px", marginBottom: "10px" }}>✅</div>
-                <h3 style={{ color: "#fff", fontSize: "1.05rem", marginBottom: "6px", fontWeight: "700" }}>
-                  感谢您的反馈！
-                </h3>
-                <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.82rem", lineHeight: "1.5" }}>
-                  您的建议已提交，我们会认真查看
-                </p>
+                <h3 style={{ color: "#fff", fontSize: "1.05rem", marginBottom: "6px", fontWeight: "700" }}>感谢您的反馈！</h3>
+                <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.82rem", lineHeight: "1.5" }}>您的建议已提交，我们会认真查看</p>
               </div>
             ) : (
               <>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
-                  <h3 style={{ color: "#fff", fontSize: "1.05rem", fontWeight: "700" }}>
-                    💬 反馈与建议
-                  </h3>
+                  <h3 style={{ color: "#fff", fontSize: "1.05rem", fontWeight: "700" }}>💬 反馈与建议</h3>
                   <button
                     onClick={closeModal}
                     aria-label="关闭"
@@ -250,11 +217,8 @@ export default function FeedbackWidget() {
                 </div>
 
                 <form onSubmit={handleSubmit}>
-                  {/* 反馈类型 - 禁用闪动 */}
                   <div style={{ marginBottom: "12px" }}>
-                    <label style={{ display: "block", color: "rgba(255,255,255,0.7)", fontSize: "0.8rem", marginBottom: "6px", fontWeight: "600" }}>
-                      反馈类型
-                    </label>
+                    <label style={{ display: "block", color: "rgba(255,255,255,0.7)", fontSize: "0.8rem", marginBottom: "6px", fontWeight: "600" }}>反馈类型</label>
                     <div style={{ display: "flex", gap: "6px" }}>
                       {[
                         { value: "suggestion", label: "💡 建议", color: "#a855f7" },
@@ -276,7 +240,6 @@ export default function FeedbackWidget() {
                             cursor: "pointer",
                             transition: "none",
                             fontWeight: type === item.value ? "600" : "400",
-                            // 禁用闪动
                             WebkitTapHighlightColor: "transparent",
                             touchAction: "manipulation",
                             userSelect: "none",
@@ -290,11 +253,8 @@ export default function FeedbackWidget() {
                     </div>
                   </div>
 
-                  {/* 反馈内容 */}
                   <div style={{ marginBottom: "12px" }}>
-                    <label style={{ display: "block", color: "rgba(255,255,255,0.7)", fontSize: "0.8rem", marginBottom: "6px", fontWeight: "600" }}>
-                      详细描述 <span style={{ color: "#ef4444" }}>*</span>
-                    </label>
+                    <label style={{ display: "block", color: "rgba(255,255,255,0.7)", fontSize: "0.8rem", marginBottom: "6px", fontWeight: "600" }}>详细描述 <span style={{ color: "#ef4444" }}>*</span></label>
                     <textarea
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
@@ -316,16 +276,11 @@ export default function FeedbackWidget() {
                         lineHeight: "1.5",
                       }}
                     />
-                    <div style={{ textAlign: "right", marginTop: "3px", fontSize: "0.68rem", color: "rgba(255,255,255,0.35)" }}>
-                      {content.length}/1000
-                    </div>
+                    <div style={{ textAlign: "right", marginTop: "3px", fontSize: "0.68rem", color: "rgba(255,255,255,0.35)" }}>{content.length}/1000</div>
                   </div>
 
-                  {/* 联系方式 */}
                   <div style={{ marginBottom: "14px" }}>
-                    <label style={{ display: "block", color: "rgba(255,255,255,0.7)", fontSize: "0.8rem", marginBottom: "6px", fontWeight: "600" }}>
-                      联系方式 <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.7rem" }}>(选填)</span>
-                    </label>
+                    <label style={{ display: "block", color: "rgba(255,255,255,0.7)", fontSize: "0.8rem", marginBottom: "6px", fontWeight: "600" }}>联系方式 <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.7rem" }}>(选填)</span></label>
                     <input
                       type="text"
                       value={contact}
@@ -345,7 +300,6 @@ export default function FeedbackWidget() {
                     />
                   </div>
 
-                  {/* 错误提示 */}
                   {status === "error" && (
                     <div style={{
                       padding: "8px 12px",
@@ -360,7 +314,6 @@ export default function FeedbackWidget() {
                     </div>
                   )}
 
-                  {/* 提交按钮 */}
                   <button
                     type="submit"
                     disabled={!content.trim() || status === "submitting"}
