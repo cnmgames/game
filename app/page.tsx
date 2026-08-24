@@ -119,11 +119,6 @@ const games = [
                         付费
                       </span>
                     )}
-                    {game.dev && (
-                      <span className="inline-flex items-center rounded-full bg-gradient-to-r from-orange-500 to-red-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-md animate-pulse">
-                        开发中
-                      </span>
-                    )}
                   </div>
                   <p className="game-card-desc">{game.desc}</p>
                 </div>

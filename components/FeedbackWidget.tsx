@@ -45,14 +45,12 @@ export default function FeedbackWidget() {
       e.preventDefault();
     };
     document.addEventListener("touchmove", preventZoom, { passive: false });
-    document.addEventListener("gesturestart", preventZoom as EventListener);
     document.addEventListener("dblclick", preventDoubleTap);
     return () => {
       document.body.style.overflow = "";
       document.body.style.position = "";
       document.body.style.width = "";
       document.removeEventListener("touchmove", preventZoom);
-      document.removeEventListener("gesturestart", preventZoom as EventListener);
       document.removeEventListener("dblclick", preventDoubleTap);
     };
   }, [open]);
@@ -137,10 +135,6 @@ export default function FeedbackWidget() {
         }}
         onDoubleClick={(e) => {
           // 阻止双击缩放
-          e.preventDefault();
-        }}
-        onGestureStart={(e) => {
-          // 阻止iOS手势缩放
           e.preventDefault();
         }}
         style={{
