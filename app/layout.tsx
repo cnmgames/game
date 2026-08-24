@@ -2,6 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import AntiDebugProvider from '../components/AntiDebugProvider'
+import FeedbackWidget from '../components/FeedbackWidget'
 
 export const metadata: Metadata = {
   title: '情侣互动小游戏合集 | 约会之夜前戏必备',
@@ -35,7 +36,7 @@ export default function RootLayout({
         }}>
         <AntiDebugProvider>
           {children}
-
+          <FeedbackWidget />
         </AntiDebugProvider>
         {/* 免责声明 */}
         <div className="global-disclaimer" style={{
