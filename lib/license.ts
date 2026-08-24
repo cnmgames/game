@@ -1,5 +1,5 @@
 // 激活码工具函数
-// 类型：A=周卡(7天), B=月卡(30天), C=季卡(90天), D=年卡(365天)
+// 类型：E=天卡(1天), A=周卡(7天), B=月卡(30天), C=季卡(90天), D=年卡(365天), T=测试卡(5分钟)
 // 格式：7位字母+数字大写（无横线）
 // ============================================
 // ⚠️ 重要配置：Cloudflare Workers API 地址
@@ -7,13 +7,16 @@
 const API_BASE_URL = "https://api.ttla.top";
 
 const TYPE_DAYS: Record<string, number> = {
+  E: 1,
   A: 7,
   B: 30,
   C: 90,
   D: 365,
+  T: 0, // 测试卡5分钟，单独处理
 };
 
 export const TYPE_NAMES: Record<number, string> = {
+  0: "天卡",
   1: "周卡",
   2: "月卡",
   3: "季卡",
@@ -23,6 +26,7 @@ export const TYPE_NAMES: Record<number, string> = {
 
 // 类型数字到字母的映射
 const TYPE_NUM_TO_CHAR: Record<number, string> = {
+  0: "E",
   1: "A",
   2: "B",
   3: "C",
@@ -32,6 +36,7 @@ const TYPE_NUM_TO_CHAR: Record<number, string> = {
 
 // 类型字母到数字的映射
 const TYPE_CHAR_TO_NUM: Record<string, number> = {
+  E: 0,
   A: 1,
   B: 2,
   C: 3,
