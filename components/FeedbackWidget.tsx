@@ -181,11 +181,11 @@ export default function FeedbackWidget() {
               background: "linear-gradient(180deg, #1e1e3a 0%, #15152a 100%)",
               border: "1px solid rgba(255,255,255,0.1)",
               borderRadius: "16px 16px 0 0",
-              padding: "16px 16px",
-              paddingBottom: "calc(env(safe-area-inset-bottom) + 70px)",
+              padding: "14px 12px",
+              paddingBottom: "calc(env(safe-area-inset-bottom) + 90px)",
               width: "100%",
-              maxWidth: "420px",
-              maxHeight: "75vh",
+              maxWidth: "100%",
+              maxHeight: "85vh",
               overflowY: "auto",
               boxShadow: "0 -8px 30px rgba(0,0,0,0.5)",
               WebkitOverflowScrolling: "touch",
@@ -229,11 +229,11 @@ export default function FeedbackWidget() {
                 <form onSubmit={handleSubmit}>
                   <div style={{ marginBottom: "12px" }}>
                     <label style={{ display: "block", color: "rgba(255,255,255,0.7)", fontSize: "0.8rem", marginBottom: "6px", fontWeight: "600" }}>反馈类型</label>
-                    <div style={{ display: "flex", gap: "6px" }}>
+                    <div style={{ display: "flex", gap: "4px" }}>
                       {[
-                        { value: "suggestion", label: "💡 建议", color: "#a855f7" },
-                        { value: "bug", label: "🐛 问题", color: "#ef4444" },
-                        { value: "other", label: "📝 其他", color: "#6b7280" },
+                        { value: "suggestion", label: "💡建议", color: "#a855f7" },
+                        { value: "bug", label: "🐛问题", color: "#ef4444" },
+                        { value: "other", label: "📝其他", color: "#6b7280" },
                       ].map((item) => (
                         <button
                           key={item.value}
@@ -241,12 +241,13 @@ export default function FeedbackWidget() {
                           onClick={() => setType(item.value)}
                           style={{
                             flex: 1,
-                            padding: "9px 4px",
+                            minWidth: 0,
+                            padding: "8px 2px",
                             borderRadius: "8px",
                             border: type === item.value ? `2px solid ${item.color}` : "1px solid rgba(255,255,255,0.1)",
                             background: type === item.value ? `${item.color}22` : "rgba(255,255,255,0.03)",
                             color: "#fff",
-                            fontSize: "0.78rem",
+                            fontSize: "0.72rem",
                             cursor: "pointer",
                             transition: "none",
                             fontWeight: type === item.value ? "600" : "400",
@@ -255,6 +256,9 @@ export default function FeedbackWidget() {
                             userSelect: "none",
                             WebkitUserSelect: "none",
                             outline: "none",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
                           }}
                         >
                           {item.label}
@@ -268,13 +272,6 @@ export default function FeedbackWidget() {
                     <textarea
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
-                      onFocus={(e) => {
-                        // 阻止iOS输入时自动放大
-                        e.target.style.fontSize = "16px";
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.fontSize = "0.85rem";
-                      }}
                       placeholder="请描述您的建议或遇到的问题（至少10字）..."
                       rows={3}
                       maxLength={1000}
@@ -287,7 +284,7 @@ export default function FeedbackWidget() {
                         background: "rgba(255,255,255,0.04)",
                         color: "#fff",
                         fontSize: "16px",
-                        resize: "vertical",
+                        resize: "none",
                         outline: "none",
                         fontFamily: "inherit",
                         lineHeight: "1.5",
@@ -304,9 +301,7 @@ export default function FeedbackWidget() {
                       type="text"
                       value={contact}
                       onChange={(e) => setContact(e.target.value)}
-                      onFocus={(e) => { e.target.style.fontSize = "16px"; }}
-                      onBlur={(e) => { e.target.style.fontSize = "0.85rem"; }}
-                      placeholder="微信/QQ/邮箱"
+                      placeholder="微信/QQ/邮箱（选填）"
                       maxLength={50}
                       style={{
                         width: "100%",
@@ -341,14 +336,14 @@ export default function FeedbackWidget() {
                     disabled={!content.trim() || status === "submitting"}
                     style={{
                       width: "100%",
-                      padding: "11px",
+                      padding: "12px",
                       borderRadius: "10px",
                       border: "none",
                       background: content.trim() && status !== "submitting"
                         ? "linear-gradient(135deg, #ec4899, #a855f7)"
                         : "rgba(255,255,255,0.08)",
                       color: "#fff",
-                      fontSize: "0.92rem",
+                      fontSize: "1rem",
                       fontWeight: "600",
                       cursor: content.trim() && status !== "submitting" ? "pointer" : "not-allowed",
                       transition: "none",
