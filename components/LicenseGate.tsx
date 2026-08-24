@@ -295,7 +295,25 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
       <GameFeedbackButton gameName={gameName} />
       {/* 激活状态指示器（固定在右上角） */}
       {activated && activation && activation.active && (
-        <div className="fixed top-3 right-3 z-50 rounded-full border border-green-400/30 bg-black/60 px-3 py-1 text-xs text-green-300 backdrop-blur whitespace-nowrap max-w-[200px] truncate">
+        <div style={{
+          position: "fixed",
+          top: "max(12px, env(safe-area-inset-top))",
+          right: "max(12px, env(safe-area-inset-right))",
+          zIndex: 9999,
+          padding: "4px 12px",
+          borderRadius: "9999px",
+          border: "1px solid rgba(74,222,128,0.3)",
+          background: "rgba(0,0,0,0.6)",
+          color: "#86efac",
+          fontSize: "12px",
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+          whiteSpace: "nowrap",
+          maxWidth: "200px",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          lineHeight: "1.5",
+        }}>
           ✓ {activation.type ? TYPE_NAMES[activation.type] : "已激活"} · {activation.timeLeftText ? "剩" + activation.timeLeftText : "永久有效"}
         </div>
       )}

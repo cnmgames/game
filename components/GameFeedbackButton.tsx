@@ -84,11 +84,11 @@ export default function GameFeedbackButton({ gameName }: { gameName: string }) {
         onClick={() => setOpen(true)}
         style={{
           position: "fixed",
-          top: "max(10px, env(safe-area-inset-top))",
-          right: "max(10px, env(safe-area-inset-right))",
-          padding: "6px 12px",
-          borderRadius: "20px",
-          background: "rgba(236,72,153,0.15)",
+          top: "max(12px, env(safe-area-inset-top))",
+          left: "max(12px, env(safe-area-inset-left))",
+          padding: "4px 12px",
+          borderRadius: "9999px",
+          background: "rgba(0,0,0,0.6)",
           border: "1px solid rgba(236,72,153,0.3)",
           color: "#f9a8d4",
           fontSize: "12px",
@@ -98,12 +98,11 @@ export default function GameFeedbackButton({ gameName }: { gameName: string }) {
           WebkitBackdropFilter: "blur(10px)",
           WebkitTapHighlightColor: "transparent",
           touchAction: "manipulation",
-          display: "flex",
-          alignItems: "center",
-          gap: "4px",
+          whiteSpace: "nowrap",
+          lineHeight: "1.5",
         }}
       >
-        💬 反馈
+        反馈
       </button>
 
       {/* 弹窗 */}
