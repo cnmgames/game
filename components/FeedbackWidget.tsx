@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 
 const API_BASE = "https://api.ttla.top";
+import { validateContent } from "../lib/contentFilter";
 
 // 游戏页面路径列表（这些页面不显示悬浮按钮，改用页面内反馈入口）
 const GAME_PATHS = ["/flight", "/truth", "/dice", "/beast", "/slot", "/monopoly", "/flight-pro", "/posture"];
@@ -46,6 +47,14 @@ export default function FeedbackWidget() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim() || status === "submitting") return;
+
+    // 内容验证：字数和脏字
+    const validation = validateContent(content);
+    if (!validation.valid) {
+      setStatus("error");
+      setErrorMsg(validation.message || "内容不符合要求");
+      return;
+    }
 
     setStatus("submitting");
     setErrorMsg("");
@@ -149,6 +158,7 @@ export default function FeedbackWidget() {
       {open && (
         <div
           onClick={closeModal}
+          onTouchMove={(e) => e.preventDefault()}
           style={{
             position: "fixed",
             inset: 0,
@@ -258,7 +268,14 @@ export default function FeedbackWidget() {
                     <textarea
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
-                      placeholder="请描述您的建议或遇到的问题..."
+                      onFocus={(e) => {
+                        // 阻止iOS输入时自动放大
+                        e.target.style.fontSize = "16px";
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.fontSize = "0.85rem";
+                      }}
+                      placeholder="请描述您的建议或遇到的问题（至少10字）..."
                       rows={3}
                       maxLength={1000}
                       required
@@ -269,14 +286,16 @@ export default function FeedbackWidget() {
                         border: "1px solid rgba(255,255,255,0.1)",
                         background: "rgba(255,255,255,0.04)",
                         color: "#fff",
-                        fontSize: "0.85rem",
+                        fontSize: "16px",
                         resize: "vertical",
                         outline: "none",
                         fontFamily: "inherit",
                         lineHeight: "1.5",
+                        WebkitTextSizeAdjust: "none",
+                        textSizeAdjust: "none",
                       }}
                     />
-                    <div style={{ textAlign: "right", marginTop: "3px", fontSize: "0.68rem", color: "rgba(255,255,255,0.35)" }}>{content.length}/1000</div>
+                    <div style={{ textAlign: "right", marginTop: "3px", fontSize: "0.68rem", color: "rgba(255,255,255,0.35)" }}>有效{content.replace(/[^\u4e00-\u9fa5a-zA-Z]/g, "").length}/10字起</div>
                   </div>
 
                   <div style={{ marginBottom: "14px" }}>
@@ -285,6 +304,8 @@ export default function FeedbackWidget() {
                       type="text"
                       value={contact}
                       onChange={(e) => setContact(e.target.value)}
+                      onFocus={(e) => { e.target.style.fontSize = "16px"; }}
+                      onBlur={(e) => { e.target.style.fontSize = "0.85rem"; }}
                       placeholder="微信/QQ/邮箱"
                       maxLength={50}
                       style={{
@@ -294,8 +315,9 @@ export default function FeedbackWidget() {
                         border: "1px solid rgba(255,255,255,0.1)",
                         background: "rgba(255,255,255,0.04)",
                         color: "#fff",
-                        fontSize: "0.85rem",
+                        fontSize: "16px",
                         outline: "none",
+                        WebkitTextSizeAdjust: "none",
                       }}
                     />
                   </div>
