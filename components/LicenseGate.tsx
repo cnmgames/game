@@ -293,6 +293,27 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
       {children}
       {/* 游戏内反馈按钮 */}
       <GameFeedbackButton gameName={gameName} />
+      {/* 返回游戏列表按钮（固定在左上角） */}
+      <Link href="/" style={{
+        position: "fixed",
+        top: "max(12px, env(safe-area-inset-top))",
+        left: "max(12px, env(safe-area-inset-left))",
+        zIndex: 9999,
+        padding: "4px 10px",
+        borderRadius: "9999px",
+        border: "1px solid rgba(255,255,255,0.2)",
+        background: "rgba(0,0,0,0.6)",
+        color: "rgba(255,255,255,0.8)",
+        fontSize: "12px",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+        whiteSpace: "nowrap",
+        textDecoration: "none",
+        lineHeight: "1.5",
+      }}>
+        ← 返回游戏列表
+      </Link>
+
       {/* 激活状态指示器（固定在右上角） */}
       {activated && activation && activation.active && (
         <div style={{
@@ -300,7 +321,7 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
           top: "max(12px, env(safe-area-inset-top))",
           right: "max(12px, env(safe-area-inset-right))",
           zIndex: 9999,
-          padding: "4px 12px",
+          padding: "4px 10px",
           borderRadius: "9999px",
           border: "1px solid rgba(74,222,128,0.3)",
           background: "rgba(0,0,0,0.6)",
@@ -309,12 +330,12 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
           backdropFilter: "blur(10px)",
           WebkitBackdropFilter: "blur(10px)",
           whiteSpace: "nowrap",
-          maxWidth: "200px",
+          maxWidth: "150px",
           overflow: "hidden",
           textOverflow: "ellipsis",
           lineHeight: "1.5",
         }}>
-          ✓ {activation.type ? TYPE_NAMES[activation.type] : "已激活"} · {activation.timeLeftText ? "剩" + activation.timeLeftText : "永久有效"}
+          {activation.type ? TYPE_NAMES[activation.type] : "已激活"}·{activation.timeLeftText ? "剩" + activation.timeLeftText : "永久有效"}
         </div>
       )}
     </>

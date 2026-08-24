@@ -85,8 +85,8 @@ export default function GameFeedbackButton({ gameName }: { gameName: string }) {
         style={{
           position: "fixed",
           top: "max(12px, env(safe-area-inset-top))",
-          left: "max(12px, env(safe-area-inset-left))",
-          padding: "4px 12px",
+          right: "105px",
+          padding: "4px 10px",
           borderRadius: "9999px",
           background: "rgba(0,0,0,0.6)",
           border: "1px solid rgba(236,72,153,0.3)",
@@ -102,7 +102,7 @@ export default function GameFeedbackButton({ gameName }: { gameName: string }) {
           lineHeight: "1.5",
         }}
       >
-        反馈
+        建议反馈
       </button>
 
       {/* 弹窗 */}
