@@ -2,6 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import AntiDebugProvider from '../components/AntiDebugProvider'
+import FeedbackWidget from '../components/FeedbackWidget'
 
 export const metadata: Metadata = {
   title: '情侣互动小游戏合集 | 约会之夜前戏必备',
@@ -44,6 +45,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://api.ttla.top" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.ttla.top" />
         <AntiDebugProvider>
+          <FeedbackWidget />
           {children}
                   </AntiDebugProvider>
         {/* 免责声明 */}
