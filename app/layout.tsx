@@ -14,6 +14,13 @@ export const metadata: Metadata = {
     statusBarStyle: 'black-translucent',
     title: '情侣游戏',
   },
+  // 移动端性能优化
+  other: {
+    'format-detection': 'telephone=no',
+    'mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'black-translucent',
+  },
 }
 
 export default function RootLayout({
@@ -33,6 +40,9 @@ export default function RootLayout({
           WebkitTouchCallout: 'none',
           touchAction: 'manipulation'
         }}>
+        {/* 预连接API，加速移动端请求 */}
+        <link rel="preconnect" href="https://api.ttla.top" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://api.ttla.top" />
         <AntiDebugProvider>
           {children}
                   </AntiDebugProvider>
