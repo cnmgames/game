@@ -396,16 +396,15 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
           {activation.type ? TYPE_NAMES[activation.type] : "已激活"}·{activation.timeLeftText ? "剩" + activation.timeLeftText : "永久有效"}
         </div>
       )}
+    <style jsx global>{`
+      @keyframes textShine {
+        to { background-position: 200% center; }
+      }
+      @keyframes btnShine {
+        0%, 100% { background-position: 0% center; }
+        50% { background-position: 100% center; }
+      }
+    `}</style>
     </>
   );
 }
-
-<style jsx global>{`
-  @keyframes textShine {
-    to { background-position: 200% center; }
-  }
-  @keyframes btnShine {
-    0%, 100% { background-position: 0% center; }
-    50% { background-position: 100% center; }
-  }
-`}</style>

@@ -110,16 +110,15 @@ export default function ActivatePage() {
 
         </div>
       </div>
+    <style jsx global>{`
+      @keyframes textShine {
+        to { background-position: 200% center; }
+      }
+      @keyframes btnShine {
+        0%, 100% { background-position: 0% center; }
+        50% { background-position: 100% center; }
+      }
+    `}</style>
     </>
   );
 }
-
-<style jsx global>{`
-  @keyframes textShine {
-    to { background-position: 200% center; }
-  }
-  @keyframes btnShine {
-    0%, 100% { background-position: 0% center; }
-    50% { background-position: 100% center; }
-  }
-`}</style>
