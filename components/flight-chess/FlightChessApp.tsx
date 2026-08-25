@@ -116,30 +116,26 @@ export default function FlightChessApp() {
       </div>
 
       <div style={{position:'relative',zIndex:10,width:'100%',maxWidth:430,height:'100%',display:'flex',flexDirection:'column',background:'rgba(0,0,0,0.2)'}}>
-        <header style={{position:'relative',width:'100%',maxWidth:430,zIndex:10,paddingTop:0,paddingBottom:2,paddingLeft:16,paddingRight:16,boxSizing:'border-box',margin:'0 auto'}}>
-          <h1 className="game-title" style={{fontSize:'22px',marginBottom:'2px',textAlign:'center'}}>情侣飞行棋Pro</h1>
-          <div style={{display:'flex',alignItems:'center',justifyContent:'center',position:'relative'}}>
-            <div className="game-title-underline" style={{margin:'0'}} />
-            <div style={{position:'absolute',right:0}}>
-              {state.view === 'home' && (
-                <button onClick={() => switchView('themes')}
-                  style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:'999px',color:'rgba(255,255,255,0.85)',fontSize:11,fontWeight:600,cursor:'pointer',padding:'4px 10px',whiteSpace:'nowrap'}}>
-                  📚 题库
-                </button>
-              )}
-              {state.view === 'themes' && (
-                <button onClick={() => switchView('home')}
-                  style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:'999px',color:'rgba(255,255,255,0.85)',fontSize:11,fontWeight:600,cursor:'pointer',padding:'4px 10px',whiteSpace:'nowrap'}}>
-                  ← 返回
-                </button>
-              )}
-            </div>
-          </div>
+        <header style={{position:'relative',width:'100%',maxWidth:430,zIndex:10,paddingTop:0,paddingBottom:8,paddingLeft:16,paddingRight:16,boxSizing:'border-box',margin:'0 auto',textAlign:'center'}}>
+          <h1 className="game-title" style={{fontSize:'22px',marginBottom:'4px',textAlign:'center'}}>情侣飞行棋Pro</h1>
+          <div className="game-title-underline" style={{margin:'0 auto 8px'}} />
+          {state.view === 'home' && (
+            <button onClick={() => switchView('themes')}
+              style={{background:'linear-gradient(135deg, rgba(236,72,153,0.15), rgba(168,85,247,0.15))',border:'1px solid rgba(236,72,153,0.3)',borderRadius:'999px',color:'#f9a8d4',fontSize:12,fontWeight:600,cursor:'pointer',padding:'5px 16px',whiteSpace:'nowrap',display:'inline-flex',alignItems:'center',gap:'4px'}}>
+              点击选择题库 <span style={{fontSize:10}}>›</span>
+            </button>
+          )}
+          {state.view === 'themes' && (
+            <button onClick={() => switchView('home')}
+              style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:'999px',color:'rgba(255,255,255,0.85)',fontSize:12,fontWeight:600,cursor:'pointer',padding:'5px 16px',whiteSpace:'nowrap',display:'inline-flex',alignItems:'center',gap:'4px'}}>
+              <span style={{fontSize:10}}>‹</span> 返回游戏
+            </button>
+          )}
         </header>
 
         <main style={{flex:1,minHeight:0,position:'relative',overflow:'hidden',paddingTop:'4px'}}>
           <div style={{
-            position:'absolute',top:'55px',left:0,right:0,bottom:0,display:'flex',flexDirection:'column',padding:'0 24px 8px',
+            position:'absolute',top:'75px',left:0,right:0,bottom:0,display:'flex',flexDirection:'column',padding:'0 24px 8px',
             transition:'all 0.5s ease-in-out',
             transform: state.view === 'home' ? 'translateX(0)' : 'translateX(-100%)',
             opacity: state.view === 'home' ? 1 : 0,
