@@ -46,6 +46,12 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
   };
 
   useEffect(() => {
+    // 进入游戏页面时重置滚动位置，防止列表页滚动影响游戏内
+    window.scrollTo(0, 0);
+    if (typeof document !== 'undefined') {
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
     const status = checkActivation();
     setActivation(status);
 

@@ -135,7 +135,7 @@ export default function FlightChessApp() {
           )}
         </header>
 
-        <main style={{flex:1,minHeight:0,position:'relative',overflow:'hidden'}}>
+        <main style={{flex:1,minHeight:0,position:'relative',overflow:'hidden',paddingTop:'4px'}}>
           <div style={{
             position:'absolute',top:'80px',left:0,right:0,bottom:0,display:'flex',flexDirection:'column',padding:'0 24px 8px',
             transition:'all 0.5s ease-in-out',
