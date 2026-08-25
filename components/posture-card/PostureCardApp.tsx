@@ -46,23 +46,12 @@ export default function PostureCardApp() {
     }}>
       {/* 头部 */}
       <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: '16px',
-        paddingTop: '16px'
+        textAlign: 'center',
+        marginBottom: '12px',
+        paddingTop: '0'
       }}>
-        <h1 style={{
-          fontSize: '20px',
-          fontWeight: 'bold',
-          margin: 0,
-          background: 'linear-gradient(90deg, #FF375F, #BF5AF2)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent'
-        }}>
-          💕 姿势大全
-        </h1>
-        <div style={{ width: '60px' }} />
+        <h1 className="game-title" style={{fontSize:'24px',marginBottom:'4px'}}>姿势大全</h1>
+        <div className="game-title-underline" />
       </div>
 
       {/* 筛选按钮 */}

@@ -116,16 +116,22 @@ export default function FlightChessApp() {
       </div>
 
       <div style={{position:'relative',zIndex:10,width:'100%',maxWidth:430,height:'100%',display:'flex',flexDirection:'column',background:'rgba(0,0,0,0.2)'}}>
-        <header style={{position:'relative',width:'100%',maxWidth:430,zIndex:10,paddingTop:8,paddingBottom:12,paddingLeft:16,paddingRight:16,display:'flex',alignItems:'center',gap:8,backgroundColor:'transparent',boxSizing:'border-box',margin:'0 auto'}}>
-          <div style={{position:'absolute',left:0,right:0,textAlign:'center',pointerEvents:'none'}}>
-            <div style={{fontSize:10,fontWeight:600,color:'#666',letterSpacing:2,marginBottom:2}}>Couple&apos;s Game</div>
-            <h1 style={{fontSize:20,fontWeight:700,color:'#fff',margin:0,letterSpacing:-0.5,lineHeight:1.2}}>情侣飞行棋</h1>
-          </div>
+        <header style={{position:'relative',width:'100%',maxWidth:430,zIndex:10,paddingTop:0,paddingBottom:8,paddingLeft:16,paddingRight:16,textAlign:'center',boxSizing:'border-box',margin:'0 auto'}}>
+          <h1 className="game-title" style={{fontSize:'24px',marginBottom:'4px'}}>情侣飞行棋Pro</h1>
+          <div className="game-title-underline" />
           {state.view === 'home' && (
-            <div style={{marginLeft:'auto',flexShrink:0}}>
+            <div style={{marginTop:'8px'}}>
               <button onClick={() => switchView('themes')}
-                style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:'999px',color:'rgba(255,255,255,0.85)',fontSize:13,fontWeight:600,cursor:'pointer',padding:'7px 14px',display:'flex',alignItems:'center',gap:4}}>
+                style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:'999px',color:'rgba(255,255,255,0.85)',fontSize:13,fontWeight:600,cursor:'pointer',padding:'6px 14px'}}>
                 📚 题库
+              </button>
+            </div>
+          )}
+          {state.view === 'themes' && (
+            <div style={{marginTop:'8px'}}>
+              <button onClick={() => switchView('home')}
+                style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:'999px',color:'rgba(255,255,255,0.85)',fontSize:13,fontWeight:600,cursor:'pointer',padding:'6px 14px'}}>
+                ← 返回游戏
               </button>
             </div>
           )}

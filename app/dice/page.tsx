@@ -106,7 +106,7 @@ export default function DiceGame() {
     <>
       <LicenseGate gameName="情趣骰子">
       <div className="bg-aurora" />
-      <div className="relative z-10 mx-auto min-h-screen w-full max-w-5xl px-3.5 py-4 sm:px-6 sm:py-8">
+      <div className="relative z-10 mx-auto min-h-[calc(100vh-60px)] w-full max-w-5xl px-3.5 py-4 sm:px-6 sm:py-8">
 
         {/* 主游戏容器 */}
         <div className="game-container">
