@@ -59,31 +59,36 @@ function hashStr(str: string): number {
 // 获取或生成设备唯一ID（一人一码核心）
 export function getDeviceId(): string {
   if (typeof window === "undefined") return "unknown";
-  let deviceId = localStorage.getItem("lg_device_id");
-  if (!deviceId) {
-    // 生成基于浏览器特征的设备指纹
+  // 完全基于浏览器固有信息生成稳定指纹，不依赖localStorage
+  // 清理浏览器数据后指纹不变，同一台设备不会被误判为其他设备
+  // 同时严格一码一设备，防止多人共享
+  const nav = navigator as any;
+  // Canvas指纹（不同设备/浏览器渲染结果不同）
+  let canvasFp = "";
+  try {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    let fingerprint = "";
     if (ctx) {
       ctx.textBaseline = "top";
-      ctx.font = "14px Arial";
-      ctx.fillText("fingerprint", 2, 2);
-      fingerprint = canvas.toDataURL();
+      ctx.font = "14px 'Arial'";
+      ctx.fillText("fingerprint_ios_safe", 2, 2);
+      canvasFp = canvas.toDataURL();
     }
-    const raw = [
-      navigator.userAgent,
-      navigator.language,
-      screen.width + "x" + screen.height,
-      screen.colorDepth,
-      new Date().getTimezoneOffset(),
-      fingerprint,
-      Math.random().toString(36).substring(2),
-    ].join("|");
-    deviceId = hashStr(raw).toString(36) + Date.now().toString(36);
-    localStorage.setItem("lg_device_id", deviceId);
-  }
-  return deviceId;
+  } catch (e) {}
+  const raw = [
+    navigator.userAgent,
+    navigator.language,
+    navigator.platform,
+    screen.width + "x" + screen.height,
+    screen.colorDepth,
+    screen.pixelDepth,
+    new Date().getTimezoneOffset(),
+    nav.hardwareConcurrency || 0,
+    nav.deviceMemory || 0,
+    canvasFp.substring(0, 100), // 只取前100字符，避免过长
+    // 不包含随机数和时间戳，确保指纹稳定
+  ].join("|");
+  return "dev_" + hashStr(raw).toString(36);
 }
 
 function randomStr(len: number): string {
