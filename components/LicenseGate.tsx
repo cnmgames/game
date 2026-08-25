@@ -231,9 +231,24 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
                 href="https://weidian.com/?userid=1388425837"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex w-full items-center justify-center rounded-full bg-gradient-to-r from-pink-500 to-purple-600 py-3 text-base font-bold text-white shadow-lg shadow-pink-500/50 hover:from-pink-400 hover:to-purple-500 hover:shadow-pink-500/70 transition animate-pulse"
+                className="flex w-full items-center justify-center rounded-full border-2 border-pink-500/50 bg-black/40 py-3 text-base font-bold shadow-lg shadow-pink-500/30 hover:border-pink-400/70 hover:bg-black/60 hover:shadow-pink-500/50 transition"
+                style={{
+                  background: 'linear-gradient(90deg, rgba(0,0,0,0.4), rgba(20,0,30,0.6), rgba(0,0,0,0.4))',
+                  backgroundSize: '200% auto',
+                  animation: 'btnShine 3s ease infinite'
+                }}
               >
-                🛒 购买激活码（全部通用）
+                <span style={{
+                  background: 'linear-gradient(90deg, #FF6B9D, #C44DFF, #FF6B9D)',
+                  backgroundSize: '200% auto',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  animation: 'textShine 2s linear infinite',
+                  filter: 'drop-shadow(0 0 8px rgba(255,107,157,0.6))'
+                }}>
+                  购买激活码（全部通用）
+                </span>
               </a>
               {result && (
                 <div className={`rounded-xl p-3 text-center text-sm ${
@@ -285,9 +300,24 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
                 href="https://weidian.com/?userid=1388425837"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex w-full items-center justify-center rounded-full bg-gradient-to-r from-pink-500 to-purple-600 py-3 text-base font-bold text-white shadow-lg shadow-pink-500/50 hover:from-pink-400 hover:to-purple-500 transition animate-pulse"
+                className="flex w-full items-center justify-center rounded-full border-2 border-pink-500/50 bg-black/40 py-3 text-base font-bold shadow-lg shadow-pink-500/30 hover:border-pink-400/70 hover:bg-black/60 hover:shadow-pink-500/50 transition"
+                style={{
+                  background: 'linear-gradient(90deg, rgba(0,0,0,0.4), rgba(20,0,30,0.6), rgba(0,0,0,0.4))',
+                  backgroundSize: '200% auto',
+                  animation: 'btnShine 3s ease infinite'
+                }}
               >
-                🛒 购买激活码（全部通用）
+                <span style={{
+                  background: 'linear-gradient(90deg, #FF6B9D, #C44DFF, #FF6B9D)',
+                  backgroundSize: '200% auto',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  animation: 'textShine 2s linear infinite',
+                  filter: 'drop-shadow(0 0 8px rgba(255,107,157,0.6))'
+                }}>
+                  购买激活码（全部通用）
+                </span>
               </a>
               {result && (
                 <div className={`rounded-xl p-3 text-center text-sm ${
@@ -369,3 +399,13 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
     </>
   );
 }
+
+<style jsx global>{`
+  @keyframes textShine {
+    to { background-position: 200% center; }
+  }
+  @keyframes btnShine {
+    0%, 100% { background-position: 0% center; }
+    50% { background-position: 100% center; }
+  }
+`}</style>
