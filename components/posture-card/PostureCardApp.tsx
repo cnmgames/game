@@ -52,22 +52,6 @@ export default function PostureCardApp() {
         marginBottom: '16px',
         paddingTop: '16px'
       }}>
-        <a href="/" style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px',
-          padding: '8px 14px',
-          borderRadius: '999px',
-          backgroundColor: 'rgba(255,255,255,0.1)',
-          border: '1px solid rgba(255,255,255,0.15)',
-          color: 'white',
-          fontSize: '12px',
-          textDecoration: 'none',
-          cursor: 'pointer'
-        }}>
-          <ArrowLeft size={14} />
-          返回
-        </a>
         <h1 style={{
           fontSize: '18px',
           fontWeight: 'bold',

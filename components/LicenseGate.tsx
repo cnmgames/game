@@ -290,6 +290,17 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
   }
   return (
     <>
+      {/* 顶部背景条，让固定按钮有背景不透明 */}
+      <div style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        height: "50px",
+        background: "linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 70%, rgba(0,0,0,0) 100%)",
+        zIndex: 9998,
+        pointerEvents: "none",
+      }} />
       {/* 游戏内容容器，顶部留空避免被固定按钮遮挡 */}
       <div style={{ paddingTop: "60px" }}>
         {children}
@@ -322,7 +333,7 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
         <div style={{
           position: "fixed",
           top: "max(12px, env(safe-area-inset-top))",
-          right: "max(12px, env(safe-area-inset-right))",
+          right: "100px",
           zIndex: 9999,
           padding: "4px 10px",
           borderRadius: "9999px",

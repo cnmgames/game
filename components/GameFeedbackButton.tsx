@@ -85,7 +85,7 @@ export default function GameFeedbackButton({ gameName }: { gameName: string }) {
         style={{
           position: "fixed",
           top: "max(12px, env(safe-area-inset-top))",
-          right: "105px",
+          right: "max(12px, env(safe-area-inset-right))",
           padding: "4px 10px",
           borderRadius: "9999px",
           background: "rgba(0,0,0,0.6)",
