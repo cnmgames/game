@@ -240,14 +240,14 @@ export function checkActivation(): { active: boolean; type?: number; expireAt?: 
     if (msLeft < 60 * 60 * 1000) {
       // 小于1小时，显示分钟
       const minutesLeft = Math.max(1, Math.ceil(msLeft / (60 * 1000)));
-      timeLeftText = `${minutesLeft} 分钟`;
+      timeLeftText = `${minutesLeft}分钟`;
     } else if (msLeft < 24 * 60 * 60 * 1000) {
       // 小于1天，显示小时
       const hoursLeft = Math.ceil(msLeft / (60 * 60 * 1000));
-      timeLeftText = `${hoursLeft} 小时`;
+      timeLeftText = `${hoursLeft}小时`;
     } else {
       // 大于1天，显示天
-      timeLeftText = `${daysLeft} 天`;
+      timeLeftText = `${daysLeft}天`;
     }
     return {
       active: true,

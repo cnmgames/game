@@ -117,9 +117,6 @@ export default function MonopolyGame() {
       <LicenseGate gameName="午夜大富翁">
       <div className="bg-aurora" />
       <div className="relative z-10 mx-auto min-h-screen w-full max-w-3xl px-3.5 py-4 sm:px-6 sm:py-10">
-        <div className="mb-4">
-          <Link href="/" className="back-btn">← 返回游戏列表</Link>
-        </div>
 
         <div className="game-container">
           <div className="text-center mb-4 sm:mb-6">
