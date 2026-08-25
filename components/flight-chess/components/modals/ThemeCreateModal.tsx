@@ -6,7 +6,7 @@ interface ThemeCreateModalProps {
   isOpen: boolean;
   onClose: () => void;
   onCreate: (input: { name: string; desc: string; audience: Theme['audience'] }) => void;
-  onOpenAiImport: () => void;
+  onOpenAiImport: (themeInfo: { name: string; desc: string; audience: Theme['audience'] }) => void;
 }
 
 const audienceOptions: Array<{ value: Theme['audience']; label: string }> = [
@@ -198,7 +198,7 @@ export function ThemeCreateModal({ isOpen, onClose, onCreate, onOpenAiImport }: 
         </div>
 
         <button
-          onClick={onOpenAiImport}
+          onClick={() => onOpenAiImport({ name: name.trim() || 'AI导入主题', desc: desc.trim(), audience })}
           style={{
             width: '100%',
             height: '44px',

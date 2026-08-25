@@ -204,9 +204,9 @@ export default function FlightChessApp() {
       />
 
       <ThemeCreateModal
-          onOpenAiImport={() => {
-            // 先创建一个默认主题，再打开AI导入（确保有真实themeId保存任务卡）
-            const id = createTheme({ name: 'AI导入主题', desc: 'AI智能生成的任务卡', audience: 'common' });
+          onOpenAiImport={(themeInfo) => {
+            // 用用户输入的主题信息创建主题，再打开AI导入
+            const id = createTheme(themeInfo);
             if (id) {
               setAiImportThemeId(id);
               setIsCreateThemeModalOpen(false);
