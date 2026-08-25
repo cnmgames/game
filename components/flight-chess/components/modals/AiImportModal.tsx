@@ -226,6 +226,7 @@ export function AiImportModal({ isOpen, themeName, onClose, onImport }: AiImport
     }}>
       <div
         onClick={onClose}
+        onTouchMove={(e) => e.preventDefault()}
         style={{
           position: 'absolute',
           top: 0,

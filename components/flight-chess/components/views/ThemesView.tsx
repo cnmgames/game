@@ -6,6 +6,7 @@ interface ThemesViewProps {
   themes: Theme[];
   onCreateTheme: () => void;
   onEditTheme: (themeId: string) => void;
+  onAiImport: (themeId: string) => void;
 }
 
 const audienceLabel: Record<Theme['audience'], string> = {
@@ -45,7 +46,7 @@ const audienceFilters = [
   { id: 'female', label: '女方' },
 ];
 
-export function ThemesView({ themes, onCreateTheme, onEditTheme }: ThemesViewProps) {
+export function ThemesView({ themes, onCreateTheme, onEditTheme, onAiImport }: ThemesViewProps) {
   const [searchText, setSearchText] = useState('');
   const [modeFilter, setModeFilter] = useState('all');
   const [audienceFilter, setAudienceFilter] = useState('all');
@@ -102,7 +103,27 @@ export function ThemesView({ themes, onCreateTheme, onEditTheme }: ThemesViewPro
             {themes.length} 个题库 · {totalTasks} 张任务卡
           </p>
         </div>
-        <button
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <button
+            style={{
+              paddingLeft: '12px',
+              paddingRight: '12px',
+              borderRadius: '999px',
+              background: 'linear-gradient(135deg, #BF5AF2, #FF375F)',
+              color: 'white',
+              fontSize: '12px',
+              fontWeight: 600,
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+            onClick={() => onAiImport('')}
+          >
+            ✨ AI导入
+          </button>
+<button
           style={{
             height: '36px',
             paddingLeft: '16px',
@@ -122,6 +143,7 @@ export function ThemesView({ themes, onCreateTheme, onEditTheme }: ThemesViewPro
         >
           <span style={{ fontSize: '16px' }}>+</span> 新建
         </button>
+        </div>
       </div>
 
       {/* 搜索框 */}

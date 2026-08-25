@@ -66,6 +66,7 @@ export function ThemeEditorModal({
       }}>
       <div
         onClick={onClose}
+        onTouchMove={(e) => e.preventDefault()}
         style={{
           position: 'absolute',
           top: 0,

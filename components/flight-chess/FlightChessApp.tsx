@@ -160,6 +160,7 @@ export default function FlightChessApp() {
           }}>
             <ThemesView
               themes={state.themes}
+              onAiImport={(themeId) => setAiImportThemeId(themeId || 'new')}
               onCreateTheme={() => setIsCreateThemeModalOpen(true)}
               onEditTheme={themeId => setEditingThemeId(themeId)}
             />

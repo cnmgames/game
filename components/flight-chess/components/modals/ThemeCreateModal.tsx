@@ -54,6 +54,7 @@ export function ThemeCreateModal({ isOpen, onClose, onCreate }: ThemeCreateModal
     }}>
       <div
         onClick={onClose}
+        onTouchMove={(e) => e.preventDefault()}
         style={{
           position: 'absolute',
           top: 0,
