@@ -53,7 +53,7 @@ export default function PostureCardApp() {
         paddingTop: '16px'
       }}>
         <h1 style={{
-          fontSize: '18px',
+          fontSize: '20px',
           fontWeight: 'bold',
           margin: 0,
           background: 'linear-gradient(90deg, #FF375F, #BF5AF2)',

@@ -116,10 +116,10 @@ export default function FlightChessApp() {
       </div>
 
       <div style={{position:'relative',zIndex:10,width:'100%',maxWidth:430,height:'100%',display:'flex',flexDirection:'column',background:'rgba(0,0,0,0.2)'}}>
-        <header style={{position:'fixed',top:0,left:'50%',transform:'translateX(-50%)',width:'100%',maxWidth:430,zIndex:1000,paddingTop:24,paddingBottom:8,paddingLeft:16,paddingRight:16,display:'flex',alignItems:'center',gap:8,backgroundColor:'rgba(0,0,0,0.95)',backdropFilter:'blur(10px)',WebkitBackdropFilter:'blur(10px)',borderBottom:'1px solid rgba(255,255,255,0.05)',boxSizing:'border-box'}}>
+        <header style={{position:'relative',width:'100%',maxWidth:430,zIndex:10,paddingTop:8,paddingBottom:12,paddingLeft:16,paddingRight:16,display:'flex',alignItems:'center',gap:8,backgroundColor:'transparent',boxSizing:'border-box',margin:'0 auto'}}>
           <div style={{position:'absolute',left:0,right:0,textAlign:'center',pointerEvents:'none'}}>
             <div style={{fontSize:10,fontWeight:600,color:'#666',letterSpacing:2,marginBottom:2}}>Couple&apos;s Game</div>
-            <h1 style={{fontSize:22,fontWeight:700,color:'#fff',margin:0,letterSpacing:-0.5,lineHeight:1.2}}>情侣飞行棋</h1>
+            <h1 style={{fontSize:20,fontWeight:700,color:'#fff',margin:0,letterSpacing:-0.5,lineHeight:1.2}}>情侣飞行棋</h1>
           </div>
           {state.view === 'home' && (
             <div style={{marginLeft:'auto',flexShrink:0}}>
