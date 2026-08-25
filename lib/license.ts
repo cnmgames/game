@@ -91,6 +91,35 @@ export function getDeviceId(): string {
   return "dev_" + hashStr(raw).toString(36);
 }
 
+// 稳定设备指纹（不依赖localStorage，清理浏览器数据后不变）
+// 用于老用户平滑迁移：旧格式设备ID对不上时，用指纹识别是否同一台设备
+export function getDeviceFingerprint(): string {
+  if (typeof window === "undefined") return "unknown";
+  const nav = navigator as any;
+  let canvasFp = "";
+  try {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      ctx.textBaseline = "top";
+      ctx.font = "14px 'Arial'";
+      ctx.fillText("fp_migrate", 2, 2);
+      canvasFp = canvas.toDataURL();
+    }
+  } catch (e) {}
+  const raw = [
+    navigator.userAgent,
+    navigator.language,
+    navigator.platform,
+    screen.width + "x" + screen.height,
+    screen.colorDepth,
+    new Date().getTimezoneOffset(),
+    nav.hardwareConcurrency || 0,
+    canvasFp.substring(0, 80),
+  ].join("|");
+  return "fp_" + hashStr(raw).toString(36);
+}
+
 function randomStr(len: number): string {
   let result = "";
   for (let i = 0; i < len; i++) {
@@ -147,19 +176,20 @@ async function cloudCheck(code: string): Promise<{ used: boolean } | null> {
 }
 
 // 云端激活：标记码为已使用
-async function cloudActivate(code: string): Promise<{ success: boolean; message: string; expireAt?: number } | null> {
+async function cloudActivate(code: string): Promise<{ success: boolean; message: string; expireAt?: number; migrated?: boolean } | null> {
   if (!API_BASE_URL) return null;
   try {
     const deviceId = getDeviceId();
+    const deviceFingerprint = getDeviceFingerprint();
     const res = await fetch(`${API_BASE_URL}/activate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code, deviceId }),
-      signal: AbortSignal.timeout(5000),
+      body: JSON.stringify({ code, deviceId, deviceFingerprint, migrate: true }),
+      signal: AbortSignal.timeout(8000),
     });
     if (res.ok) {
       const data = await res.json();
-      return { success: !!data.success, message: data.message || "", expireAt: data.expireAt };
+      return { success: !!data.success, message: data.message || "", expireAt: data.expireAt, migrated: !!data.migrated };
     }
     return null;
   } catch {
@@ -214,9 +244,10 @@ export function activateCode(code: string): Promise<{ success: boolean; message:
       expireAt,
     };
     localStorage.setItem("lg_activation", JSON.stringify(activation));
+    const isMigrated = cloudResult?.migrated;
     return {
       success: true,
-      message: `激活成功！${TYPE_NAMES[parsed.type]}，剩余${durationText}`,
+      message: isMigrated ? `迁移成功！${TYPE_NAMES[parsed.type]}，剩余${durationText}` : `激活成功！${TYPE_NAMES[parsed.type]}，剩余${durationText}`,
       type: parsed.type,
       expireAt,
     };
