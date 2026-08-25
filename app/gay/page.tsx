@@ -1,7 +1,10 @@
 "use client";
 import Link from "next/link";
 import LicenseGate from "../../components/LicenseGate";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+type Mode = "truth" | "dare" | "intimate";
+type GameMode = "turn" | "battle" | "coop";
 
 const truthQuestions = [
   "第一次意识到自己喜欢男生是什么时候？",
@@ -24,6 +27,11 @@ const truthQuestions = [
   "最想尝试但还没试过的玩法？",
   "对方的什么小习惯最让你心动？",
   "有没有在洗澡的时候做过？",
+  "出柜了吗？家人知道吗？",
+  "第一次和男生约会去了哪里？",
+  "有没有被直男撩过？什么感觉？",
+  "最喜欢对方叫你什么？",
+  "有没有在异地的时候视频做过？",
 ];
 
 const dareTasks = [
@@ -41,12 +49,15 @@ const dareTasks = [
   "在对方大腿内侧留个吻痕",
   "模仿gay片里的经典台词和动作",
   "用嘴喂对方喝一口水",
-  "让对方检查你的手机最近10条消息",
   "穿对方的内裤走一圈",
   "在对方面前做10个俯卧撑，每做一个亲一下",
   "用手指在对方手心画圈，看对方能不能忍住不笑",
   "蒙眼让对方亲你不同部位，猜是哪里",
   "边脱衣服边跳一段性感舞蹈",
+  "用牙齿轻咬对方耳垂",
+  "在对方耳边吹气然后舔脖子",
+  "模仿对方平时说话的语气",
+  "用鼻子蹭对方的鼻子然后亲一下",
 ];
 
 const intimateTasks = [
@@ -70,16 +81,34 @@ const intimateTasks = [
   "用舌头从耳朵慢慢舔到肚脐",
   "尝试后入式，拍打对方屁股",
   "互相说dirty talk，越骚越好",
+  "互相KJ，比赛谁坚持的时间长",
+  "用润滑剂尝试不同的进入方式",
+  "边做边录视频（事后可删）",
+  "尝试角色扮演，老师学生/医生病人",
 ];
+
+const modeInfo = {
+  truth: { label: "真心话", icon: "💬", color: "from-blue-500 to-cyan-500", desc: "深入了解彼此的秘密" },
+  dare: { label: "大冒险", icon: "🎯", color: "from-orange-500 to-red-500", desc: "刺激有趣的挑战任务" },
+  intimate: { label: "亲密时刻", icon: "🔥", color: "from-pink-500 to-rose-500", desc: "仅限两人的私密玩法" },
+};
 
 export default function GayGame() {
   const [started, setStarted] = useState(false);
-  const [mode, setMode] = useState<"truth" | "dare" | "intimate" | null>(null);
+  const [gameMode, setGameMode] = useState<GameMode>("turn");
+  const [mode, setMode] = useState<Mode | null>(null);
   const [current, setCurrent] = useState("");
   const [history, setHistory] = useState<string[]>([]);
   const [round, setRound] = useState(1);
+  const [scoreA, setScoreA] = useState(0);
+  const [scoreB, setScoreB] = useState(0);
+  const [currentPlayer, setCurrentPlayer] = useState<"A" | "B">("A");
+  const [showResult, setShowResult] = useState(false);
+  const [completed, setCompleted] = useState(false);
+  const [nameA, setNameA] = useState("他A");
+  const [nameB, setNameB] = useState("他B");
 
-  const draw = (type: "truth" | "dare" | "intimate") => {
+  const draw = (type: Mode) => {
     let pool: string[];
     if (type === "truth") pool = truthQuestions;
     else if (type === "dare") pool = dareTasks;
@@ -99,12 +128,32 @@ export default function GayGame() {
     }
     setCurrent(text);
     setMode(type);
+    setShowResult(false);
+  };
+
+  const completeTask = (success: boolean) => {
+    setShowResult(true);
+    setCompleted(success);
+    if (success) {
+      if (currentPlayer === "A") setScoreA((s) => s + 1);
+      else setScoreB((s) => s + 1);
+    }
   };
 
   const nextRound = () => {
     setRound((r) => r + 1);
+    if (gameMode === "turn") {
+      setCurrentPlayer(currentPlayer === "A" ? "B" : "A");
+    }
     setCurrent("");
     setMode(null);
+    setShowResult(false);
+    setCompleted(false);
+  };
+
+  const randomAll = () => {
+    const modes: Mode[] = ["truth", "dare", "intimate"];
+    draw(modes[Math.floor(Math.random() * modes.length)]);
   };
 
   const restart = () => {
@@ -113,76 +162,181 @@ export default function GayGame() {
     setCurrent("");
     setHistory([]);
     setRound(1);
+    setScoreA(0);
+    setScoreB(0);
+    setCurrentPlayer("A");
+    setShowResult(false);
+    setCompleted(false);
+  };
+
+  const gameModeInfo = {
+    turn: { label: "轮流模式", icon: "🔄", desc: "两人轮流抽卡执行" },
+    battle: { label: "对战模式", icon: "⚔️", desc: "完成得分，比拼胜负" },
+    coop: { label: "合作模式", icon: "🤝", desc: "一起完成，不计胜负" },
   };
 
   return (
     <LicenseGate gameName="他与他">
       <div className="bg-aurora" />
-      <div className="relative z-10 mx-auto flex w-full max-w-md flex-col items-center px-4 py-4">
+      <div className="relative z-10 mx-auto flex w-full max-w-md flex-col items-center px-4 py-6">
         <div className="game-container w-full">
           {!started && (
             <div className="text-center">
-              <div className="mb-3 text-5xl">👨‍❤️‍👨</div>
-              <h1 className="mb-2 text-xl font-bold text-white">他与他</h1>
+              <div className="mb-4 text-6xl">👨‍❤️‍👨</div>
+              <h1 className="mb-1 text-2xl font-bold text-white">他与他</h1>
               <p className="mb-1 text-sm text-pink-300">🌈 专为男同情侣设计</p>
-              <p className="mb-4 text-sm text-white/70">真心话、大冒险、亲密任务，三种模式，属于两个男生的深夜游戏</p>
-              <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-3 text-left text-xs text-white/60">
-                <p className="mb-1">📋 三种模式：</p>
-                <p>💬 真心话 - 深入了解彼此的秘密</p>
-                <p>🎯 大冒险 - 刺激有趣的挑战任务</p>
-                <p>🔥 亲密时刻 - 仅限两人的私密玩法</p>
-                <p className="mt-2">轮流选择模式，每轮一人抽卡</p>
+              <p className="mb-5 text-sm text-white/70">真心话、大冒险、亲密时刻，属于两个男生的深夜游戏</p>
+
+              {/* 游戏模式选择 */}
+              <p className="mb-2 text-left text-xs font-semibold text-white/60">选择游戏模式</p>
+              <div className="mb-5 grid grid-cols-3 gap-2">
+                {(Object.keys(gameModeInfo) as GameMode[]).map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => setGameMode(m)}
+                    className={`rounded-xl border p-3 text-center transition-all ${
+                      gameMode === m
+                        ? "border-pink-400 bg-pink-500/20 text-white"
+                        : "border-white/10 bg-white/5 text-white/60 hover:bg-white/10"
+                    }`}
+                  >
+                    <div className="text-xl">{gameModeInfo[m].icon}</div>
+                    <p className="mt-1 text-[11px] font-bold">{gameModeInfo[m].label}</p>
+                    <p className="mt-0.5 text-[9px] opacity-70">{gameModeInfo[m].desc}</p>
+                  </button>
+                ))}
               </div>
+
+              <div className="mb-5 grid grid-cols-3 gap-2 text-center">
+                {(Object.keys(modeInfo) as Mode[]).map((m) => (
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-3">
+                    <div className="text-2xl">{modeInfo[m].icon}</div>
+                    <p className="mt-1 text-[10px] text-white/60">{modeInfo[m].label}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mb-5 rounded-xl border border-white/10 bg-white/5 p-3 text-left text-xs text-white/60">
+                <p className="mb-1 font-semibold text-white/80">📋 游戏内容：</p>
+                <p>• 💬 真心话：{truthQuestions.length}道深入问题</p>
+                <p>• 🎯 大冒险：{dareTasks.length}个刺激挑战</p>
+                <p>• 🔥 亲密时刻：{intimateTasks.length}种私密玩法</p>
+                <p>• 支持计分对战、轮流、合作三种模式</p>
+              </div>
+
               <button
                 onClick={() => setStarted(true)}
-                className="w-full rounded-full bg-gradient-to-r from-pink-500 to-purple-500 py-3 text-base font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:from-pink-400 hover:to-purple-400"
+                className="w-full rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:shadow-pink-500/60"
               >
-                开始游戏
+                🌈 开始游戏
               </button>
             </div>
           )}
 
           {started && (
             <div>
-              <div className="mb-3 text-center text-xs text-white/50">第 {round} 轮</div>
-
-              {current && (
-                <div className={`mb-4 rounded-xl border p-4 ${
-                  mode === "truth" ? "border-blue-400/30 bg-blue-500/10" :
-                  mode === "dare" ? "border-orange-400/30 bg-orange-500/10" :
-                  "border-pink-400/30 bg-pink-500/10"
-                }`}>
-                  <p className={`mb-2 text-xs font-semibold ${
-                    mode === "truth" ? "text-blue-300" :
-                    mode === "dare" ? "text-orange-300" :
-                    "text-pink-300"
+              {/* 顶部状态栏 */}
+              <div className="mb-4 flex items-center justify-between">
+                <div className="text-center">
+                  <p className="text-[10px] text-white/40">第 {round} 轮</p>
+                  <p className="text-[10px] text-white/30">{gameModeInfo[gameMode].label}</p>
+                </div>
+                {gameMode === "battle" && (
+                  <div className="flex items-center gap-3">
+                    <div className="text-center">
+                      <p className="text-[10px] text-pink-300">{nameA}</p>
+                      <p className="text-lg font-bold text-pink-200">{scoreA}</p>
+                    </div>
+                    <span className="text-white/30">:</span>
+                    <div className="text-center">
+                      <p className="text-[10px] text-purple-300">{nameB}</p>
+                      <p className="text-lg font-bold text-purple-200">{scoreB}</p>
+                    </div>
+                  </div>
+                )}
+                {gameMode === "turn" && (
+                  <div className={`rounded-full px-3 py-1 text-xs font-bold ${
+                    currentPlayer === "A" ? "bg-pink-500/20 text-pink-300" : "bg-purple-500/20 text-purple-300"
                   }`}>
-                    {mode === "truth" ? "💬 真心话" : mode === "dare" ? "🎯 大冒险" : "🔥 亲密时刻"}
-                  </p>
-                  <p className="text-sm leading-relaxed text-white">{current}</p>
+                    {currentPlayer === "A" ? nameA : nameB} 的回合
+                  </div>
+                )}
+              </div>
+
+              {/* 当前任务 */}
+              {current && (
+                <div className="mb-4">
+                  <div className={`relative overflow-hidden rounded-2xl border p-5 ${
+                    mode === "truth" ? "border-blue-400/30 bg-gradient-to-br from-blue-500/15 to-cyan-500/10" :
+                    mode === "dare" ? "border-orange-400/30 bg-gradient-to-br from-orange-500/15 to-red-500/10" :
+                    "border-pink-400/30 bg-gradient-to-br from-pink-500/15 to-rose-500/10"
+                  }`}>
+                    <div className="absolute -right-3 -top-3 text-5xl opacity-10">
+                      {modeInfo[mode!].icon}
+                    </div>
+                    <div className="relative z-10">
+                      <div className="mb-3 flex items-center gap-2">
+                        <span className="text-xl">{modeInfo[mode!].icon}</span>
+                        <span className={`rounded-full bg-gradient-to-r ${modeInfo[mode!].color} px-3 py-0.5 text-[10px] font-semibold text-white`}>
+                          {modeInfo[mode!].label}
+                        </span>
+                      </div>
+                      <p className="text-sm leading-relaxed text-white">{current}</p>
+                    </div>
+                  </div>
                 </div>
               )}
 
+              {/* 完成结果 */}
+              {showResult && (
+                <div className={`mb-4 rounded-xl border p-3 text-center ${
+                  completed ? "border-green-400/30 bg-green-500/10" : "border-red-400/30 bg-red-500/10"
+                }`}>
+                  <p className={`text-sm font-bold ${completed ? "text-green-200" : "text-red-200"}`}>
+                    {completed ? "✅ 完成！+1分" : "❌ 未完成"}
+                  </p>
+                </div>
+              )}
+
+              {/* 选择模式抽卡 */}
               {!current && (
                 <div className="mb-4 space-y-2">
                   <p className="text-center text-sm text-white/60 mb-3">选择一个模式抽卡</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(Object.keys(modeInfo) as Mode[]).map((m) => (
+                      <button
+                        key={m}
+                        onClick={() => draw(m)}
+                        className={`rounded-xl border bg-gradient-to-br ${modeInfo[m].color} p-3 text-center text-white transition hover:scale-105 hover:shadow-lg`}
+                      >
+                        <div className="text-2xl">{modeInfo[m].icon}</div>
+                        <p className="mt-1 text-[11px] font-bold">{modeInfo[m].label}</p>
+                      </button>
+                    ))}
+                  </div>
                   <button
-                    onClick={() => draw("truth")}
-                    className="w-full rounded-xl border border-blue-400/30 bg-blue-500/10 py-3 text-sm font-semibold text-blue-200 transition hover:bg-blue-500/20"
+                    onClick={randomAll}
+                    className="w-full rounded-xl border border-white/15 bg-white/5 py-2.5 text-xs text-white/60 transition hover:bg-white/10"
                   >
-                    💬 真心话
+                    🎲 随机全部
+                  </button>
+                </div>
+              )}
+
+              {/* 操作按钮 */}
+              {current && !showResult && gameMode !== "coop" && (
+                <div className="mb-2 grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => completeTask(true)}
+                    className="rounded-full bg-green-500 py-2.5 text-sm font-semibold text-white transition hover:bg-green-400"
+                  >
+                    ✅ 完成了
                   </button>
                   <button
-                    onClick={() => draw("dare")}
-                    className="w-full rounded-xl border border-orange-400/30 bg-orange-500/10 py-3 text-sm font-semibold text-orange-200 transition hover:bg-orange-500/20"
+                    onClick={() => completeTask(false)}
+                    className="rounded-full bg-red-500/80 py-2.5 text-sm font-semibold text-white transition hover:bg-red-400"
                   >
-                    🎯 大冒险
-                  </button>
-                  <button
-                    onClick={() => draw("intimate")}
-                    className="w-full rounded-xl border border-pink-400/30 bg-pink-500/10 py-3 text-sm font-semibold text-pink-200 transition hover:bg-pink-500/20"
-                  >
-                    🔥 亲密时刻
+                    ❌ 没完成
                   </button>
                 </div>
               )}
@@ -191,16 +345,13 @@ export default function GayGame() {
                 <div className="space-y-2">
                   <button
                     onClick={nextRound}
-                    className="w-full rounded-full bg-pink-500 py-3 text-base font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400"
+                    className="w-full rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:shadow-pink-500/60"
                   >
-                    下一轮
+                    {showResult ? "下一轮 →" : "跳过此题"}
                   </button>
                   <button
-                    onClick={() => {
-                      setCurrent("");
-                      setMode(null);
-                    }}
-                    className="w-full rounded-full border border-white/20 bg-white/5 py-2 text-xs text-white/60 transition hover:bg-white/10"
+                    onClick={() => { setCurrent(""); setMode(null); }}
+                    className="w-full rounded-full border border-white/15 bg-white/5 py-2 text-xs text-white/50 transition hover:bg-white/10"
                   >
                     重新抽卡
                   </button>
@@ -209,12 +360,12 @@ export default function GayGame() {
 
               <button
                 onClick={restart}
-                className="mt-2 w-full rounded-full border border-white/20 bg-white/5 py-2 text-xs text-white/60 transition hover:bg-white/10"
+                className="mt-2 w-full rounded-full border border-white/15 bg-white/5 py-2 text-xs text-white/50 transition hover:bg-white/10"
               >
-                重新开始
+                🔄 重新开始
               </button>
 
-              <p className="mt-3 text-center text-xs text-white/40">🌈 爱就是爱，勇敢做自己</p>
+              <p className="mt-4 text-center text-[10px] text-white/30">🌈 爱就是爱，勇敢做自己</p>
             </div>
           )}
         </div>
