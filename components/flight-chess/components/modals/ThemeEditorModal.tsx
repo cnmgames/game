@@ -154,15 +154,7 @@ export function ThemeEditorModal({
             </div>
           </div>
 
-          <div className="flex gap-2">
-            <button
-              className="flex-1 h-12 rounded-xl bg-gradient-to-r from-[#BF5AF2] via-[#FF375F] to-[#FF9F0A] text-white font-bold ios-btn shadow-[0_0_15px_rgba(255,55,95,0.3)] flex items-center justify-center gap-2 border-none"
-              onClick={() => onOpenAiImport(theme.id)}
-            >
-              <Wand2 size={18} className="animate-pulse" />
-              <span>AI 导入任务卡</span>
-            </button>
-          </div>
+          
 
           <div className="space-y-2">
             <div className="text-xs text-gray-400">新增任务卡</div>

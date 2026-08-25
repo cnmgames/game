@@ -204,6 +204,7 @@ export default function FlightChessApp() {
       />
 
       <ThemeCreateModal
+          onOpenAiImport={() => setAiImportThemeId('new')}
         isOpen={isCreateThemeModalOpen}
         onClose={() => setIsCreateThemeModalOpen(false)}
         onCreate={input => {

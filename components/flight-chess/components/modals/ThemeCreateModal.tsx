@@ -6,6 +6,7 @@ interface ThemeCreateModalProps {
   isOpen: boolean;
   onClose: () => void;
   onCreate: (input: { name: string; desc: string; audience: Theme['audience'] }) => void;
+  onOpenAiImport: () => void;
 }
 
 const audienceOptions: Array<{ value: Theme['audience']; label: string }> = [
@@ -14,7 +15,7 @@ const audienceOptions: Array<{ value: Theme['audience']; label: string }> = [
   { value: 'female', label: '仅限女方' }
 ];
 
-export function ThemeCreateModal({ isOpen, onClose, onCreate }: ThemeCreateModalProps) {
+export function ThemeCreateModal({ isOpen, onClose, onCreate, onOpenAiImport }: ThemeCreateModalProps) {
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
   const [audience, setAudience] = useState<Theme['audience']>('common');
@@ -196,6 +197,27 @@ export function ThemeCreateModal({ isOpen, onClose, onCreate }: ThemeCreateModal
           {error && <div style={{ fontSize: '13px', color: '#FF453A', marginBottom: '12px' }}>{error}</div>}
         </div>
 
+        <button
+          onClick={onOpenAiImport}
+          style={{
+            width: '100%',
+            height: '44px',
+            borderRadius: '999px',
+            background: 'linear-gradient(135deg, #BF5AF2, #FF375F)',
+            color: 'white',
+            fontSize: '14px',
+            fontWeight: 'bold',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            marginBottom: '12px'
+          }}
+        >
+          ✨ AI 导入任务卡
+        </button>
         <div style={{ display: 'flex', gap: '12px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
           <button
             onClick={onClose}

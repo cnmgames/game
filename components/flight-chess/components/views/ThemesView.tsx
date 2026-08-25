@@ -103,26 +103,7 @@ export function ThemesView({ themes, onCreateTheme, onEditTheme, onAiImport }: T
             {themes.length} 个题库 · {totalTasks} 张任务卡
           </p>
         </div>
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <button
-            style={{
-              paddingLeft: '12px',
-              paddingRight: '12px',
-              borderRadius: '999px',
-              background: 'linear-gradient(135deg, #BF5AF2, #FF375F)',
-              color: 'white',
-              fontSize: '12px',
-              fontWeight: 600,
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px'
-            }}
-            onClick={() => onAiImport('')}
-          >
-            ✨ AI导入
-          </button>
+                        
 <button
           style={{
             height: '36px',
@@ -143,7 +124,6 @@ export function ThemesView({ themes, onCreateTheme, onEditTheme, onAiImport }: T
         >
           <span style={{ fontSize: '16px' }}>+</span> 新建
         </button>
-        </div>
       </div>
 
       {/* 搜索框 */}
