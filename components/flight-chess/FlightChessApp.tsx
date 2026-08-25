@@ -109,7 +109,7 @@ export default function FlightChessApp() {
   };
 
   return (
-    <div className="flight-chess-app" style={{height:'calc(100vh - 60px)',width:'100%',overflow:'hidden',overflowX:'hidden',display:'flex',justifyContent:'center',background:'#000',touchAction:'none',userSelect:'none',WebkitUserSelect:'none',overscrollBehavior:'none'}}>
+    <div className="flight-chess-app" style={{height:'calc(100vh - 60px)',width:'100%',overflow:'hidden',overflowX:'hidden',display:'flex',justifyContent:'center',background:'#000',touchAction:'none',userSelect:'none',WebkitUserSelect:'none',WebkitTouchCallout:'none',overscrollBehavior:'none'}}>
       <div style={{position:'fixed',inset:0,zIndex:0}}>
         <div style={{width:'100%',height:'100%',background:'linear-gradient(135deg, #1a1a2e, #000, #1a1a2e)',opacity:0.6}} />
         <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,0.4)',backdropFilter:'blur(2px)'}} />
@@ -133,9 +133,9 @@ export default function FlightChessApp() {
           )}
         </header>
 
-        <main style={{flex:1,minHeight:0,position:'relative',overflowY:'auto',overflowX:'hidden',paddingTop:'4px',touchAction:'pan-y'}}>
+        <main style={{flex:1,minHeight:0,position:'relative',overflowY:'auto',overflowX:'hidden',paddingTop:'4px',touchAction:'none',userSelect:'none',WebkitUserSelect:'none',WebkitTouchCallout:'none'}}>
           <div style={{
-            position:'absolute',top:'60px',left:0,right:0,bottom:0,display:'flex',flexDirection:'column',padding:'0 24px 8px',
+            position:'absolute',top:'48px',left:0,right:0,bottom:0,display:'flex',flexDirection:'column',padding:'0 24px 8px',
             transition:'all 0.5s ease-in-out',
             transform: state.view === 'home' ? 'translateX(0)' : 'translateX(-100%)',
             opacity: state.view === 'home' ? 1 : 0,
