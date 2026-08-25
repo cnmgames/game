@@ -75,9 +75,9 @@ const games = [
             <p className="text-sm leading-relaxed text-white/80 sm:text-lg">多款氛围火辣的私房游戏，专为敢玩敢爱的亲密情侣而设。</p>
             <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               <a href="#games" className="btn-primary md:hidden">开始探索</a>
-              <a href="#games" className="hidden items-center gap-2 rounded-full bg-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400 md:inline-flex">开始探索</a>
-              <Link href="/activate" className="rounded-full bg-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400">激活游戏</Link>
-              <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" className="rounded-full bg-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400">购买激活码</a>
+              <a href="#games" className="hidden items-center justify-center rounded-full bg-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400 md:inline-flex">开始探索</a>
+              <Link href="/activate" className="inline-flex items-center justify-center rounded-full bg-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400">激活游戏</Link>
+              <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400">购买激活码</a>
             </div>
           </div>
         </div>
@@ -130,8 +130,8 @@ const games = [
           </div>
         </div>
 
-        {/* 底部区域 - 紧凑间距 */}
-        <div className="flex flex-col gap-2 -mt-2">
+        {/* 底部区域 - 最小间距 */}
+        <div className="flex flex-col gap-1 -mt-8">
         {/* 清理缓存按钮 */}
         <div className="flex justify-center">
           <button
@@ -148,15 +148,15 @@ const games = [
                 setTimeout(() => window.location.reload(), 500);
               }
             }}
-            className="rounded-full border border-white/20 bg-white/5 px-5 py-2 text-xs text-white/60 hover:bg-white/10 hover:text-white/80 transition"
+            className="rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs text-white/60 hover:bg-white/10 hover:text-white/80 transition"
           >
             🗑️ 清理缓存
           </button>
         </div>
 
         {/* 底部声明 */}
-        <div className="footer-card">
-          <p>请在充分沟通界限的前提下玩乐，确保每一步都建立在积极同意之上。</p>
+        <div className="footer-card !py-2 !my-0">
+          <p className="!text-xs">请在充分沟通界限的前提下玩乐，确保每一步都建立在积极同意之上。</p>
         </div>
         
         {/* 免责声明 */}
@@ -164,7 +164,7 @@ const games = [
           <p className="text-xs text-white/30 leading-relaxed">
             🔞 本网站所有游戏仅供18岁以上成年情侣在双方自愿前提下娱乐使用
           </p>
-          <p className="text-xs text-white/20 mt-1">
+          <p className="text-xs text-white/20 mt-0.5">
             请在安全、健康、互敬的原则下进行，如有不适请立即停止
           </p>
         </div>
