@@ -92,28 +92,25 @@ export default function TelepathyGame() {
   return (
     <LicenseGate gameName="心有灵犀">
       <div className="bg-aurora" />
-      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-md flex-col items-center justify-center px-4 py-8">
+      <div className="relative z-10 mx-auto flex w-full max-w-md flex-col items-center px-4 py-4">
         <div className="game-container w-full">
-          {/* 头部 */}
-          <div className="mb-6 flex items-center justify-between">
-            <Link href="/" className="back-btn inline-flex">← 返回</Link>
-            {started && !finished && (
-              <div className="text-right">
-                <div className="text-xs text-white/50">第 {round}/{totalRounds} 轮</div>
-                <div className="text-sm font-bold text-pink-300">默契分：{score}</div>
-              </div>
-            )}
-          </div>
+          {/* 轮次显示 */}
+          {started && !finished && (
+            <div className="mb-4 flex justify-center gap-4 text-center">
+              <div className="rounded-full bg-white/10 px-3 py-1 text-xs text-white/70">第 {round}/{totalRounds} 轮</div>
+              <div className="rounded-full bg-pink-500/20 px-3 py-1 text-xs font-bold text-pink-300">默契分：{score}</div>
+            </div>
+          )}
 
           {/* 开始界面 */}
           {!started && !finished && (
             <div className="text-center">
-              <div className="mb-4 text-6xl">💞</div>
-              <h1 className="mb-3 text-2xl font-bold text-white">心有灵犀</h1>
-              <p className="mb-6 text-sm leading-relaxed text-white/70">
+              <div className="mb-3 text-5xl">💞</div>
+              <h1 className="mb-2 text-xl font-bold text-white">心有灵犀</h1>
+              <p className="mb-4 text-sm leading-relaxed text-white/70">
                 情侣默契大考验。同时回答关于彼此的问题，答案一致得分，不一致接受甜蜜惩罚。看看你们是不是真的心有灵犀。
               </p>
-              <div className="mb-6 rounded-xl border border-white/10 bg-white/5 p-4 text-left text-xs text-white/60">
+              <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-3 text-left text-xs text-white/60">
                 <p className="mb-2">📋 游戏规则：</p>
                 <p>• 共 {totalRounds} 轮，每轮一个关于彼此的问题</p>
                 <p>• 两人分别输入自己心中的答案</p>
@@ -132,12 +129,11 @@ export default function TelepathyGame() {
           {/* 游戏中 - 玩家A答题 */}
           {started && !finished && phase === "answerA" && (
             <div className="text-center">
-              <div className="mb-2 text-xs text-pink-300">第 {round} 轮</div>
-              <div className="mb-6 rounded-xl border border-pink-500/30 bg-pink-500/10 p-4">
+              <div className="mb-3 rounded-xl border border-pink-500/30 bg-pink-500/10 p-3">
                 <p className="text-xs text-white/50 mb-1">问题</p>
                 <p className="text-lg font-semibold text-white">{currentQ}</p>
               </div>
-              <div className="mb-4">
+              <div className="mb-3">
                 <label className="mb-2 block text-sm font-medium text-pink-300">👩 玩家A 请输入答案</label>
                 <input
                   type="text"
@@ -149,7 +145,7 @@ export default function TelepathyGame() {
                   autoFocus
                 />
               </div>
-              <p className="mb-4 text-xs text-white/40">（玩家B请不要看屏幕）</p>
+              <p className="mb-3 text-xs text-white/40">（玩家B请不要看屏幕）</p>
               <button
                 onClick={submitA}
                 className="w-full rounded-full bg-pink-500 py-3 text-base font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400 disabled:opacity-50"
@@ -163,8 +159,7 @@ export default function TelepathyGame() {
           {/* 游戏中 - 玩家B答题 */}
           {started && !finished && phase === "answerB" && (
             <div className="text-center">
-              <div className="mb-2 text-xs text-purple-300">第 {round} 轮</div>
-              <div className="mb-6 rounded-xl border border-purple-500/30 bg-purple-500/10 p-4">
+              <div className="mb-3 rounded-xl border border-purple-500/30 bg-purple-500/10 p-3">
                 <p className="text-xs text-white/50 mb-1">问题</p>
                 <p className="text-lg font-semibold text-white">{currentQ}</p>
               </div>
@@ -193,11 +188,11 @@ export default function TelepathyGame() {
           {/* 结果 */}
           {started && !finished && phase === "result" && (
             <div className="text-center">
-              <div className="mb-4 text-5xl">{match ? "✨" : "💔"}</div>
-              <h2 className={`mb-4 text-2xl font-bold ${match ? "text-green-300" : "text-pink-300"}`}>
+              <div className="mb-2 text-4xl">{match ? "✨" : "💔"}</div>
+              <h2 className={`mb-3 text-xl font-bold ${match ? "text-green-300" : "text-pink-300"}`}>
                 {match ? "心有灵犀！" : "默契不足"}
               </h2>
-              <div className="mb-4 space-y-2 text-left">
+              <div className="mb-3 space-y-2 text-left">
                 <div className="rounded-xl border border-pink-500/20 bg-pink-500/5 p-3">
                   <p className="text-xs text-pink-300">👩 玩家A</p>
                   <p className="text-white">{answerA}</p>
@@ -208,11 +203,11 @@ export default function TelepathyGame() {
                 </div>
               </div>
               {match ? (
-                <div className="mb-6 rounded-xl border border-green-400/30 bg-green-500/10 p-4 text-sm text-green-200">
+                <div className="mb-4 rounded-xl border border-green-400/30 bg-green-500/10 p-3 text-sm text-green-200">
                   🎉 太棒了！默契 +1分，当前得分：{score}
                 </div>
               ) : (
-                <div className="mb-6 rounded-xl border border-pink-400/30 bg-pink-500/10 p-4">
+                <div className="mb-4 rounded-xl border border-pink-400/30 bg-pink-500/10 p-3">
                   <p className="mb-1 text-xs text-pink-300">甜蜜惩罚</p>
                   <p className="text-sm text-white">{punishment}</p>
                 </div>
@@ -229,15 +224,15 @@ export default function TelepathyGame() {
           {/* 最终结果 */}
           {finished && (
             <div className="text-center">
-              <div className="mb-4 text-6xl">💞</div>
-              <h2 className="mb-2 text-2xl font-bold text-white">默契度测试完成</h2>
-              <div className="my-6">
+              <div className="mb-2 text-5xl">💞</div>
+              <h2 className="mb-2 text-xl font-bold text-white">默契度测试完成</h2>
+              <div className="my-4">
                 <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">
                   {telepathyPercent}%
                 </div>
                 <p className="mt-2 text-sm text-white/60">心有灵犀指数</p>
               </div>
-              <div className="mb-6 rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-white/70">
+              <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white/70">
                 {telepathyPercent >= 80 && "🔥 你们简直是天作之合，心有灵犀一点通！"}
                 {telepathyPercent >= 60 && telepathyPercent < 80 && "💕 默契不错，你们很了解彼此！"}
                 {telepathyPercent >= 40 && telepathyPercent < 60 && "😊 还有提升空间，多聊聊彼此吧~"}
