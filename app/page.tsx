@@ -131,7 +131,7 @@ const games = [
         </div>
 
         {/* 底部区域 - 最小间距 */}
-        <div className="flex flex-col gap-1 -mt-8">
+        <div className="flex flex-col gap-0 -mt-12">
         {/* 清理缓存按钮 */}
         <div className="flex justify-center">
           <button
@@ -148,9 +148,9 @@ const games = [
                 setTimeout(() => window.location.reload(), 500);
               }
             }}
-            className="rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs text-white/60 hover:bg-white/10 hover:text-white/80 transition"
+            className="rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[11px] text-white/60 hover:bg-white/10 hover:text-white/80 transition"
           >
-            🗑️ 清理缓存
+            清理缓存
           </button>
         </div>
 
@@ -161,10 +161,10 @@ const games = [
         
         {/* 免责声明 */}
         <div className="text-center">
-          <p className="text-xs text-white/30 leading-relaxed">
+          <p className="text-[11px] text-white/30 leading-relaxed">
             🔞 本网站所有游戏仅供18岁以上成年情侣在双方自愿前提下娱乐使用
           </p>
-          <p className="text-xs text-white/20 mt-0.5">
+          <p className="text-[11px] text-white/20 mt-0">
             请在安全、健康、互敬的原则下进行，如有不适请立即停止
           </p>
         </div>
