@@ -81,7 +81,7 @@ export function ThemesView({ themes, onCreateTheme, onEditTheme }: ThemesViewPro
       display: 'flex',
       flexDirection: 'column',
       overflowY: 'auto',
-      paddingBottom: '24px',
+      paddingBottom: '12px',
       backgroundColor: '#000000',
       position: 'relative',
       zIndex: 10,
@@ -94,7 +94,7 @@ export function ThemesView({ themes, onCreateTheme, onEditTheme }: ThemesViewPro
         alignItems: 'center',
         justifyContent: 'space-between',
         marginBottom: '8px',
-        paddingTop: '16px'
+        paddingTop: '4px'
       }}>
         <div>
           <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: 'white', margin: 0 }}>任务主题库</h2>

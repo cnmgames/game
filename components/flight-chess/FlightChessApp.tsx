@@ -152,7 +152,7 @@ export default function FlightChessApp() {
           </div>
 
           <div style={{
-            position:'absolute',top:'80px',left:0,right:0,bottom:0,display:'flex',flexDirection:'column',minHeight:0,padding:'0 24px',
+            position:'absolute',top:'28px',left:0,right:0,bottom:0,display:'flex',flexDirection:'column',minHeight:0,padding:'0 20px 4px',
             transition:'all 0.5s ease-in-out',
             transform: state.view === 'themes' ? 'translateX(0)' : 'translateX(100%)',
             opacity: state.view === 'themes' ? 1 : 0,
