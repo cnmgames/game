@@ -33,6 +33,19 @@ export default function GameFeedbackButton({ gameName }: { gameName: string }) {
       setErrorMsg(validation.message || "内容不符合要求");
       return;
     }
+    // 联系方式验证（选填，填了就验证格式）
+    const contactTrimmed = contact.trim();
+    if (contactTrimmed) {
+      // 判断联系方式类型
+      const isQQ = /^[1-9]\d{5,}$/.test(contactTrimmed); // QQ：纯数字，至少6位
+      const isWechat = /^[a-zA-Z][a-zA-Z0-9_-]{5,}$/.test(contactTrimmed); // 微信：字母开头，至少6位
+      const isEmail = /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(contactTrimmed); // 邮箱格式
+      if (!isQQ && !isWechat && !isEmail) {
+        setStatus("error");
+        setErrorMsg("联系方式格式不正确：QQ至少6位数字、微信号至少6位(字母开头)、或正确邮箱格式");
+        return;
+      }
+    }
     setStatus("submitting");
     setErrorMsg("");
     try {
@@ -153,7 +166,7 @@ export default function GameFeedbackButton({ gameName }: { gameName: string }) {
                   <label style={{ display: "block", color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", marginBottom: "8px", fontWeight: "600" }}>反馈类型</label>
                   <div style={{ display: "flex", gap: "8px" }}>
                     {[{ value: "suggestion", label: "💡 建议", color: "#a855f7" }, { value: "bug", label: "🐛 问题", color: "#ef4444" }, { value: "other", label: "📝 其他", color: "#6b7280" }].map((item) => (
-                      <button key={item.value} type="button" onClick={() => setType(item.value)} style={{ flex: 1, padding: "10px 4px", borderRadius: "8px", border: type === item.value ? `2px solid ${item.color}` : "1px solid rgba(255,255,255,0.1)", background: type === item.value ? `${item.color}22` : "rgba(255,255,255,0.03)", color: "#fff", fontSize: "0.85rem", cursor: "pointer", fontWeight: type === item.value ? "600" : "400", WebkitTapHighlightColor: "transparent" }}>{item.label}</button>
+                      <button key={item.value} type="button" onClick={() => setType(item.value)} style={{ flex: 1, padding: "10px 4px", borderRadius: "8px", border: type === item.value ? `2px solid ${item.color}` : "1px solid rgba(255,255,255,0.1)", background: type === item.value ? `${item.color}22` : "rgba(255,255,255,0.03)", color: "#fff", fontSize: "0.85rem", cursor: "pointer", fontWeight: type === item.value ? "600" : "400", WebkitTapHighlightColor: "transparent", touchAction: "manipulation", userSelect: "none", WebkitUserSelect: "none", transition: "none", outline: "none" }}>{item.label}</button>
                     ))}
                   </div>
                 </div>
@@ -164,7 +177,7 @@ export default function GameFeedbackButton({ gameName }: { gameName: string }) {
                 </div>
                 <div style={{ marginBottom: "16px" }}>
                   <label style={{ display: "block", color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", marginBottom: "8px", fontWeight: "600" }}>联系方式 <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.75rem" }}>(选填)</span></label>
-                  <input type="text" value={contact} onChange={(e) => setContact(e.target.value)} onFocus={(e) => { e.target.style.fontSize = "16px"; }} onBlur={(e) => { e.target.style.fontSize = "0.9rem"; }} placeholder="微信/QQ/邮箱" maxLength={50} style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "#fff", fontSize: "16px", outline: "none", WebkitTextSizeAdjust: "none" }} />
+                  <input type="text" value={contact} onChange={(e) => setContact(e.target.value)} placeholder="微信/QQ/邮箱（选填，QQ至少6位数字）" maxLength={50} style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "#fff", fontSize: "16px", outline: "none", WebkitTextSizeAdjust: "none" }} />
                 </div>
                 {status === "error" && <div style={{ padding: "10px 12px", borderRadius: "6px", background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.3)", color: "#fca5a5", fontSize: "0.85rem", marginBottom: "12px" }}>⚠️ {errorMsg}</div>}
                 <button type="submit" disabled={!content.trim() || status === "submitting"} style={{ width: "100%", padding: "12px", borderRadius: "10px", border: "none", background: content.trim() && status !== "submitting" ? "linear-gradient(135deg, #ec4899, #a855f7)" : "rgba(255,255,255,0.08)", color: "#fff", fontSize: "1rem", fontWeight: "600", cursor: content.trim() && status !== "submitting" ? "pointer" : "not-allowed", boxShadow: content.trim() && status !== "submitting" ? "0 4px 12px rgba(236,72,153,0.35)" : "none", opacity: status === "submitting" ? 0.7 : 1, WebkitTapHighlightColor: "transparent" }}>{status === "submitting" ? "提交中..." : "提交反馈"}</button>

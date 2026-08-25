@@ -109,31 +109,29 @@ export default function FlightChessApp() {
   };
 
   return (
-    <div className="flight-chess-app" style={{height:'100vh',width:'100vw',overflow:'hidden',overflowX:'hidden',display:'flex',justifyContent:'center',background:'#000',touchAction:'pan-y',userSelect:'none',WebkitUserSelect:'none',overscrollBehavior:'none'}}>
+    <div className="flight-chess-app" style={{height:'calc(100vh - 60px)',width:'100%',overflow:'hidden',overflowX:'hidden',display:'flex',justifyContent:'center',background:'#000',touchAction:'pan-y',userSelect:'none',WebkitUserSelect:'none',overscrollBehavior:'none'}}>
       <div style={{position:'fixed',inset:0,zIndex:0}}>
         <div style={{width:'100%',height:'100%',background:'linear-gradient(135deg, #1a1a2e, #000, #1a1a2e)',opacity:0.6}} />
         <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,0.4)',backdropFilter:'blur(2px)'}} />
       </div>
 
       <div style={{position:'relative',zIndex:10,width:'100%',maxWidth:430,height:'100%',display:'flex',flexDirection:'column',background:'rgba(0,0,0,0.2)'}}>
-        <header style={{position:'relative',width:'100%',maxWidth:430,zIndex:10,paddingTop:0,paddingBottom:8,paddingLeft:16,paddingRight:16,textAlign:'center',boxSizing:'border-box',margin:'0 auto'}}>
-          <h1 className="game-title" style={{fontSize:'24px',marginBottom:'4px'}}>情侣飞行棋Pro</h1>
-          <div className="game-title-underline" />
+        <header style={{position:'relative',width:'100%',maxWidth:430,zIndex:10,paddingTop:0,paddingBottom:6,paddingLeft:16,paddingRight:16,display:'flex',alignItems:'center',justifyContent:'center',gap:'12px',boxSizing:'border-box',margin:'0 auto'}}>
+          <div style={{textAlign:'center',flex:1}}>
+            <h1 className="game-title" style={{fontSize:'22px',marginBottom:'2px'}}>情侣飞行棋Pro</h1>
+            <div className="game-title-underline" style={{marginTop:'2px'}} />
+          </div>
           {state.view === 'home' && (
-            <div style={{marginTop:'8px'}}>
-              <button onClick={() => switchView('themes')}
-                style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:'999px',color:'rgba(255,255,255,0.85)',fontSize:13,fontWeight:600,cursor:'pointer',padding:'6px 14px'}}>
-                📚 题库
-              </button>
-            </div>
+            <button onClick={() => switchView('themes')}
+              style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:'999px',color:'rgba(255,255,255,0.85)',fontSize:12,fontWeight:600,cursor:'pointer',padding:'5px 12px',flexShrink:0}}>
+              📚 题库
+            </button>
           )}
           {state.view === 'themes' && (
-            <div style={{marginTop:'8px'}}>
-              <button onClick={() => switchView('home')}
-                style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:'999px',color:'rgba(255,255,255,0.85)',fontSize:13,fontWeight:600,cursor:'pointer',padding:'6px 14px'}}>
-                ← 返回游戏
-              </button>
-            </div>
+            <button onClick={() => switchView('home')}
+              style={{background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.12)',borderRadius:'999px',color:'rgba(255,255,255,0.85)',fontSize:12,fontWeight:600,cursor:'pointer',padding:'5px 12px',flexShrink:0}}>
+              ← 返回
+            </button>
           )}
         </header>
 

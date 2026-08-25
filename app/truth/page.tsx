@@ -99,7 +99,7 @@ export default function TruthGame() {
     <>
       <LicenseGate gameName="真心话大冒险转盘">
       <div className="bg-aurora" />
-      <div className="relative z-10 mx-auto min-h-[calc(100vh-60px)] w-full max-w-4xl px-3.5 py-4 sm:px-6 sm:py-10">
+      <div className="relative z-10 mx-auto min-h-auto w-full max-w-4xl px-3.5 py-3 sm:px-6 sm:py-5">
 
         <div className="game-container">
           <div className="text-center mb-4 sm:mb-6">

@@ -36,10 +36,10 @@ export default function PostureCardApp() {
 
   return (
     <div style={{
-      minHeight: '100vh',
+      minHeight: 'calc(100vh - 60px)',
       backgroundColor: '#000',
       color: 'white',
-      padding: '16px',
+      padding: '12px 16px',
       boxSizing: 'border-box',
       maxWidth: '800px',
       margin: '0 auto'
@@ -170,7 +170,7 @@ export default function PostureCardApp() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '16px'
+          padding: '12px'
         }}
         onClick={() => setSelectedPosture(null)}
         >
