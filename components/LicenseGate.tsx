@@ -290,7 +290,10 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
   }
   return (
     <>
-      {children}
+      {/* 游戏内容容器，顶部留空避免被固定按钮遮挡 */}
+      <div style={{ paddingTop: "60px" }}>
+        {children}
+      </div>
       {/* 游戏内反馈按钮 */}
       <GameFeedbackButton gameName={gameName} />
       {/* 返回游戏列表按钮（固定在左上角） */}
