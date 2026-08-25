@@ -140,7 +140,7 @@ export function useGameState() {
       createdId = id;
       return {
         ...prev,
-        themes: [...prev.themes, { id, name, desc: (input.desc || '').trim(), audience: input.audience, tasks: [] }]
+        themes: [...prev.themes, { id, name, desc: (input.desc || '').trim(), audience: input.audience, tasks: [{ id: `task_${Date.now().toString(36)}`, text: '点击编辑添加更多任务卡', executor: 'both' }] }]
       };
     });
     return createdId;

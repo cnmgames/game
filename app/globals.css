@@ -278,3 +278,13 @@ body {
 input, textarea, select {
   font-size: 16px !important;
 }
+
+
+/* 弹窗打开时禁用飞行棋Pro滚动 */
+.modal-open .flight-chess-app {
+  overflow: hidden !important;
+  touch-action: none !important;
+}
+.modal-open .flight-chess-app * {
+  touch-action: none !important;
+}
