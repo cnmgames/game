@@ -76,8 +76,8 @@ const games = [
             <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               <a href="#games" className="btn-primary md:hidden">开始探索</a>
               <a href="#games" className="hidden items-center gap-2 rounded-full bg-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400 md:inline-flex">开始探索</a>
-              <Link href="/activate" className="rounded-full border border-pink-400/40 bg-pink-500/10 px-6 py-3 text-sm font-semibold text-pink-200 hover:bg-pink-500/20 transition">激活游戏</Link>
-              <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" className="rounded-full bg-gradient-to-r from-pink-500 to-purple-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/50 hover:from-pink-400 hover:to-purple-500 hover:shadow-pink-500/70 transition animate-pulse">购买激活码</a>
+              <Link href="/activate" className="rounded-full bg-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400">激活游戏</Link>
+              <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" className="rounded-full bg-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400">购买激活码</a>
             </div>
           </div>
         </div>
@@ -130,6 +130,8 @@ const games = [
           </div>
         </div>
 
+        {/* 底部区域 - 紧凑间距 */}
+        <div className="flex flex-col gap-2 -mt-2">
         {/* 清理缓存按钮 */}
         <div className="flex justify-center">
           <button
@@ -158,13 +160,14 @@ const games = [
         </div>
         
         {/* 免责声明 */}
-        <div className="mt-2 text-center">
+        <div className="text-center">
           <p className="text-xs text-white/30 leading-relaxed">
             🔞 本网站所有游戏仅供18岁以上成年情侣在双方自愿前提下娱乐使用
           </p>
           <p className="text-xs text-white/20 mt-1">
             请在安全、健康、互敬的原则下进行，如有不适请立即停止
           </p>
+        </div>
         </div>
       </div>
     </>
