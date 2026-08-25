@@ -76,6 +76,8 @@ const games = [
             <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               <a href="#games" className="btn-primary md:hidden">开始探索</a>
               <a href="#games" className="hidden items-center gap-2 rounded-full bg-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400 md:inline-flex">开始探索</a>
+              <Link href="/activate" className="rounded-full border border-pink-400/40 bg-pink-500/10 px-5 py-2.5 text-sm font-semibold text-pink-200 hover:bg-pink-500/20 transition">激活游戏</Link>
+              <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" className="rounded-full bg-gradient-to-r from-pink-500 to-purple-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-pink-500/50 hover:from-pink-400 hover:to-purple-500 hover:shadow-pink-500/70 transition animate-pulse">购买激活码</a>
             </div>
           </div>
         </div>
@@ -126,16 +128,6 @@ const games = [
               </Link>
             ))}
           </div>
-        </div>
-
-        {/* 激活入口 */}
-        <div className="flex flex-wrap justify-center gap-4">
-          <Link href="/activate" className="rounded-full border border-pink-400/40 bg-pink-500/10 px-6 py-2.5 text-sm font-semibold text-pink-200 hover:bg-pink-500/20 transition">
-            🔑 激活游戏
-          </Link>
-          <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" className="rounded-full bg-gradient-to-r from-pink-500 to-purple-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-pink-500/50 hover:from-pink-400 hover:to-purple-500 hover:shadow-pink-500/70 transition animate-pulse">
-            🛒 购买激活码
-          </a>
         </div>
 
         {/* 清理缓存按钮 */}
