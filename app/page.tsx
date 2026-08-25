@@ -53,7 +53,7 @@ const games = [
     { emoji: "💎", title: "午夜大富翁", desc: "绕棋盘冒险，每站都有欲望事件，一步步点燃激情。", path: "/monopoly", type: "paid" },
     { emoji: "🚀", title: "情侣飞行棋Pro", desc: "自定义任务主题、AI导入、3D骰子，打造专属游戏。", path: "/flight-pro", type: "paid" },
     { emoji: "💕", title: "姿势大全", desc: "12种经典姿势图文教程，难度分级，探索更多亲密可能。", path: "/posture", type: "paid" },
-    { emoji: "💞", title: "心有灵犀", desc: "情侣默契考验，同时答题，一致得分，不一致甜蜜惩罚。", path: "/telepathy", type: "paid" },
+    { emoji: "🧠", title: "心有灵犀", desc: "情侣默契考验，同时答题，一致得分，不一致甜蜜惩罚。", path: "/telepathy", type: "paid" },
   ];
 
   return (
@@ -91,6 +91,7 @@ const games = [
           <div className="grid grid-cols-2 gap-3 md:grid-cols-2 md:gap-6 xl:grid-cols-3">
             {games.map((game, i) => (
               <Link key={game.path} href={game.path} className="game-card group fade-in-up" style={{ animationDelay: `${i * 0.08}s` }}>
+                <span className="game-card-emoji">{game.emoji}</span>
                 <div className="space-y-2 sm:space-y-4">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="game-card-tag" style={{
