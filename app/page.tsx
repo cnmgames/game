@@ -45,15 +45,15 @@ export default function Home() {
   }, []);
 
 const games = [
-    { emoji: "✈️", title: "情侣飞行棋", desc: "经典飞行棋的情趣浪漫升级版，专为情侣设计的增进感情的情趣游戏。掷骰子前进，每格都有惊喜任务，让感情迅速升温。", path: "/flight", type: "free" },
-    { emoji: "🎡", title: "真心话大冒险转盘", desc: "终极派对游戏。旋转转盘抽取题目，回答劲爆的真心话问题或接受刺激大胆的挑战，揭开彼此心底的秘密。", path: "/truth", type: "paid" },
-    { emoji: "🎲", title: "情趣骰子", desc: "喝酒助兴必备神器。摇骰子比大小，挑战上家的点数，输了就喝酒或接受大冒险惩罚，越玩越刺激。", path: "/dice", type: "paid" },
-    { emoji: "🦁", title: "火辣暗兽棋", desc: "翻牌、博弈、宽衣，心跳加速的策略对决。记忆与运气的较量，每翻一张牌都可能让对方卸下防备。", path: "/beast", type: "paid" },
-    { emoji: "🎰", title: "桃色老虎机", desc: "一拉定情。地点、动作、部位随机组合，摇出你的下一个亲密时刻。先集满欲望条者获胜，体验前所未有的刺激。", path: "/slot", type: "paid" },
-    { emoji: "💎", title: "午夜大富翁", desc: "绕着棋盘冒险，每一站都有欲望事件等待完成。买房、收租、触发惊喜，在游戏中一步步点燃激情。", path: "/monopoly", type: "paid" },
-    { emoji: "🚀", title: "情侣飞行棋Pro", desc: "功能增强版飞行棋，支持自定义任务主题、AI智能导入、3D骰子动画，男女双方专属任务包，打造你们的专属游戏。", path: "/flight-pro", type: "paid" },
-    { emoji: "💕", title: "姿势大全", desc: "12种经典性爱姿势，详细图文教程与难度分级，从入门到高阶，探索更多亲密可能，让每一晚都充满新鲜感。", path: "/posture", type: "paid" },
-    { emoji: "💞", title: "心有灵犀", desc: "考验情侣默契度的终极游戏。同时回答关于彼此的问题，答案一致得分，不一致接受甜蜜惩罚。看看你们是不是真的心有灵犀，夜间两人专属。", path: "/telepathy", type: "paid" },
+    { emoji: "✈️", title: "情侣飞行棋", desc: "掷骰子前进，每格都有惊喜任务，让感情迅速升温。", path: "/flight", type: "free" },
+    { emoji: "🎡", title: "真心话大冒险转盘", desc: "旋转转盘抽题，真心话或大冒险，揭开彼此秘密。", path: "/truth", type: "paid" },
+    { emoji: "🎲", title: "情趣骰子", desc: "摇骰子比大小，输了喝酒或接受惩罚，越玩越刺激。", path: "/dice", type: "paid" },
+    { emoji: "🦁", title: "火辣暗兽棋", desc: "翻牌博弈策略对决，每翻一张牌都可能让对方卸下防备。", path: "/beast", type: "paid" },
+    { emoji: "🎰", title: "桃色老虎机", desc: "地点动作部位随机组合，摇出你的下一个亲密时刻。", path: "/slot", type: "paid" },
+    { emoji: "💎", title: "午夜大富翁", desc: "绕棋盘冒险，每站都有欲望事件，一步步点燃激情。", path: "/monopoly", type: "paid" },
+    { emoji: "🚀", title: "情侣飞行棋Pro", desc: "自定义任务主题、AI导入、3D骰子，打造专属游戏。", path: "/flight-pro", type: "paid" },
+    { emoji: "💕", title: "姿势大全", desc: "12种经典姿势图文教程，难度分级，探索更多亲密可能。", path: "/posture", type: "paid" },
+    { emoji: "💞", title: "心有灵犀", desc: "情侣默契考验，同时答题，一致得分，不一致甜蜜惩罚。", path: "/telepathy", type: "paid" },
   ];
 
   return (
