@@ -21,7 +21,7 @@ export function CardModeView({ players, themes, currentTurn, onDrawTask, onTaskT
   };
 
   return (
-    <div style={{position:'fixed',inset:0,zIndex:50,background:'#000',display:'flex',flexDirection:'column'}}>
+    <div style={{paddingTop:'50px',overflowY:'auto',overflowX:'hidden',position:'fixed',inset:0,zIndex:50,background:'#000',display:'flex',flexDirection:'column'}}>
       <div style={{position:'absolute',inset:0,zIndex:0,background:'linear-gradient(135deg, #1a1a2e, #000, #1a1a2e)',opacity:0.6}} />
       <div style={{position:'relative',zIndex:10,display:'flex',flexDirection:'column',height:'100%',maxWidth:430,margin:'0 auto',width:'100%'}}>
         <header style={{padding:'48px 16px 8px',display:'flex',alignItems:'center',gap:16,flexShrink:0}}>

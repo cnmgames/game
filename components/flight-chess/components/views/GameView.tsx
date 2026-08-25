@@ -95,7 +95,7 @@ export function GameView({
   const turnNumber = Math.floor(Math.max(...players.map(p => p.step)) / 4) + 1;
 
   return (
-    <div style={{
+    <div style={{paddingTop:'50px',
       position: 'fixed',
       top: 0,
       left: 0,

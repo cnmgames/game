@@ -109,14 +109,14 @@ export default function FlightChessApp() {
   };
 
   return (
-    <div className="flight-chess-app" style={{height:'calc(100vh - 60px)',width:'100%',overflow:'hidden',overflowX:'hidden',display:'flex',justifyContent:'center',background:'#000',touchAction:'none',userSelect:'none',WebkitUserSelect:'none',WebkitTouchCallout:'none',overscrollBehavior:'none'}}>
+    <div className="flight-chess-app" style={{height:'calc(100vh - 60px)',width:'100%',overflow:'hidden',overflowX:'hidden',display:'flex',justifyContent:'center',background:'#000',touchAction:'pan-y',userSelect:'none',WebkitUserSelect:'none',WebkitTouchCallout:'none',overscrollBehavior:'none'}}>
       <div style={{position:'fixed',inset:0,zIndex:0}}>
         <div style={{width:'100%',height:'100%',background:'linear-gradient(135deg, #1a1a2e, #000, #1a1a2e)',opacity:0.6}} />
         <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,0.4)',backdropFilter:'blur(2px)'}} />
       </div>
 
       <div style={{position:'relative',zIndex:10,width:'100%',maxWidth:430,height:'100%',display:'flex',flexDirection:'column',background:'rgba(0,0,0,0.2)'}}>
-        <header style={{position:'relative',width:'100%',maxWidth:430,zIndex:10,paddingTop:0,paddingBottom:2,paddingLeft:16,paddingRight:16,boxSizing:'border-box',margin:'0 auto',textAlign:'center'}}>
+        <header style={{position:'relative',width:'100%',maxWidth:430,zIndex:10,paddingTop:0,paddingBottom:0,paddingLeft:16,paddingRight:16,boxSizing:'border-box',margin:'0 auto',textAlign:'center'}}>
           <h1 className="game-title" style={{fontSize:'22px',marginBottom:'2px',textAlign:'center'}}>情侣飞行棋Pro</h1>
           <div className="game-title-underline" style={{margin:'0 auto 4px'}} />
           {state.view === 'home' && (
@@ -133,9 +133,9 @@ export default function FlightChessApp() {
           )}
         </header>
 
-        <main style={{flex:1,minHeight:0,position:'relative',overflowY:'auto',overflowX:'hidden',paddingTop:'4px',touchAction:'none',userSelect:'none',WebkitUserSelect:'none',WebkitTouchCallout:'none'}}>
+        <main style={{flex:1,minHeight:0,position:'relative',overflowY:'auto',overflowX:'hidden',paddingTop:'4px',touchAction:'pan-y',userSelect:'none',WebkitUserSelect:'none',WebkitTouchCallout:'none'}}>
           <div style={{
-            position:'absolute',top:'36px',left:0,right:0,bottom:0,display:'flex',flexDirection:'column',padding:'0 24px 8px',
+            position:'absolute',top:'28px',left:0,right:0,bottom:0,display:'flex',flexDirection:'column',padding:'0 20px 4px',
             transition:'all 0.5s ease-in-out',
             transform: state.view === 'home' ? 'translateX(0)' : 'translateX(-100%)',
             opacity: state.view === 'home' ? 1 : 0,

@@ -125,10 +125,10 @@ export function DiceModeView({ players, themes, currentTurn, onEndTurn, onBack }
     sequenceActive && hasActionOnly ? '等待下骰子' : sequenceActive && hasResult ? '切换回合中' : `${activePlayer.name}掷骰子`;
 
   return (
-    <div style={{position:'fixed',inset:0,zIndex:50,background:'#000',display:'flex',flexDirection:'column'}}>
+    <div style={{paddingTop:'50px',overflowY:'auto',overflowX:'hidden',position:'fixed',inset:0,zIndex:50,background:'#000',display:'flex',flexDirection:'column'}}>
       <div style={{position:'absolute',inset:0,zIndex:0,background:'linear-gradient(135deg, #1a1a2e, #000, #1a1a2e)',opacity:0.6}} />
       <div style={{position:'relative',zIndex:10,display:'flex',flexDirection:'column',height:'100%',maxWidth:430,margin:'0 auto',width:'100%'}}>
-        <header style={{padding:'44px 16px 8px',display:'flex',alignItems:'center',gap:16,flexShrink:0}}>
+        <header style={{padding:'16px 16px 8px',display:'flex',alignItems:'center',gap:16,flexShrink:0}}>
           <button onClick={onBack} style={{width:40,height:40,borderRadius:'50%',background:'rgba(255,255,255,0.1)',border:'1px solid rgba(255,255,255,0.05)',color:'#fff',fontSize:18,cursor:'pointer'}}>←</button>
           <div style={{flex:1,display:'flex',justifyContent:'center'}}>
             <div style={{padding:6,background:'#1C1C1E',borderRadius:999,display:'flex',alignItems:'center',gap:8,border:'1px solid rgba(255,255,255,0.1)'}}>
