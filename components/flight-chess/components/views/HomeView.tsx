@@ -77,8 +77,7 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
         <div style={{position:'relative',marginBottom:12}}>
           <div ref={scrollerRef} className="no-scrollbar" style={{
             overflowX:'auto',paddingBottom:4,display:'flex',gap:12,touchAction:'pan-x',
-            scrollbarWidth:'none',msOverflowStyle:'none',WebkitOverflowScrolling:'touch',
-            touchAction:'pan-x'
+            scrollbarWidth:'none',msOverflowStyle:'none',WebkitOverflowScrolling:'touch'
           }}>
             {gameModes.map(mode => {
               const isActive = mode.id === gameMode;
