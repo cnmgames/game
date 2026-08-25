@@ -91,7 +91,6 @@ const games = [
           <div className="grid grid-cols-2 gap-3 md:grid-cols-2 md:gap-6 xl:grid-cols-3">
             {games.map((game, i) => (
               <Link key={game.path} href={game.path} className="game-card group fade-in-up" style={{ animationDelay: `${i * 0.08}s` }}>
-                <span className="game-card-emoji">{game.emoji}</span>
                 <div className="space-y-2 sm:space-y-4">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="game-card-tag" style={{
