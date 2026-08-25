@@ -73,11 +73,10 @@ const games = [
           <div className="max-w-3xl space-y-2.5 text-white sm:space-y-4">
             <h1 className="text-[1.7rem] font-semibold leading-tight sm:text-5xl">燃情此刻，放肆尽兴</h1>
             <p className="text-sm leading-relaxed text-white/80 sm:text-lg">多款氛围火辣的私房游戏，专为敢玩敢爱的亲密情侣而设。</p>
-            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-              <a href="#games" className="btn-primary md:hidden">开始探索</a>
-              <a href="#games" className="hidden items-center justify-center rounded-full bg-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400 md:inline-flex">开始探索</a>
-              <Link href="/activate" className="inline-flex items-center justify-center rounded-full bg-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400">激活游戏</Link>
-              <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400">购买激活码</a>
+            <div className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-4">
+              <a href="#games" className="inline-flex items-center justify-center rounded-full bg-pink-500 px-2 py-2 text-xs font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400 sm:px-6 sm:py-3 sm:text-sm">开始探索</a>
+              <Link href="/activate" className="inline-flex items-center justify-center rounded-full bg-pink-500 px-2 py-2 text-xs font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400 sm:px-6 sm:py-3 sm:text-sm">激活游戏</Link>
+              <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-pink-500 px-2 py-2 text-xs font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400 sm:px-6 sm:py-3 sm:text-sm">购买激活码</a>
             </div>
           </div>
         </div>
@@ -131,7 +130,7 @@ const games = [
         </div>
 
         {/* 底部区域 - 最小间距 */}
-        <div className="flex flex-col gap-3 -mt-4">
+        <div className="flex flex-col gap-4 mt-2">
         {/* 清理缓存按钮 */}
         <div className="flex justify-center">
           <button
