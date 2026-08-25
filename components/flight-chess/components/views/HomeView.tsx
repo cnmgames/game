@@ -65,8 +65,8 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
 
   return (
     <div style={{height:'100%',minHeight:0}}>
-      <div className="no-scrollbar" style={{height:'100%',minHeight:0,overflowY:'auto',padding:'8px 0 24px',background:'transparent',scrollbarWidth:'none',msOverflowStyle:'none',touchAction:'none',userSelect:'none',WebkitUserSelect:'none',WebkitTouchCallout:'none'}}>
-        <div style={{textAlign:'center',marginBottom:8}}>
+      <div className="no-scrollbar" style={{height:'100%',minHeight:0,overflowY:'auto',padding:'0 0 16px',background:'transparent',scrollbarWidth:'none',msOverflowStyle:'none',touchAction:'none',userSelect:'none',WebkitUserSelect:'none',WebkitTouchCallout:'none'}}>
+        <div style={{textAlign:'center',marginBottom:4}}>
           <h2 style={{fontSize:20,color:'#ccc',fontWeight:500,margin:0}}>配置游戏角色</h2>
           <p style={{fontSize:13,color:'#666',marginTop:8,margin:'8px 0 0'}}>
             {shouldShowThemeSelectors ? themeHint : '选择游戏模式即可开始'}
