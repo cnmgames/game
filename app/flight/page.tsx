@@ -208,6 +208,7 @@ export default function FlightGame() {
   return (
     <>
       {/* 固定返回按钮 */}
+      <div style={{paddingTop: "50px"}}>
       <a href="/" className="fixed-return-btn" style={{position:"fixed",top:"max(12px,env(safe-area-inset-top))",left:"max(12px,env(safe-area-inset-left))",zIndex:9999,padding:"4px 10px",borderRadius:"9999px",border:"1px solid rgba(255,255,255,0.2)",background:"rgba(0,0,0,0.6)",color:"rgba(255,255,255,0.8)",fontSize:"12px",backdropFilter:"blur(10px)",WebkitBackdropFilter:"blur(10px)",whiteSpace:"nowrap",textDecoration:"none",lineHeight:"1.5"}}>← 返回游戏列表</a>
       <div className="bg-aurora" />
       <div className="relative z-10 mx-auto min-h-screen w-full max-w-5xl px-2 py-3 sm:px-4 sm:py-6">
@@ -333,6 +334,7 @@ export default function FlightGame() {
         </div>
       )}
       <GameFeedbackButton gameName="情侣飞行棋" />
+      </div>
     </>
   );
 }
