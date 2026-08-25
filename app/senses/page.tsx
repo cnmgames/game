@@ -1,309 +1,346 @@
 "use client";
 import Link from "next/link";
 import LicenseGate from "../../components/LicenseGate";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
-type Difficulty = "gentle" | "spicy" | "extreme";
-type SenseType = "all" | "touch" | "smell" | "taste" | "sound" | "sight";
-
-const taskPool = {
-  gentle: [
-    { type: "触觉", icon: "✋", text: "蒙眼状态下，用手指从对方额头慢慢滑到下巴，感受每一寸肌肤" },
-    { type: "触觉", icon: "✋", text: "用指尖在对方手背轻轻画圈，看对方能不能忍住不笑" },
-    { type: "嗅觉", icon: "👃", text: "蒙眼闻对方脖子、手腕、头发的味道，说出最喜欢哪个" },
-    { type: "味觉", icon: "👅", text: "用嘴把一口温水喂给对方，然后轻轻接吻" },
-    { type: "听觉", icon: "👂", text: "在对方耳边轻轻说一句你最想对他做的事" },
-    { type: "视觉", icon: "👁️", text: "深情对视30秒，谁先笑谁就接受对方一个要求" },
-    { type: "综合", icon: "🔥", text: "从背后轻轻抱住对方，下巴搭在对方肩膀上，呼吸感受彼此" },
-  ],
-  spicy: [
-    { type: "触觉", icon: "✋", text: "用舌尖在对方脖子上慢慢画圈，直到对方发出声音" },
-    { type: "触觉", icon: "✋", text: "从背后抱住对方，手慢慢游走，每停一处问对方喜不喜欢" },
-    { type: "触觉", icon: "✋", text: "用手指在对方大腿内侧画圈，越来越靠近但就是不碰敏感处" },
-    { type: "嗅觉", icon: "👃", text: "在对方脖子、胸口、手腕各亲一下，让对方蒙眼分辨是哪个部位" },
-    { type: "味觉", icon: "👅", text: "在对方身上滴一滴蜂蜜/糖浆，用舌头慢慢舔干净" },
-    { type: "听觉", icon: "👂", text: "蒙眼，让对方在你耳边发出不同的声音，猜他在做什么" },
-    { type: "视觉", icon: "👁️", text: "在对方面前慢慢脱一件衣服，每脱一个动作停3秒" },
-    { type: "综合", icon: "🔥", text: "蒙眼，对方可以用嘴/手触碰你，你要说出是什么部位" },
-    { type: "综合", icon: "🔥", text: "用冰块在对方身上慢慢滑动，从脖子到大腿内侧" },
-  ],
-  extreme: [
-    { type: "触觉", icon: "✋", text: "蒙眼绑住手，对方可以对你做任何事，你只能用声音回应" },
-    { type: "触觉", icon: "✋", text: "互相按摩，但只能用舌头，从肩膀开始慢慢往下" },
-    { type: "触觉", icon: "✋", text: "在对方敏感部位呼热气，然后突然用舌头舔，观察反应" },
-    { type: "味觉", icon: "👅", text: "用嘴传递一颗葡萄/草莓，最后一起吃掉" },
-    { type: "综合", icon: "🔥", text: "蒙眼，用羽毛/冰块/手指轮流触碰对方，让对方猜是什么" },
-    { type: "综合", icon: "🔥", text: "在镜子前蒙眼，让对方引导你的手触碰他的身体" },
-    { type: "综合", icon: "🔥", text: "用低温蜡烛在对方身上滴蜡，感受温度和刺激" },
-    { type: "综合", icon: "🔥", text: "互相用脚挑逗对方敏感部位，看谁先忍不住" },
-  ],
+type Layer = "menu" | "map" | "task" | "editor";
+type BodyPart = {
+  id: string; name: string; icon: string; position: string;
+  tasks: string[]; unlocked: boolean; completed: number;
 };
 
-const senseFilters: { key: SenseType; label: string; icon: string }[] = [
-  { key: "all", label: "全部", icon: "🌈" },
-  { key: "touch", label: "触觉", icon: "✋" },
-  { key: "smell", label: "嗅觉", icon: "👃" },
-  { key: "taste", label: "味觉", icon: "👅" },
-  { key: "sound", label: "听觉", icon: "👂" },
-  { key: "sight", label: "视觉", icon: "👁️" },
+const defaultBodyParts: BodyPart[] = [
+  { id: "head", name: "头部", icon: "👤", position: "头部区域", tasks: ["蒙眼亲吻额头，慢慢移到嘴唇", "用舌头舔对方耳垂，轻轻吹气", "深吻同时抚摸头发", "在耳边说骚话，观察对方反应"], unlocked: true, completed: 0 },
+  { id: "neck", name: "颈部", icon: "🦢", position: "脖子与锁骨", tasks: ["从下巴慢慢吻到锁骨", "在脖子上种草莓", "用舌头在脖子画圈", "轻咬锁骨，慢慢往下"], unlocked: false, completed: 0 },
+  { id: "chest", name: "胸部", icon: "❤️", position: "胸口与乳头", tasks: ["亲吻胸口，画圈慢慢靠近乳头", "用舌头舔乳头，轻轻吸吮", "手指揉捏乳头，观察反应", "在胸口留下口水印"], unlocked: false, completed: 0 },
+  { id: "arms", name: "手臂", icon: "💪", position: "手臂与指尖", tasks: ["从肩膀吻到指尖，每根手指都舔", "十指相扣，慢慢靠近", "用手指在对方手心画圈", "亲吻腋下，敏感地带探索"], unlocked: false, completed: 0 },
+  { id: "belly", name: "腹部", icon: "🤰", position: "小腹与肚脐", tasks: ["从胸口慢慢吻到小腹", "用舌头在肚脐画圈", "手指在腹肌上滑动", "亲吻腰侧，敏感带探索"], unlocked: false, completed: 0 },
+  { id: "thighs", name: "大腿", icon: "🦵", position: "大腿内侧", tasks: ["从膝盖慢慢吻到大腿内侧", "用手指在大腿内侧画圈，越来越靠近", "轻咬大腿内侧，留下痕迹", "蒙眼让对方猜亲的是哪里"], unlocked: false, completed: 0 },
+  { id: "feet", name: "脚部", icon: "🦶", position: "脚尖与脚底", tasks: ["亲吻脚尖，一根根舔脚趾", "用手指划过脚底，看对方反应", "按摩脚踝，慢慢往上", "用脚挑逗对方敏感部位"], unlocked: false, completed: 0 },
 ];
 
+// 音效工具
+const useSound = () => {
+  const audioCtx = useRef<AudioContext | null>(null);
+  
+  const play = useCallback((type: "click" | "success" | "fail" | "unlock" | "tick") => {
+    try {
+      if (!audioCtx.current) {
+        audioCtx.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      }
+      const ctx = audioCtx.current;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (type === "click") {
+        osc.frequency.value = 800;
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.1);
+      } else if (type === "success") {
+        osc.frequency.setValueAtTime(523, ctx.currentTime);
+        osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+        osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.4);
+      } else if (type === "fail") {
+        osc.frequency.setValueAtTime(300, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.3);
+      } else if (type === "unlock") {
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(400, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.5);
+      } else if (type === "tick") {
+        osc.frequency.value = 1000;
+        gain.gain.setValueAtTime(0.05, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.05);
+      }
+    } catch (e) {}
+  }, []);
+
+  return play;
+};
+
 export default function SensesGame() {
-  const [started, setStarted] = useState(false);
-  const [difficulty, setDifficulty] = useState<Difficulty>("spicy");
-  const [senseFilter, setSenseFilter] = useState<SenseType>("all");
-  const [currentTask, setCurrentTask] = useState<{ type: string; icon: string; text: string } | null>(null);
-  const [history, setHistory] = useState<number[]>([]);
-  const [favorites, setFavorites] = useState<number[]>([]);
-  const [timer, setTimer] = useState(0);
-  const [timerRunning, setTimerRunning] = useState(false);
-  const [blindfold, setBlindfold] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const [layer, setLayer] = useState<Layer>("menu");
+  const [bodyParts, setBodyParts] = useState<BodyPart[]>(defaultBodyParts);
+  const [currentPart, setCurrentPart] = useState<BodyPart | null>(null);
+  const [currentTask, setCurrentTask] = useState("");
+  const [taskIndex, setTaskIndex] = useState(0);
+  const [showComplete, setShowComplete] = useState(false);
+  const [newTask, setNewTask] = useState("");
+  const [editingPart, setEditingPart] = useState<string>("");
+  const [particles, setParticles] = useState<{ id: number; x: number; y: number }[]>([]);
+  const play = useSound();
 
   useEffect(() => {
-    if (timerRunning) {
-      timerRef.current = setInterval(() => {
-        setTimer((t) => t + 1);
-      }, 1000);
-    } else if (timerRef.current) {
-      clearInterval(timerRef.current);
+    const saved = localStorage.getItem("senses_progress");
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        setBodyParts(defaultBodyParts.map((p, i) => ({
+          ...p,
+          unlocked: data[i]?.unlocked ?? p.unlocked,
+          completed: data[i]?.completed ?? 0,
+          tasks: data[i]?.tasks ?? p.tasks,
+        })));
+      } catch {}
     }
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [timerRunning]);
+  }, []);
 
-  const getFilteredTasks = () => {
-    let tasks = taskPool[difficulty];
-    if (senseFilter !== "all") {
-      const typeMap: Record<string, string> = {
-        touch: "触觉", smell: "嗅觉", taste: "味觉", sound: "听觉", sight: "视觉",
-      };
-      tasks = tasks.filter((t) => t.type === typeMap[senseFilter] || t.type === "综合");
-    }
-    return tasks;
+  useEffect(() => {
+    localStorage.setItem("senses_progress", JSON.stringify(bodyParts.map((p) => ({ unlocked: p.unlocked, completed: p.completed, tasks: p.tasks }))));
+  }, [bodyParts]);
+
+  const goBack = () => {
+    play("click");
+    if (layer === "map") setLayer("menu");
+    else if (layer === "task") setLayer("map");
+    else if (layer === "editor") setLayer("menu");
   };
 
-  const drawTask = () => {
-    const tasks = getFilteredTasks();
-    if (tasks.length === 0) return;
+  const selectPart = (part: BodyPart) => {
+    if (!part.unlocked) { play("fail"); return; }
+    play("click");
+    setCurrentPart(part);
+    setTaskIndex(0);
+    setCurrentTask(part.tasks[0]);
+    setLayer("task");
+  };
+
+  const nextTask = () => {
+    play("click");
+    if (!currentPart) return;
+    const nextIdx = (taskIndex + 1) % currentPart.tasks.length;
+    setTaskIndex(nextIdx);
+    setCurrentTask(currentPart.tasks[nextIdx]);
+  };
+
+  const completeTask = () => {
+    if (!currentPart) return;
+    play("success");
     
-    let idx;
-    do {
-      idx = Math.floor(Math.random() * tasks.length);
-    } while (history.includes(idx) && history.length < tasks.length);
-    
-    if (history.length >= tasks.length) {
-      setHistory([]);
-    } else {
-      setHistory([...history, idx]);
-    }
-    setCurrentTask(tasks[idx]);
-    setBlindfold(tasks[idx].text.includes("蒙眼"));
-    setTimer(0);
-    setTimerRunning(true);
+    // 粒子特效
+    const newParticles = Array.from({ length: 12 }, (_, i) => ({
+      id: Date.now() + i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+    }));
+    setParticles(newParticles);
+    setTimeout(() => setParticles([]), 1000);
+
+    setShowComplete(true);
+    setTimeout(() => setShowComplete(false), 1500);
+
+    setBodyParts((prev) => {
+      const updated = prev.map((p) => {
+        if (p.id === currentPart.id) {
+          const newCompleted = Math.min(p.tasks.length, p.completed + 1);
+          return { ...p, completed: newCompleted };
+        }
+        return p;
+      });
+
+      // 检查是否解锁下一个区域
+      const idx = updated.findIndex((p) => p.id === currentPart.id);
+      if (updated[idx].completed >= updated[idx].tasks.length && idx + 1 < updated.length && !updated[idx + 1].unlocked) {
+        updated[idx + 1] = { ...updated[idx + 1], unlocked: true };
+        setTimeout(() => play("unlock"), 500);
+      }
+      return updated;
+    });
   };
 
-  const toggleFavorite = () => {
-    if (!currentTask) return;
-    const tasks = getFilteredTasks();
-    const idx = tasks.findIndex((t) => t.text === currentTask.text);
-    if (favorites.includes(idx)) {
-      setFavorites(favorites.filter((i) => i !== idx));
-    } else {
-      setFavorites([...favorites, idx]);
-    }
+  const totalProgress = Math.round((bodyParts.reduce((s, p) => s + p.completed, 0) / bodyParts.reduce((s, p) => s + p.tasks.length, 0)) * 100);
+  const unlockedCount = bodyParts.filter((p) => p.unlocked).length;
+
+  const addTask = () => {
+    if (!newTask.trim() || !editingPart) return;
+    play("click");
+    setBodyParts((prev) => prev.map((p) => p.id === editingPart ? { ...p, tasks: [...p.tasks, newTask.trim()] } : p));
+    setNewTask("");
   };
 
-  const formatTime = (s: number) => {
-    const m = Math.floor(s / 60);
-    const sec = s % 60;
-    return `${m}:${sec.toString().padStart(2, "0")}`;
+  const removeTask = (partId: string, idx: number) => {
+    play("click");
+    setBodyParts((prev) => prev.map((p) => p.id === partId ? { ...p, tasks: p.tasks.filter((_, i) => i !== idx) } : p));
   };
 
-  const restart = () => {
-    setStarted(false);
-    setCurrentTask(null);
-    setHistory([]);
-    setTimer(0);
-    setTimerRunning(false);
-    setBlindfold(false);
+  const resetProgress = () => {
+    play("fail");
+    setBodyParts(defaultBodyParts);
   };
 
-  const difficultyLabels = {
-    gentle: { label: "温柔", color: "from-blue-500 to-cyan-500", desc: "适合新手，温柔探索" },
-    spicy: { label: "刺激", color: "from-pink-500 to-rose-500", desc: "调情挑逗，渐入佳境" },
-    extreme: { label: "极限", color: "from-red-500 to-orange-500", desc: "重口味，释放欲望" },
-  };
+  const BackButton = () => (
+    <button onClick={goBack} className="mb-4 flex items-center gap-1 text-xs text-white/50 transition hover:text-white/80">
+      ← 返回上一层
+    </button>
+  );
 
   return (
     <LicenseGate gameName="感官探索">
       <div className="bg-aurora" />
-      <div className="relative z-10 mx-auto flex w-full max-w-md flex-col items-center px-4 py-6">
-        <div className="game-container w-full">
-          {!started && (
+      <div className="relative z-10 mx-auto flex w-full max-w-md flex-col px-4 py-6">
+        <div className="game-container w-full relative overflow-hidden">
+          {/* 粒子特效 */}
+          {particles.map((p) => (
+            <div key={p.id} className="pointer-events-none absolute text-xl animate-ping" style={{ left: `${p.x}%`, top: `${p.y}%` }}>✨</div>
+          ))}
+
+          {/* 主菜单 */}
+          {layer === "menu" && (
             <div className="text-center">
-              <div className="mb-4 text-6xl">🌙</div>
+              <div className="mb-4 text-6xl animate-pulse">🌙</div>
               <h1 className="mb-2 text-2xl font-bold text-white">感官探索</h1>
-              <p className="mb-5 text-sm text-white/70">蒙眼+五感放大，探索彼此的每一寸敏感地带</p>
-
-              {/* 难度选择 */}
-              <p className="mb-2 text-left text-xs font-semibold text-white/60">选择难度</p>
-              <div className="mb-5 grid grid-cols-3 gap-2">
-                {(Object.keys(difficultyLabels) as Difficulty[]).map((d) => (
-                  <button
-                    key={d}
-                    onClick={() => setDifficulty(d)}
-                    className={`rounded-xl border p-3 text-center transition-all ${
-                      difficulty === d
-                        ? `border-transparent bg-gradient-to-br ${difficultyLabels[d].color} text-white shadow-lg`
-                        : "border-white/10 bg-white/5 text-white/60 hover:bg-white/10"
-                    }`}
-                  >
-                    <p className="text-sm font-bold">{difficultyLabels[d].label}</p>
-                    <p className="mt-0.5 text-[9px] opacity-80">{difficultyLabels[d].desc}</p>
-                  </button>
-                ))}
+              <p className="mb-6 text-sm text-white/70">身体地图关卡解锁，从头到脚探索每一寸敏感地带</p>
+              <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-4">
+                <div className="mb-2 flex justify-between text-xs">
+                  <span className="text-white/60">总进度</span>
+                  <span className="font-bold text-pink-300">{totalProgress}%</span>
+                </div>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
+                  <div className="h-full rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 transition-all duration-500" style={{ width: `${totalProgress}%` }} />
+                </div>
+                <p className="mt-2 text-[10px] text-white/40">已解锁 {unlockedCount}/{bodyParts.length} 个区域</p>
               </div>
-
-              {/* 感官筛选 */}
-              <p className="mb-2 text-left text-xs font-semibold text-white/60">感官类型（可选）</p>
-              <div className="mb-5 flex flex-wrap gap-1.5">
-                {senseFilters.map((f) => (
-                  <button
-                    key={f.key}
-                    onClick={() => setSenseFilter(f.key)}
-                    className={`rounded-full px-3 py-1 text-[11px] transition ${
-                      senseFilter === f.key
-                        ? "bg-pink-500 text-white"
-                        : "bg-white/5 text-white/50 hover:bg-white/10"
-                    }`}
-                  >
-                    {f.icon} {f.label}
-                  </button>
-                ))}
+              <div className="space-y-3">
+                <button onClick={() => { play("click"); setLayer("map"); }} className="w-full rounded-full bg-gradient-to-r from-pink-500 to-purple-500 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:shadow-pink-500/60 hover:scale-[1.02]">
+                  🗺️ 开始探索
+                </button>
+                <button onClick={() => { play("click"); setLayer("editor"); }} className="w-full rounded-full border border-white/15 bg-white/5 py-3 text-sm text-white/70 transition hover:bg-white/10">
+                  ✏️ 编辑任务库
+                </button>
+                <button onClick={resetProgress} className="w-full rounded-full border border-red-400/20 bg-red-500/5 py-2 text-xs text-red-300/60 transition hover:bg-red-500/10">
+                  🔄 重置进度
+                </button>
               </div>
-
-              <div className="mb-5 rounded-xl border border-white/10 bg-white/5 p-3 text-left text-xs text-white/60">
-                <p className="mb-1">📋 玩法：</p>
-                <p>• 选择难度和感官类型</p>
-                <p>• 抽取任务卡，按要求执行</p>
-                <p>• 内置计时器，记录每次时长</p>
-                <p>• 可收藏喜欢的任务</p>
-              </div>
-
-              <button
-                onClick={() => setStarted(true)}
-                className={`w-full rounded-full bg-gradient-to-r ${difficultyLabels[difficulty].color} py-3 text-sm font-semibold text-white shadow-lg transition hover:shadow-xl`}
-              >
-                开始探索
-              </button>
             </div>
           )}
 
-          {started && (
+          {/* 身体地图 */}
+          {layer === "map" && (
             <div>
-              {/* 顶部状态栏 */}
+              <BackButton />
+              <h2 className="mb-4 text-center text-lg font-bold text-white">身体地图</h2>
+              <p className="mb-4 text-center text-xs text-white/50">完成一个区域的所有任务，解锁下一个区域</p>
+              <div className="space-y-2">
+                {bodyParts.map((part) => (
+                  <button key={part.id} onClick={() => selectPart(part)} disabled={!part.unlocked} className={`flex w-full items-center gap-3 rounded-2xl border p-3 text-left transition-all ${
+                    part.unlocked ? "border-white/10 bg-white/5 hover:border-pink-400/50 hover:bg-pink-500/10 hover:scale-[1.02]" : "border-white/5 bg-black/20 opacity-40 cursor-not-allowed"
+                  }`}>
+                    <div className={`flex h-12 w-12 items-center justify-center rounded-xl text-2xl ${part.unlocked ? "bg-gradient-to-br from-pink-500/20 to-purple-500/20" : "bg-white/5"}`}>
+                      {part.unlocked ? part.icon : "🔒"}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-bold text-white">{part.name}</p>
+                      <p className="text-[10px] text-white/50">{part.position}</p>
+                      <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-white/10">
+                        <div className="h-full rounded-full bg-gradient-to-r from-pink-500 to-purple-500 transition-all" style={{ width: `${(part.completed / part.tasks.length) * 100}%` }} />
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs font-bold text-pink-300">{part.completed}/{part.tasks.length}</p>
+                      {part.completed >= part.tasks.length && part.unlocked && <p className="text-[10px] text-green-400">✅ 完成</p>}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 任务执行 */}
+          {layer === "task" && currentPart && (
+            <div>
+              <BackButton />
               <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className={`rounded-full bg-gradient-to-r ${difficultyLabels[difficulty].color} px-2 py-0.5 text-[10px] font-semibold text-white`}>
-                    {difficultyLabels[difficulty].label}
-                  </span>
-                  {senseFilter !== "all" && (
-                    <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] text-white/60">
-                      {senseFilters.find((f) => f.key === senseFilter)?.label}
-                    </span>
-                  )}
+                  <span className="text-2xl">{currentPart.icon}</span>
+                  <div>
+                    <p className="text-sm font-bold text-white">{currentPart.name}</p>
+                    <p className="text-[10px] text-white/50">第 {taskIndex + 1}/{currentPart.tasks.length} 个任务</p>
+                  </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-[10px] text-white/40">已完成</p>
-                  <p className="text-xs font-bold text-pink-300">{history.length}</p>
+                  <p className="text-xs font-bold text-pink-300">{currentPart.completed}/{currentPart.tasks.length}</p>
                 </div>
               </div>
 
-              {/* 计时器 */}
-              {timerRunning && (
-                <div className="mb-3 flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 py-2">
-                  <span className="text-lg">⏱️</span>
-                  <span className="font-mono text-lg font-bold text-white">{formatTime(timer)}</span>
-                  <button
-                    onClick={() => setTimerRunning(!timerRunning)}
-                    className="ml-2 rounded-full bg-white/10 px-2 py-0.5 text-[10px] text-white/60"
-                  >
-                    {timerRunning ? "暂停" : "继续"}
-                  </button>
-                </div>
-              )}
-
-              {/* 蒙眼提示 */}
-              {blindfold && currentTask && (
-                <div className="mb-3 rounded-xl border border-yellow-400/30 bg-yellow-500/10 p-2.5 text-center">
-                  <p className="text-xs text-yellow-200">😎 本任务需要蒙眼，请准备好眼罩</p>
+              {/* 完成动画 */}
+              {showComplete && (
+                <div className="mb-4 animate-bounce rounded-xl border border-green-400/30 bg-green-500/10 p-4 text-center">
+                  <p className="text-lg font-bold text-green-200">✅ 任务完成！</p>
+                  {currentPart.completed + 1 >= currentPart.tasks.length && <p className="text-xs text-green-300 mt-1">🎉 本区域全部完成，下一个区域已解锁！</p>}
                 </div>
               )}
 
               {/* 任务卡片 */}
-              {currentTask && (
-                <div className="mb-4">
-                  <div className="relative overflow-hidden rounded-2xl border border-pink-500/30 bg-gradient-to-br from-pink-500/15 via-purple-500/10 to-pink-500/15 p-5">
-                    <div className="absolute -right-3 -top-3 text-5xl opacity-10">{currentTask.icon}</div>
-                    <div className="relative z-10">
-                      <div className="mb-3 flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="text-xl">{currentTask.icon}</span>
-                          <span className="rounded-full bg-pink-500/20 px-2.5 py-0.5 text-[10px] font-semibold text-pink-200">
-                            {currentTask.type}
-                          </span>
-                        </div>
-                        <button
-                          onClick={toggleFavorite}
-                          className="text-lg transition hover:scale-110"
-                        >
-                          {favorites.includes(history[history.length - 1]) ? "❤️" : "🤍"}
-                        </button>
-                      </div>
-                      <p className="text-sm leading-relaxed text-white">{currentTask.text}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {!currentTask && (
-                <div className="mb-4 rounded-2xl border border-white/10 bg-white/5 p-8 text-center">
-                  <div className="mb-2 text-4xl">🎲</div>
-                  <p className="text-sm text-white/50">点击下方按钮抽取任务</p>
-                </div>
-              )}
-
-              {/* 操作按钮 */}
-              <div className="space-y-2">
-                <button
-                  onClick={drawTask}
-                  className={`w-full rounded-full bg-gradient-to-r ${difficultyLabels[difficulty].color} py-3 text-sm font-semibold text-white shadow-lg transition hover:shadow-xl`}
-                >
-                  {currentTask ? "✨ 下一个任务" : "🎲 抽取任务"}
-                </button>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => { setTimer(0); setTimerRunning(false); }}
-                    className="flex-1 rounded-full border border-white/15 bg-white/5 py-2 text-xs text-white/50 transition hover:bg-white/10"
-                  >
-                    ⏱️ 重置计时
-                  </button>
-                  <button
-                    onClick={restart}
-                    className="flex-1 rounded-full border border-white/15 bg-white/5 py-2 text-xs text-white/50 transition hover:bg-white/10"
-                  >
-                    🔄 重新选择
-                  </button>
+              <div className="mb-4 relative overflow-hidden rounded-2xl border border-pink-500/30 bg-gradient-to-br from-pink-500/15 via-purple-500/10 to-pink-500/15 p-6">
+                <div className="absolute -right-4 -top-4 text-7xl opacity-10">{currentPart.icon}</div>
+                <div className="relative z-10">
+                  <p className="mb-3 text-[10px] text-pink-300">感官任务</p>
+                  <p className="text-base leading-relaxed text-white">{currentTask}</p>
                 </div>
               </div>
 
-              {favorites.length > 0 && (
-                <p className="mt-3 text-center text-[10px] text-white/30">❤️ 已收藏 {favorites.length} 个任务</p>
-              )}
+              <div className="space-y-2">
+                <button onClick={completeTask} className="w-full rounded-full bg-gradient-to-r from-green-500 to-emerald-500 py-3 text-sm font-semibold text-white shadow-lg shadow-green-500/40 transition hover:shadow-green-500/60 hover:scale-[1.02]">
+                  ✅ 完成此任务
+                </button>
+                <button onClick={nextTask} className="w-full rounded-full border border-white/15 bg-white/5 py-2 text-xs text-white/60 transition hover:bg-white/10">
+                  ⏭️ 跳过/下一个
+                </button>
+              </div>
+            </div>
+          )}
 
-              <p className="mt-2 text-center text-[10px] text-white/30">放慢节奏，用心感受每一个瞬间</p>
+          {/* 编辑任务库 */}
+          {layer === "editor" && (
+            <div>
+              <BackButton />
+              <h2 className="mb-4 text-center text-lg font-bold text-white">✏️ 编辑任务库</h2>
+              <div className="mb-4">
+                <p className="mb-2 text-xs text-white/60">选择区域：</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {bodyParts.map((p) => (
+                    <button key={p.id} onClick={() => { play("click"); setEditingPart(p.id); }} className={`rounded-full px-3 py-1 text-[11px] transition ${editingPart === p.id ? "bg-pink-500 text-white" : "bg-white/5 text-white/50 hover:bg-white/10"}`}>
+                      {p.icon} {p.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {editingPart && (
+                <>
+                  <div className="mb-4 flex gap-2">
+                    <input value={newTask} onChange={(e) => setNewTask(e.target.value)} onKeyDown={(e) => e.key === "Enter" && addTask()} placeholder="输入新任务..." className="flex-1 rounded-xl border border-white/15 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-pink-400/50" />
+                    <button onClick={addTask} className="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-pink-400">添加</button>
+                  </div>
+                  <div className="max-h-72 space-y-2 overflow-y-auto">
+                    {bodyParts.find((p) => p.id === editingPart)?.tasks.map((t, i) => (
+                      <div key={i} className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                        <span className="text-sm text-white/80">{t}</span>
+                        <button onClick={() => removeTask(editingPart, i)} className="ml-2 text-red-400 hover:text-red-300">🗑️</button>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+              {!editingPart && <p className="text-center text-sm text-white/40">请先选择一个区域</p>}
+              <p className="mt-4 text-center text-[10px] text-white/30">修改自动保存</p>
             </div>
           )}
         </div>
