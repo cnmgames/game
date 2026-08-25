@@ -59,7 +59,7 @@ const games = [
     <>
       <div className="bg-aurora" />
 
-      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-7 px-3.5 py-4 sm:gap-12 sm:px-6 sm:py-10 lg:gap-16 lg:px-10 lg:py-12">
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-5 px-3.5 py-4 sm:gap-8 sm:px-6 sm:py-8 lg:gap-10 lg:px-10 lg:py-10">
         {/* 顶部卡片 */}
         <div className="game-container">
           <div className="flex items-center justify-between gap-2 mb-6">
@@ -76,8 +76,8 @@ const games = [
             <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               <a href="#games" className="btn-primary md:hidden">开始探索</a>
               <a href="#games" className="hidden items-center gap-2 rounded-full bg-pink-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/40 transition hover:bg-pink-400 md:inline-flex">开始探索</a>
-              <Link href="/activate" className="rounded-full border border-pink-400/40 bg-pink-500/10 px-5 py-2.5 text-sm font-semibold text-pink-200 hover:bg-pink-500/20 transition">激活游戏</Link>
-              <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" className="rounded-full bg-gradient-to-r from-pink-500 to-purple-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-pink-500/50 hover:from-pink-400 hover:to-purple-500 hover:shadow-pink-500/70 transition animate-pulse">购买激活码</a>
+              <Link href="/activate" className="rounded-full border border-pink-400/40 bg-pink-500/10 px-6 py-3 text-sm font-semibold text-pink-200 hover:bg-pink-500/20 transition">激活游戏</Link>
+              <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" className="rounded-full bg-gradient-to-r from-pink-500 to-purple-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/50 hover:from-pink-400 hover:to-purple-500 hover:shadow-pink-500/70 transition animate-pulse">购买激活码</a>
             </div>
           </div>
         </div>
@@ -158,7 +158,7 @@ const games = [
         </div>
         
         {/* 免责声明 */}
-        <div className="mt-8 text-center">
+        <div className="mt-2 text-center">
           <p className="text-xs text-white/30 leading-relaxed">
             🔞 本网站所有游戏仅供18岁以上成年情侣在双方自愿前提下娱乐使用
           </p>
