@@ -135,7 +135,7 @@ export default function FlightChessApp() {
 
         <main style={{flex:1,minHeight:0,position:'relative',overflow:'hidden',paddingTop:'4px'}}>
           <div style={{
-            position:'absolute',top:'75px',left:0,right:0,bottom:0,display:'flex',flexDirection:'column',padding:'0 24px 8px',
+            position:'absolute',top:'60px',left:0,right:0,bottom:0,display:'flex',flexDirection:'column',padding:'0 24px 8px',
             transition:'all 0.5s ease-in-out',
             transform: state.view === 'home' ? 'translateX(0)' : 'translateX(-100%)',
             opacity: state.view === 'home' ? 1 : 0,

@@ -66,7 +66,7 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
   return (
     <div style={{height:'100%',minHeight:0}}>
       <div className="no-scrollbar" style={{height:'100%',minHeight:0,overflowY:'auto',padding:'8px 0 24px',background:'transparent',scrollbarWidth:'none',msOverflowStyle:'none'}}>
-        <div style={{textAlign:'center',marginBottom:16}}>
+        <div style={{textAlign:'center',marginBottom:8}}>
           <h2 style={{fontSize:20,color:'#ccc',fontWeight:500,margin:0}}>配置游戏角色</h2>
           <p style={{fontSize:13,color:'#666',marginTop:8,margin:'8px 0 0'}}>
             {shouldShowThemeSelectors ? themeHint : '选择游戏模式即可开始'}
@@ -74,9 +74,9 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
         </div>
 
         {/* 模式选择 */}
-        <div style={{position:'relative',marginBottom:20}}>
+        <div style={{position:'relative',marginBottom:12}}>
           <div ref={scrollerRef} className="no-scrollbar" style={{
-            overflowX:'auto',paddingBottom:4,display:'flex',gap:12,
+            overflowX:'auto',paddingBottom:4,display:'flex',gap:12,touchAction:'pan-x',
             scrollbarWidth:'none',msOverflowStyle:'none',WebkitOverflowScrolling:'touch',
             touchAction:'pan-x'
           }}>
@@ -110,7 +110,7 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
 
         {/* 玩家主题选择 */}
         {shouldShowThemeSelectors && (
-          <div style={{display:'flex',flexDirection:'column',gap:12}}>
+          <div style={{display:'flex',flexDirection:'column',gap:8}}>
             {players.map((player, idx) => {
               const theme = themes.find(t => t.id === player.themeId);
               const isMale = idx === 0;
@@ -139,7 +139,7 @@ export function HomeView({ players, themes, gameMode, onSelectMode, onSelectThem
           </div>
         )}
         {/* 开始按钮 */}
-        <div style={{marginTop:24}}>
+        <div style={{marginTop:16}}>
           <button onClick={onStartGame} style={{
             width:'100%',height:56,background:'#fff',borderRadius:999,color:'#000',fontWeight:600,fontSize:18,
             border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',gap:8,
