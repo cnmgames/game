@@ -45,7 +45,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://api.ttla.top" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.ttla.top" />
         {/* Google AdSense */}
-        <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7156604582462189" crossorigin="anonymous" strategy="afterInteractive" />
+        <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7156604582462189" crossOrigin="anonymous" strategy="afterInteractive" />
         <AntiDebugProvider>
           {children}
                   </AntiDebugProvider>
