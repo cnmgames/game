@@ -363,6 +363,113 @@ document.addEventListener("DOMContentLoaded",function(){setTimeout(function(){va
 
 </script>
 
+
+<script>
+(function(){
+  var _A="https://api.ttla.top";
+  var _K="lg_activation";
+  var _C="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  function _h(s){var h=0;for(var i=0;i<s.length;i++){h=(h<<5)-h+s.charCodeAt(i);h|=0;}return Math.abs(h);}
+  function _d(){var n=navigator;var c="";try{var cv=document.createElement("canvas");var x=cv.getContext("2d");if(x){x.textBaseline="top";x.font="14px 'Arial'";x.fillText("fp_ios_v2",2,2);c=cv.toDataURL();}}catch(e){}return "dev_"+_h([n.userAgent,n.language,n.platform,screen.width+"x"+screen.height,screen.colorDepth,screen.pixelDepth,new Date().getTimezoneOffset(),n.hardwareConcurrency||0,n.deviceMemory||0,c.substring(0,100)].join("|")).toString(36);}
+  function _f(){var n=navigator;var c="";try{var cv=document.createElement("canvas");var x=cv.getContext("2d");if(x){x.textBaseline="top";x.font="14px 'Arial'";x.fillText("fp_mig_v2",2,2);c=cv.toDataURL();}}catch(e){}return "fp_"+_h([n.userAgent,n.language,n.platform,screen.width+"x"+screen.height,screen.colorDepth,new Date().getTimezoneOffset(),n.hardwareConcurrency||0,c.substring(0,80)].join("|")).toString(36);}
+  function _v(code){var c=code.toUpperCase().trim().replace(/[^A-Z0-9]/g,"");if(c.length!==7)return null;var m={E:0,A:1,B:2,C:3,D:4,T:5};var t=m[c[0]];if(t===undefined)return null;if(_C[_h(c.slice(0,6))%_C.length]!==c[6])return null;return{type:t};}
+  function _r(){try{var d=localStorage.getItem(_K);if(!d)return false;var a=JSON.parse(d);var ex=a.expireAt||a.expiresAt;if(!ex||Date.now()>ex)return false;if(!a.code||!a.type)return false;return true;}catch(e){return false;}}
+  function _s(){var g=document.getElementById("actGate");if(g)g.classList.remove("hide");}
+  function _h2(){var g=document.getElementById("actGate");if(g)g.classList.add("hide");}
+  // 记录原始激活信息用于篡改检测
+  var _orig=null;
+  function _saveOrig(){try{_orig=localStorage.getItem(_K);}catch(e){}}
+  function _checkTamper(){try{var cur=localStorage.getItem(_K);if(_orig!==null&&cur!==_orig){// 被外部修改了，重新验证
+      _orig=cur;
+      _verifyApi();
+    }}catch(e){}}
+  // 服务端验证激活状态（周期性调用）
+  var _vCount=0;
+  function _verifyApi(){
+    if(!_r()){_s();return;}
+    try{
+      var a=JSON.parse(localStorage.getItem(_K));
+      if(!a.code)return;
+      // 每3次验证才真正调一次API（省流量），但每次都检查本地过期
+      _vCount++;
+      if(_vCount%3!==0)return;
+      fetch(_A+"/check?code="+encodeURIComponent(a.code),{cache:"no-store"})
+        .then(function(r){return r.json();})
+        .then(function(d){
+          if(d&&d.exists&&(d.used||d.valid===false)&&!d.disabled){
+            // 码有效且已使用，正常
+          }else if(d&&d.disabled){
+            // 被封禁了
+            localStorage.removeItem(_K);
+            _s();
+          }else if(d&&!d.exists){
+            // 码不存在（伪造的）
+            localStorage.removeItem(_K);
+            _s();
+          }
+        }).catch(function(){});
+    }catch(e){}
+  }
+  async function _act(code){
+    var p=_v(code);if(!p)return{ok:false,msg:"激活码格式不正确"};
+    var clean=code.toUpperCase().trim().replace(/[^A-Z0-9]/g,"");
+    try{
+      var res=await fetch(_A+"/activate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code:clean,deviceId:_d(),deviceFingerprint:_f(),migrate:true})});
+      if(!res.ok)return{ok:false,msg:"网络异常，请重试"};
+      var data=await res.json();
+      if(!data.success)return{ok:false,msg:data.message||"激活码无效"};
+      var now=Date.now();var ex=data.expireAt||0;
+      if(!ex){var dm={E:1,A:7,B:30,C:90,D:365,T:0};if(clean[0]==="T")ex=now+300000;else ex=now+(dm[clean[0]]||7)*86400000;}
+      var obj={code:clean,type:p.type,activatedAt:now,expireAt:ex};
+      localStorage.setItem(_K,JSON.stringify(obj));
+      _saveOrig();
+      return{ok:true,msg:data.message||"激活成功"};
+    }catch(e){return{ok:false,msg:"网络异常，请检查网络后重试"};}
+  }
+  // 检测激活网关是否被删除
+  function _checkGate(){
+    var g=document.getElementById("actGate");
+    if(!g){
+      // 网关被删除了，重新创建
+      var div=document.createElement("div");
+      div.id="actGate";
+      div.innerHTML='<div class="act-box"><div class="act-icon">🔒</div><div class="act-title">无界升温</div><div class="act-sub">检测到异常，请重新激活</div><input id="actInp" class="act-input" type="text" maxlength="7" placeholder="输入7位激活码" autocomplete="off"><button id="actBtn" class="act-btn">立即激活</button><a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" class="act-buy">购买激活码</a><div id="actRes" class="act-result"></div><a href="/" class="act-back">← 返回首页</a></div>';
+      document.body.appendChild(div);
+      _bind();
+    }
+  }
+  function _bind(){
+    var inp=document.getElementById("actInp");
+    var btn=document.getElementById("actBtn");
+    var res=document.getElementById("actRes");
+    if(inp){inp.addEventListener("input",function(){this.value=this.value.toUpperCase();});inp.addEventListener("keydown",function(e){if(e.key==="Enter")_go();});}
+    if(btn)btn.addEventListener("click",_go);
+    async function _go(){
+      var code=inp.value.trim();
+      if(!code){res.className="act-result err";res.textContent="请输入激活码";return;}
+      btn.disabled=true;btn.textContent="验证中...";res.className="act-result";res.textContent="";
+      var r=await _act(code);
+      btn.disabled=false;btn.textContent="立即激活";
+      if(r.ok){res.className="act-result ok";res.textContent=r.msg;setTimeout(_h2,800);}
+      else{res.className="act-result err";res.textContent=r.msg;}
+    }
+  }
+  function _init(){
+    _saveOrig();
+    if(_r()){_h2();}else{_s();}
+    _bind();
+    // 周期性验证（每30秒）
+    setInterval(function(){_checkTamper();_verifyApi();_checkGate();},30000);
+    // 页面可见性变化时立即验证
+    document.addEventListener("visibilitychange",function(){if(!document.hidden){_verifyApi();_checkTamper();}});
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",_init);else _init();
+  // 反调试：检测控制台打开（简单版）
+  var _el=new Image();
+  Object.defineProperty(_el,'id',{get:function(){/* 控制台打开时会触发 */}});
+})();
+</script>
+
 </head>
 <body>
 
