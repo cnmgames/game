@@ -12,10 +12,10 @@
 :root {
   --bg: #08080f;
   --bg-2: #160f1f;
-  --panel: rgba(255,255,255,0.04);
-  --panel-border: rgba(255,255,255,0.08);
-  --text: #f5f5f7;
-  --text-dim: rgba(255,255,255,0.55);
+  --panel: rgba(255,234,238,0.05);
+  --panel-border: rgba(244,201,212,0.13);
+  --text: #f4e7ec;
+  --text-dim: #c6a2ae;
   --accent: #FF375F;
   --accent-2: #FF2D55;
   --accent-3: #BF5AF2;
@@ -299,422 +299,84 @@ html, body {
 .rtc-btnrow { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
 
 
-/* ========== 高大上风格覆盖 ========== */
-body {
-  background: 
-    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(255,55,95,0.15) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 80% 10%, rgba(191,90,242,0.12) 0%, transparent 50%),
-    radial-gradient(ellipse 100% 80% at 50% 100%, rgba(255,45,85,0.08) 0%, transparent 60%),
-    linear-gradient(180deg, #0a0a12 0%, #060609 100%) !important;
-  background-attachment: fixed !important;
-}
-#app {
-  background: transparent !important;
-}
-/* 毛玻璃卡片 */
-.setup-card, .temp-panel, .card-area, .report-card, .modal-box {
-  background: rgba(255,255,255,0.03) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255,255,255,0.08) !important;
-  box-shadow: 
-    0 8px 32px rgba(0,0,0,0.4),
-    inset 0 1px 0 rgba(255,255,255,0.06) !important;
-}
-/* 按钮升级 */
-.btn {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  letter-spacing: 0.02em;
-}
-.btn::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-  transition: left 0.5s;
-}
-.btn:active::before { left: 100%; }
-.btn-primary {
-  background: linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%) !important;
-  color: #fff !important;
-  box-shadow: 0 4px 20px rgba(255,55,95,0.4), 0 0 0 1px rgba(255,55,95,0.3) !important;
-  font-weight: 700 !important;
-}
-.btn-primary:hover {
-  box-shadow: 0 6px 28px rgba(255,55,95,0.55), 0 0 0 1px rgba(255,55,95,0.5) !important;
-  transform: translateY(-1px);
-}
-.btn-ghost {
-  background: rgba(255,255,255,0.05) !important;
-  border: 1px solid rgba(255,255,255,0.12) !important;
-  backdrop-filter: blur(10px);
-}
-.btn-ghost:hover {
-  background: rgba(255,255,255,0.09) !important;
-  border-color: rgba(255,55,95,0.3) !important;
-}
-.btn-safe {
-  background: rgba(255,69,58,0.1) !important;
-  border: 1px solid rgba(255,69,58,0.35) !important;
-  color: #FF6B6B !important;
-}
-.btn-danger {
-  background: rgba(255,69,58,0.12) !important;
-  border: 1px solid rgba(255,69,58,0.4) !important;
-  color: #FF6B6B !important;
-}
-/* 输入框升级 */
-.field input[type="text"], .field select, .rtc-code, .lib-content, .lib-note {
-  background: rgba(255,255,255,0.04) !important;
-  border: 1px solid rgba(255,255,255,0.1) !important;
-  backdrop-filter: blur(10px);
-  transition: all 0.2s;
-}
-.field input[type="text"]:focus, .field select:focus, .rtc-code:focus {
-  border-color: rgba(255,55,95,0.5) !important;
-  box-shadow: 0 0 0 3px rgba(255,55,95,0.1) !important;
-}
-/* 品牌标题 */
-.brand {
-  background: linear-gradient(135deg, #fff 0%, #FF375F 50%, #BF5AF2 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: none !important;
-  filter: drop-shadow(0 0 20px rgba(255,55,95,0.3));
-}
-.brand span {
-  background: linear-gradient(135deg, #FF375F, #BF5AF2);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-/* 温度面板发光 */
-.temp-panel {
-  position: relative;
-  overflow: hidden;
-}
-.temp-panel::before {
-  content: '';
-  position: absolute;
-  top: -50%; left: -50%;
-  width: 200%; height: 200%;
-  background: radial-gradient(circle, rgba(255,55,95,0.08) 0%, transparent 40%);
-  animation: tempGlow 4s ease-in-out infinite;
-  pointer-events: none;
-}
-@keyframes tempGlow {
-  0%, 100% { transform: translate(0, 0); opacity: 0.5; }
-  50% { transform: translate(10%, 10%); opacity: 1; }
-}
-.temp-value {
-  background: linear-gradient(180deg, #fff 0%, #FF375F 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: none !important;
-  filter: drop-shadow(0 0 30px rgba(255,55,95,0.4));
-}
-/* 卡牌动画增强 */
-.card {
-  background: rgba(255,255,255,0.02);
-  border-radius: 14px;
-  padding: 4px;
-}
-.card-type {
-  background: linear-gradient(135deg, #FF375F, #BF5AF2);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-/* 单选/多选药丸 */
-.radio-pill, .check-pill {
-  background: rgba(255,255,255,0.03) !important;
-  border: 1px solid rgba(255,255,255,0.1) !important;
-  transition: all 0.2s;
-}
-.radio-pill:has(input:checked), .check-pill:has(input:checked) {
-  background: rgba(255,55,95,0.1) !important;
-  border-color: rgba(255,55,95,0.4) !important;
-  color: #FF6B8A;
-}
-/* 分享链接区域 */
-.share-link-box {
-  background: rgba(191,90,242,0.06);
-  border: 1px solid rgba(191,90,242,0.25);
-  border-radius: 12px;
-  padding: 10px 12px;
-  margin-top: 8px;
-  font-size: 12px;
-  color: rgba(255,255,255,0.7);
-  word-break: break-all;
-  max-height: 80px;
-  overflow-y: auto;
-  display: none;
-}
-.share-link-box.show { display: block; }
-.share-link-label {
-  font-size: 11px;
-  color: #BF5AF2;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-/* 场景徽章 */
-.scene-badge {
-  background: rgba(255,55,95,0.08) !important;
-  border: 1px solid rgba(255,55,95,0.25) !important;
-  color: #FF6B8A !important;
-}
-.scene-badge.remote {
-  background: rgba(191,90,242,0.08) !important;
-  border-color: rgba(191,90,242,0.3) !important;
-  color: #C99BFF !important;
-}
-/* 回合徽章 */
-.turn-badge {
-  background: rgba(255,55,95,0.1) !important;
-  border: 1px solid rgba(255,55,95,0.3) !important;
-  color: #FF6B8A !important;
-}
-/* 下一张预告 */
-.next-preview {
-  background: rgba(191,90,242,0.05) !important;
-  border: 1px solid rgba(191,90,242,0.2) !important;
-}
-.np-label { color: #C99BFF !important; }
-/* 弹窗遮罩 */
-.modal {
-  background: rgba(0,0,0,0.7) !important;
-  backdrop-filter: blur(8px);
-}
-/* 报告页 */
-.report-temp {
-  background: linear-gradient(180deg, #fff 0%, #FF375F 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: none !important;
-}
-.report-stat {
-  background: rgba(255,255,255,0.03) !important;
-  border: 1px solid rgba(255,255,255,0.06);
-}
-.report-insight {
-  background: rgba(255,55,95,0.05) !important;
-  border: 1px solid rgba(255,55,95,0.2) !important;
-}
-.report-insight strong { color: #FF6B8A !important; }
-/* 沸腾标签 */
-.boiling-tag {
-  background: linear-gradient(135deg, #FF375F, #FF6B6B) !important;
-  box-shadow: 0 0 20px rgba(255,55,95,0.5);
-}
-/* 骰子 */
-.dice-face {
-  background: linear-gradient(135deg, #fff, #f0e6f5) !important;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.8) !important;
-}
-.dice-face.win {
-  box-shadow: 0 0 0 3px #FF375F, 0 6px 24px rgba(255,55,95,0.5) !important;
-  color: #FF375F !important;
-}
-/* 标签 */
-.tag-scale {
-  background: rgba(255,55,95,0.1) !important;
-  color: #FF6B8A !important;
-}
-.tag-remote {
-  background: rgba(191,90,242,0.1) !important;
-  color: #C99BFF !important;
-}
-/* 继续上一局 */
-.resume-bar {
-  background: rgba(255,55,95,0.06) !important;
-  border: 1px solid rgba(255,55,95,0.2) !important;
-}
-/* 卡片库 */
-.lib-tab.active {
-  background: linear-gradient(135deg, #FF375F, #FF2D55) !important;
-  color: #fff !important;
-  box-shadow: 0 4px 12px rgba(255,55,95,0.3);
-}
-.lib-card {
-  background: rgba(255,255,255,0.03) !important;
-  border: 1px solid rgba(255,255,255,0.08) !important;
-}
-.lib-section-title.light { color: #FF6B8A !important; }
-.lib-section-title.medium { color: #FF375F !important; }
-.lib-section-title.high { color: #BF5AF2 !important; }
-.lib-type { color: #C99BFF !important; }
-/* 开场动画背景 */
-#startAnim {
-  background: 
-    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(255,55,95,0.2) 0%, transparent 60%),
-    linear-gradient(180deg, #0a0a12 0%, #060609 100%) !important;
-}
-
-
-/* ========== 激活码验证界面 ========== */
-#activationGate {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: 
-    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(255,55,95,0.15) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 80% 10%, rgba(191,90,242,0.12) 0%, transparent 50%),
-    linear-gradient(180deg, #0a0a12 0%, #060609 100%);
-  padding: 20px;
-}
-#activationGate.hidden { display: none !important; }
-.activation-box {
-  width: 100%;
-  max-width: 360px;
-  background: rgba(255,255,255,0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 20px;
-  padding: 32px 24px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
-  text-align: center;
-}
-.activation-icon {
-  font-size: 48px;
-  margin-bottom: 12px;
-}
-.activation-title {
-  font-size: 24px;
-  font-weight: 800;
-  background: linear-gradient(135deg, #fff 0%, #FF375F 50%, #BF5AF2 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 6px;
-}
-.activation-sub {
-  font-size: 13px;
-  color: rgba(255,255,255,0.55);
-  margin-bottom: 24px;
-  line-height: 1.5;
-}
-.activation-input {
-  width: 100%;
-  box-sizing: border-box;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 14px;
-  padding: 14px 16px;
-  color: #fff;
-  font-size: 18px;
-  font-family: monospace;
-  letter-spacing: 0.15em;
-  text-align: center;
-  outline: none;
-  transition: all 0.2s;
-  text-transform: uppercase;
-  margin-bottom: 12px;
-}
-.activation-input:focus {
-  border-color: rgba(255,55,95,0.5);
-  box-shadow: 0 0 0 3px rgba(255,55,95,0.1);
-}
-.activation-input::placeholder {
-  color: rgba(255,255,255,0.25);
-  letter-spacing: 0.05em;
-  font-family: inherit;
-}
-.activation-btn {
-  width: 100%;
-  border: none;
-  border-radius: 999px;
-  padding: 14px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  color: #fff;
-  background: linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%);
-  box-shadow: 0 4px 20px rgba(255,55,95,0.4);
-  transition: all 0.25s;
-  margin-bottom: 12px;
-}
-.activation-btn:hover {
-  box-shadow: 0 6px 28px rgba(255,55,95,0.55);
-  transform: translateY(-1px);
-}
-.activation-btn:active { transform: scale(0.98); }
-.activation-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-.activation-buy {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 999px;
-  padding: 12px;
-  font-size: 14px;
-  font-weight: 700;
-  color: #FF6B8A;
-  background: rgba(255,55,95,0.08);
-  border: 1px solid rgba(255,55,95,0.25);
-  transition: all 0.2s;
-  margin-bottom: 16px;
-}
-.activation-buy:hover {
-  background: rgba(255,55,95,0.12);
-  border-color: rgba(255,55,95,0.4);
-}
-.activation-result {
-  min-height: 20px;
-  font-size: 13px;
-  margin-top: 8px;
-  line-height: 1.5;
-}
-.activation-result.success { color: #6BCB77; }
-.activation-result.error { color: #FF6B6B; }
-.activation-info {
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255,255,255,0.06);
-  font-size: 12px;
-  color: rgba(255,255,255,0.4);
-  line-height: 1.6;
-}
-.activation-back {
-  display: inline-block;
-  margin-top: 12px;
-  font-size: 13px;
-  color: rgba(255,255,255,0.5);
-  text-decoration: none;
-  cursor: pointer;
-}
-.activation-back:hover { color: rgba(255,255,255,0.8); }
+/* ===== 激活码网关 ===== */
+#actGate{position:fixed;inset:0;z-index:999999;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse 80% 50% at 20% 0%,rgba(255,55,95,.15) 0%,transparent 50%),radial-gradient(ellipse 60% 40% at 80% 10%,rgba(191,90,242,.12) 0%,transparent 50%),linear-gradient(180deg,#0a0a12 0%,#060609 100%);padding:20px}
+#actGate.hide{display:none!important}
+.act-box{width:100%;max-width:360px;background:rgba(255,255,255,.03);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:32px 24px;box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06);text-align:center}
+.act-icon{font-size:48px;margin-bottom:12px}
+.act-title{font-size:24px;font-weight:800;background:linear-gradient(135deg,#fff 0%,#FF375F 50%,#BF5AF2 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+.act-sub{font-size:13px;color:rgba(255,255,255,.55);margin-bottom:24px;line-height:1.5}
+.act-input{width:100%;box-sizing:border-box;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 16px;color:#fff;font-size:18px;font-family:monospace;letter-spacing:.15em;text-align:center;outline:none;transition:all .2s;text-transform:uppercase;margin-bottom:12px}
+.act-input:focus{border-color:rgba(255,55,95,.5);box-shadow:0 0 0 3px rgba(255,55,95,.1)}
+.act-input::placeholder{color:rgba(255,255,255,.25);letter-spacing:.05em;font-family:inherit}
+.act-btn{width:100%;border:none;border-radius:999px;padding:14px;font-size:16px;font-weight:700;cursor:pointer;color:#fff;background:linear-gradient(135deg,#FF375F 0%,#FF2D55 50%,#D70040 100%);box-shadow:0 4px 20px rgba(255,55,95,.4);transition:all .25s;margin-bottom:12px}
+.act-btn:hover{box-shadow:0 6px 28px rgba(255,55,95,.55);transform:translateY(-1px)}
+.act-btn:active{transform:scale(.98)}
+.act-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.act-buy{display:block;width:100%;box-sizing:border-box;text-align:center;text-decoration:none;border-radius:999px;padding:12px;font-size:14px;font-weight:700;color:#FF6B8A;background:rgba(255,55,95,.08);border:1px solid rgba(255,55,95,.25);transition:all .2s;margin-bottom:16px}
+.act-buy:hover{background:rgba(255,55,95,.12);border-color:rgba(255,55,95,.4)}
+.act-result{min-height:20px;font-size:13px;margin-top:8px;line-height:1.5}
+.act-result.ok{color:#6BCB77}
+.act-result.err{color:#FF6B6B}
+.act-info{margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.06);font-size:12px;color:rgba(255,255,255,.4);line-height:1.6}
+.act-back{display:inline-block;margin-top:12px;font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;cursor:pointer}
+.act-back:hover{color:rgba(255,255,255,.8)}
+/* ===== 风格覆盖 ===== */
+.setup-card,.temp-panel,.card-area,.report-card,.modal-box{background:rgba(255,255,255,.03)!important;backdrop-filter:blur(20px)!important;-webkit-backdrop-filter:blur(20px)!important;border:1px solid rgba(255,255,255,.08)!important;box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06)!important}
+.brand{background:linear-gradient(135deg,#fff 0%,#FF375F 50%,#BF5AF2 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none!important;filter:drop-shadow(0 0 20px rgba(255,55,95,.3))}
+.brand span{background:linear-gradient(135deg,#FF375F,#BF5AF2);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.temp-value{background:linear-gradient(180deg,#fff 0%,#FF375F 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none!important;filter:drop-shadow(0 0 30px rgba(255,55,95,.4))}
+.field input[type="text"],.field select,.rtc-code{background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.1)!important}
+.field input[type="text"]:focus,.field select:focus{border-color:rgba(255,55,95,.5)!important;box-shadow:0 0 0 3px rgba(255,55,95,.1)!important}
+.modal{background:rgba(0,0,0,.7)!important;backdrop-filter:blur(8px)}
+.share-link-box{background:rgba(191,90,242,.06);border:1px solid rgba(191,90,242,.25);border-radius:12px;padding:10px 12px;margin-top:8px;font-size:12px;color:rgba(255,255,255,.7);word-break:break-all;max-height:80px;overflow-y:auto;display:none}
+.share-link-box.show{display:block}
+.share-link-label{font-size:11px;color:#BF5AF2;font-weight:700;margin-bottom:4px}
 
 </style>
+
+<script>
+(function(){
+  var API="https://api.ttla.top";
+  var CHARS="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  function hashStr(s){var h=0;for(var i=0;i<s.length;i++){h=(h<<5)-h+s.charCodeAt(i);h|=0;}return Math.abs(h);}
+  function getDevId(){var n=navigator;var cf="";try{var c=document.createElement("canvas");var x=c.getContext("2d");if(x){x.textBaseline="top";x.font="14px 'Arial'";x.fillText("fingerprint_ios_safe",2,2);cf=c.toDataURL();}}catch(e){}var raw=[n.userAgent,n.language,n.platform,screen.width+"x"+screen.height,screen.colorDepth,screen.pixelDepth,new Date().getTimezoneOffset(),n.hardwareConcurrency||0,n.deviceMemory||0,cf.substring(0,100)].join("|");return "dev_"+hashStr(raw).toString(36);}
+  function getDevFp(){var n=navigator;var cf="";try{var c=document.createElement("canvas");var x=c.getContext("2d");if(x){x.textBaseline="top";x.font="14px 'Arial'";x.fillText("fp_migrate",2,2);cf=c.toDataURL();}}catch(e){}var raw=[n.userAgent,n.language,n.platform,screen.width+"x"+screen.height,screen.colorDepth,new Date().getTimezoneOffset(),n.hardwareConcurrency||0,cf.substring(0,80)].join("|");return "fp_"+hashStr(raw).toString(36);}
+  function checkChar(r6){return CHARS[hashStr(r6)%CHARS.length];}
+  function parseCode(code){var c=code.toUpperCase().trim().replace(/[^A-Z0-9]/g,"");if(c.length!==7)return null;var tm={E:0,A:1,B:2,C:3,D:4,T:5};var t=tm[c[0]];if(t===undefined)return null;if(checkChar(c.slice(0,6))!==c[6])return null;return {type:t};}
+  function isActive(){var d=localStorage.getItem("lg_activation");if(!d)return false;try{var a=JSON.parse(d);var ex=a.expireAt||a.expiresAt;if(!ex||Date.now()>ex)return false;return true;}catch(e){return false;}}
+  function showGate(){var g=document.getElementById("actGate");if(g)g.classList.remove("hide");}
+  function hideGate(){var g=document.getElementById("actGate");if(g)g.classList.add("hide");}
+  async function doAct(code){var p=parseCode(code);if(!p)return{ok:false,msg:"激活码格式不正确"};var clean=code.toUpperCase().trim().replace(/[^A-Z0-9]/g,"");try{var res=await fetch(API+"/activate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code:clean,deviceId:getDevId(),deviceFingerprint:getDevFp(),migrate:true})});if(!res.ok)return{ok:false,msg:"网络异常，请重试"};var data=await res.json();if(!data.success)return{ok:false,msg:data.message||"激活码无效"};var now=Date.now();var ex=data.expireAt||0;if(!ex){var dm={E:1,A:7,B:30,C:90,D:365,T:0};if(clean[0]==="T")ex=now+300000;else ex=now+(dm[clean[0]]||7)*86400000;}localStorage.setItem("lg_activation",JSON.stringify({code:clean,type:p.type,activatedAt:now,expireAt:ex}));return{ok:true,msg:data.message||"激活成功"};}catch(e){return{ok:false,msg:"网络异常，请检查网络后重试"};}}
+  function init(){if(isActive()){hideGate();return;}showGate();var inp=document.getElementById("actInp");var btn=document.getElementById("actBtn");var res=document.getElementById("actRes");if(inp){inp.addEventListener("input",function(){this.value=this.value.toUpperCase();});inp.addEventListener("keydown",function(e){if(e.key==="Enter")go();});}if(btn)btn.addEventListener("click",go);async function go(){var code=inp.value.trim();if(!code){res.className="act-result err";res.textContent="请输入激活码";return;}btn.disabled=true;btn.textContent="验证中...";res.className="act-result";res.textContent="";var r=await doAct(code);btn.disabled=false;btn.textContent="立即激活";if(r.ok){res.className="act-result ok";res.textContent=r.msg;setTimeout(hideGate,800);}else{res.className="act-result err";res.textContent=r.msg;}}}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+})();
+
+/* ===== 分享链接 ===== */
+function rtcBaseUrl(){return window.location.origin+window.location.pathname;}
+function rtcGenShareLink(){var code=document.getElementById("rtcOfferOut").value;if(!code.trim()){return;}var url=rtcBaseUrl()+"#invite="+encodeURIComponent(code);document.getElementById("shareLinkText").textContent=url;document.getElementById("shareLinkBox").classList.add("show");document.getElementById("btnCopyShareLink").style.display="";}
+function rtcCopyShareLink(){var url=document.getElementById("shareLinkText").textContent;if(!url)return;if(navigator.clipboard)navigator.clipboard.writeText(url).then(function(){ }).catch(function(){var t=document.createElement("textarea");t.value=url;document.body.appendChild(t);t.select();try{document.execCommand("copy");}catch(e){}document.body.removeChild(t);});else{var t=document.createElement("textarea");t.value=url;document.body.appendChild(t);t.select();try{document.execCommand("copy");}catch(e){}document.body.removeChild(t);}}
+function rtcGenAnswerLink(){var code=document.getElementById("rtcAnswerOut").value;if(!code.trim())return;var url=rtcBaseUrl()+"#answer="+encodeURIComponent(code);document.getElementById("answerLinkText").textContent=url;document.getElementById("answerLinkBox").classList.add("show");document.getElementById("btnCopyAnswerLink").style.display="";}
+function rtcCopyAnswerLink(){var url=document.getElementById("answerLinkText").textContent;if(!url)return;if(navigator.clipboard)navigator.clipboard.writeText(url).then(function(){ }).catch(function(){var t=document.createElement("textarea");t.value=url;document.body.appendChild(t);t.select();try{document.execCommand("copy");}catch(e){}document.body.removeChild(t);});else{var t=document.createElement("textarea");t.value=url;document.body.appendChild(t);t.select();try{document.execCommand("copy");}catch(e){}document.body.removeChild(t);}}
+function rtcCheckUrl(){var hash=window.location.hash||"";var im=hash.match(/invite=([^&]+)/);var am=hash.match(/answer=([^&]+)/);if(im){var code=decodeURIComponent(im[1]);setTimeout(function(){if(!window.RTCPeerConnection)return;var btnR=document.getElementById("btnRemote");if(btnR)btnR.click();setTimeout(function(){var btnJ=document.getElementById("btnRtcJoin");if(btnJ)btnJ.click();setTimeout(function(){var oi=document.getElementById("rtcOfferIn");if(oi){oi.value=code;}var btnG=document.getElementById("btnRtcJoinGen");if(btnG)btnG.click();},400);},400);},800);}else if(am){var acode=decodeURIComponent(am[1]);setTimeout(function(){if(!window.RTCPeerConnection)return;var btnR=document.getElementById("btnRemote");if(btnR)btnR.click();setTimeout(function(){var btnH=document.getElementById("btnRtcHost");if(btnH)btnH.click();setTimeout(function(){var ai=document.getElementById("rtcAnswerIn");if(ai)ai.value=acode;var btnC=document.getElementById("btnRtcConnect");if(btnC)btnC.click();},1500);},400);},800);}}
+document.addEventListener("DOMContentLoaded",function(){setTimeout(function(){var b1=document.getElementById("btnShareLink");if(b1)b1.addEventListener("click",rtcGenShareLink);var b2=document.getElementById("btnCopyShareLink");if(b2)b2.addEventListener("click",rtcCopyShareLink);var b3=document.getElementById("btnAnswerLink");if(b3)b3.addEventListener("click",rtcGenAnswerLink);var b4=document.getElementById("btnCopyAnswerLink");if(b4)b4.addEventListener("click",rtcCopyAnswerLink);rtcCheckUrl();},500);});
+
+</script>
+
 </head>
 <body>
 
-<!-- ========== 激活码验证网关 ========== -->
-<div id="activationGate">
-  <div class="activation-box">
-    <div class="activation-icon">🔒</div>
-    <div class="activation-title">无界升温</div>
-    <div class="activation-sub">本游戏需激活后使用<br />激活码全部游戏通用</div>
-    <input id="actInput" class="activation-input" type="text" maxlength="7" placeholder="输入7位激活码" autocomplete="off" />
-    <button id="actBtn" class="activation-btn">立即激活</button>
-    <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" class="activation-buy">购买激活码</a>
-    <div id="actResult" class="activation-result"></div>
-    <div class="activation-info">激活后绑定本设备，一码一设备<br />支持天卡/周卡/月卡/季卡/年卡</div>
-    <a href="/" class="activation-back">← 返回首页</a>
+<div id="actGate">
+  <div class="act-box">
+    <div class="act-icon">🔒</div>
+    <div class="act-title">无界升温</div>
+    <div class="act-sub">本游戏需激活后使用<br />激活码全部游戏通用</div>
+    <input id="actInp" class="act-input" type="text" maxlength="7" placeholder="输入7位激活码" autocomplete="off" />
+    <button id="actBtn" class="act-btn">立即激活</button>
+    <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" class="act-buy">购买激活码</a>
+    <div id="actRes" class="act-result"></div>
+    <div class="act-info">激活后绑定本设备，一码一设备<br />支持天卡/周卡/月卡/季卡/年卡</div>
+    <a href="/" class="act-back">← 返回首页</a>
   </div>
 </div>
 
@@ -920,7 +582,7 @@ body {
         <div class="rtc-btnrow">
           <button id="btnCopyShareLink" class="btn btn-text" style="display:none;">📋 复制分享链接</button>
         </div>
-        <p class="rtc-step">② 对方生成回执码后，粘贴到下面并点「接通」（或让对方发回执链接给你）</p>
+        <p class="rtc-step">② 对方生成回执码后，粘贴到下面并点「接通」（或让对方发回执链接）</p>
         <textarea id="rtcAnswerIn" class="rtc-code" placeholder="粘贴对方的回执码…"></textarea>
         <div class="rtc-btnrow">
           <button id="btnRtcConnect" class="btn btn-primary">🔗 接通</button>
@@ -2636,314 +2298,14 @@ if (document.readyState === "loading") {
   init();
 }
 
-/* ========== 分享链接功能 ========== */
-function rtcBaseUrl() {
-  return window.location.origin + window.location.pathname;
-}
-function rtcGenShareLink() {
-  var code = $("rtcOfferOut").value;
-  if (!code.trim()) { rtcStatus("请先生成邀请码"); return; }
-  var url = rtcBaseUrl() + "#invite=" + encodeURIComponent(code);
-  $("shareLinkText").textContent = url;
-  $("shareLinkBox").classList.add("show");
-  $("btnCopyShareLink").style.display = "";
-  rtcStatus("分享链接已生成，发给好友即可");
-}
-function rtcCopyShareLink() {
-  var url = $("shareLinkText").textContent;
-  if (!url) return;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(url).then(function(){ toast("分享链接已复制"); }).catch(function(){ rtcFallbackCopy(url); });
-  } else { rtcFallbackCopy(url); }
-}
-function rtcGenAnswerLink() {
-  var code = $("rtcAnswerOut").value;
-  if (!code.trim()) { rtcStatus("请先生成回执码"); return; }
-  var url = rtcBaseUrl() + "#answer=" + encodeURIComponent(code);
-  $("answerLinkText").textContent = url;
-  $("answerLinkBox").classList.add("show");
-  $("btnCopyAnswerLink").style.display = "";
-  rtcStatus("回执链接已生成，发给房主即可");
-}
-function rtcCopyAnswerLink() {
-  var url = $("answerLinkText").textContent;
-  if (!url) return;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(url).then(function(){ toast("回执链接已复制"); }).catch(function(){ rtcFallbackCopy(url); });
-  } else { rtcFallbackCopy(url); }
-}
-function rtcFallbackCopy(text) {
-  var ta = document.createElement("textarea");
-  ta.value = text; document.body.appendChild(ta); ta.select();
-  try { document.execCommand("copy"); toast("已复制"); } catch(e) { toast("复制失败，请手动复制"); }
-  document.body.removeChild(ta);
-}
-/* 页面加载时检测URL中的邀请/回执参数 */
-function rtcCheckUrlParams() {
-  var hash = window.location.hash || "";
-  var inviteMatch = hash.match(/invite=([^&]+)/);
-  var answerMatch = hash.match(/answer=([^&]+)/);
-  if (inviteMatch) {
-    var code = decodeURIComponent(inviteMatch[1]);
-    setTimeout(function() {
-      if (!window.RTCPeerConnection) { toast("当前浏览器不支持远程同玩"); return; }
-      rtcResetUI();
-      $("modalRemote").classList.remove("hidden");
-      $("rtcRoleRow").classList.add("hidden");
-      $("rtcHostBox").classList.add("hidden");
-      $("rtcJoinBox").classList.remove("hidden");
-      $("rtcOfferIn").value = code;
-      rtcStatus("检测到邀请链接，正在生成回执码…");
-      setTimeout(function() { rtcJoinGen(); }, 600);
-    }, 800);
-  } else if (answerMatch) {
-    var acode = decodeURIComponent(answerMatch[1]);
-    setTimeout(function() {
-      if (!window.RTCPeerConnection) { toast("当前浏览器不支持远程同玩"); return; }
-      rtcResetUI();
-      $("modalRemote").classList.remove("hidden");
-      $("rtcRoleRow").classList.add("hidden");
-      $("rtcJoinBox").classList.add("hidden");
-      $("rtcHostBox").classList.remove("hidden");
-      rtcHostCreate();
-      setTimeout(function() {
-        $("rtcAnswerIn").value = acode;
-        rtcStatus("检测到回执链接，正在接通…");
-        setTimeout(function() { rtcHostConnect(); }, 600);
-      }, 1500);
-    }, 800);
-  }
-}
-/* 绑定分享按钮事件 */
-document.addEventListener("DOMContentLoaded", function() {
-  setTimeout(function() {
-    var btnShare = $("btnShareLink");
-    if (btnShare) btnShare.addEventListener("click", rtcGenShareLink);
-    var btnCopyShare = $("btnCopyShareLink");
-    if (btnCopyShare) btnCopyShare.addEventListener("click", rtcCopyShareLink);
-    var btnAnswerLink = $("btnAnswerLink");
-    if (btnAnswerLink) btnAnswerLink.addEventListener("click", rtcGenAnswerLink);
-    var btnCopyAnswerLink = $("btnCopyAnswerLink");
-    if (btnCopyAnswerLink) btnCopyAnswerLink.addEventListener("click", rtcCopyAnswerLink);
-    rtcCheckUrlParams();
-  }, 300);
-});
-
-
-/* ========== 激活码验证系统（与主站共用） ========== */
-(function() {
-  var API_BASE = "https://api.ttla.top";
-  var CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  
-  function hashStr(str) {
-    var hash = 0;
-    for (var i = 0; i < str.length; i++) {
-      hash = (hash << 5) - hash + str.charCodeAt(i);
-      hash |= 0;
-    }
-    return Math.abs(hash);
-  }
-  
-  function getDeviceId() {
-    var nav = navigator;
-    var canvasFp = "";
-    try {
-      var canvas = document.createElement("canvas");
-      var ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.textBaseline = "top";
-        ctx.font = "14px 'Arial'";
-        ctx.fillText("fingerprint_ios_safe", 2, 2);
-        canvasFp = canvas.toDataURL();
-      }
-    } catch (e) {}
-    var raw = [
-      navigator.userAgent,
-      navigator.language,
-      navigator.platform,
-      screen.width + "x" + screen.height,
-      screen.colorDepth,
-      screen.pixelDepth,
-      new Date().getTimezoneOffset(),
-      nav.hardwareConcurrency || 0,
-      nav.deviceMemory || 0,
-      canvasFp.substring(0, 100)
-    ].join("|");
-    return "dev_" + hashStr(raw).toString(36);
-  }
-  
-  function getDeviceFingerprint() {
-    var nav = navigator;
-    var canvasFp = "";
-    try {
-      var canvas = document.createElement("canvas");
-      var ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.textBaseline = "top";
-        ctx.font = "14px 'Arial'";
-        ctx.fillText("fp_migrate", 2, 2);
-        canvasFp = canvas.toDataURL();
-      }
-    } catch (e) {}
-    var raw = [
-      navigator.userAgent,
-      navigator.language,
-      navigator.platform,
-      screen.width + "x" + screen.height,
-      screen.colorDepth,
-      new Date().getTimezoneOffset(),
-      nav.hardwareConcurrency || 0,
-      canvasFp.substring(0, 80)
-    ].join("|");
-    return "fp_" + hashStr(raw).toString(36);
-  }
-  
-  function calcCheckChar(raw6) {
-    var hash = hashStr(raw6);
-    return CHARS[hash % CHARS.length];
-  }
-  
-  function parseCode(code) {
-    var clean = code.toUpperCase().trim().replace(/[^A-Z0-9]/g, "");
-    if (clean.length !== 7) return null;
-    var typeChar = clean[0];
-    var typeMap = { E:0, A:1, B:2, C:3, D:4, T:5 };
-    var type = typeMap[typeChar];
-    if (type === undefined) return null;
-    var raw6 = clean.slice(0, 6);
-    var check = clean[6];
-    var expectedCheck = calcCheckChar(raw6);
-    if (check !== expectedCheck) return null;
-    return { type: type };
-  }
-  
-  function checkActivation() {
-    var data = localStorage.getItem("lg_activation");
-    if (!data) return { active: false };
-    try {
-      var act = JSON.parse(data);
-      var now = Date.now();
-      var expireAt = act.expireAt || act.expiresAt;
-      if (!expireAt || now > expireAt) return { active: false };
-      return { active: true, type: act.type, expireAt: expireAt, code: act.code };
-    } catch (e) {
-      return { active: false };
-    }
-  }
-  
-  async function activateCode(code) {
-    var parsed = parseCode(code);
-    if (parsed === null) {
-      return { success: false, message: "激活码格式不正确" };
-    }
-    var clean = code.toUpperCase().trim().replace(/[^A-Z0-9]/g, "");
-    try {
-      var deviceId = getDeviceId();
-      var deviceFingerprint = getDeviceFingerprint();
-      var res = await fetch(API_BASE + "/activate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code: clean, deviceId: deviceId, deviceFingerprint: deviceFingerprint, migrate: true })
-      });
-      if (!res.ok) {
-        return { success: false, message: "网络异常，请检查网络后重试" };
-      }
-      var data = await res.json();
-      if (!data.success) {
-        return { success: false, message: data.message || "激活码无效" };
-      }
-      var now = Date.now();
-      var expireAt = data.expireAt || 0;
-      if (!expireAt) {
-        var daysMap = { E:1, A:7, B:30, C:90, D:365, T:0 };
-        if (clean[0] === "T") {
-          expireAt = now + 5 * 60 * 1000;
-        } else {
-          var days = daysMap[clean[0]] || 7;
-          expireAt = now + days * 24 * 60 * 60 * 1000;
-        }
-      }
-      localStorage.setItem("lg_activation", JSON.stringify({
-        code: clean,
-        type: parsed.type,
-        activatedAt: now,
-        expireAt: expireAt
-      }));
-      return { success: true, message: data.message || "激活成功" };
-    } catch (e) {
-      return { success: false, message: "网络异常，请检查网络后重试" };
-    }
-  }
-  
-  function showActivationGate() {
-    var gate = document.getElementById("activationGate");
-    if (gate) gate.classList.remove("hidden");
-  }
-  
-  function hideActivationGate() {
-    var gate = document.getElementById("activationGate");
-    if (gate) gate.classList.add("hidden");
-  }
-  
-  // 页面加载时检查激活状态
-  function initActivation() {
-    var status = checkActivation();
-    if (status.active) {
-      hideActivationGate();
-      return;
-    }
-    showActivationGate();
-    
-    var input = document.getElementById("actInput");
-    var btn = document.getElementById("actBtn");
-    var result = document.getElementById("actResult");
-    
-    if (input) {
-      input.addEventListener("input", function() {
-        this.value = this.value.toUpperCase();
-      });
-      input.addEventListener("keydown", function(e) {
-        if (e.key === "Enter") doActivate();
-      });
-    }
-    if (btn) btn.addEventListener("click", doActivate);
-    
-    async function doActivate() {
-      var code = input.value.trim();
-      if (!code) {
-        result.className = "activation-result error";
-        result.textContent = "请输入激活码";
-        return;
-      }
-      btn.disabled = true;
-      btn.textContent = "验证中...";
-      result.className = "activation-result";
-      result.textContent = "";
-      
-      var res = await activateCode(code);
-      btn.disabled = false;
-      btn.textContent = "立即激活";
-      
-      if (res.success) {
-        result.className = "activation-result success";
-        result.textContent = res.message;
-        setTimeout(function() {
-          hideActivationGate();
-        }, 800);
-      } else {
-        result.className = "activation-result error";
-        result.textContent = res.message;
-      }
-    }
-  }
-  
-  // DOM ready后初始化
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initActivation);
-  } else {
-    initActivation();
-  }
-})();
+/* ===== 分享链接 ===== */
+function rtcBaseUrl(){return window.location.origin+window.location.pathname;}
+function rtcGenShareLink(){var code=document.getElementById("rtcOfferOut").value;if(!code.trim()){return;}var url=rtcBaseUrl()+"#invite="+encodeURIComponent(code);document.getElementById("shareLinkText").textContent=url;document.getElementById("shareLinkBox").classList.add("show");document.getElementById("btnCopyShareLink").style.display="";}
+function rtcCopyShareLink(){var url=document.getElementById("shareLinkText").textContent;if(!url)return;if(navigator.clipboard)navigator.clipboard.writeText(url).then(function(){ }).catch(function(){var t=document.createElement("textarea");t.value=url;document.body.appendChild(t);t.select();try{document.execCommand("copy");}catch(e){}document.body.removeChild(t);});else{var t=document.createElement("textarea");t.value=url;document.body.appendChild(t);t.select();try{document.execCommand("copy");}catch(e){}document.body.removeChild(t);}}
+function rtcGenAnswerLink(){var code=document.getElementById("rtcAnswerOut").value;if(!code.trim())return;var url=rtcBaseUrl()+"#answer="+encodeURIComponent(code);document.getElementById("answerLinkText").textContent=url;document.getElementById("answerLinkBox").classList.add("show");document.getElementById("btnCopyAnswerLink").style.display="";}
+function rtcCopyAnswerLink(){var url=document.getElementById("answerLinkText").textContent;if(!url)return;if(navigator.clipboard)navigator.clipboard.writeText(url).then(function(){ }).catch(function(){var t=document.createElement("textarea");t.value=url;document.body.appendChild(t);t.select();try{document.execCommand("copy");}catch(e){}document.body.removeChild(t);});else{var t=document.createElement("textarea");t.value=url;document.body.appendChild(t);t.select();try{document.execCommand("copy");}catch(e){}document.body.removeChild(t);}}
+function rtcCheckUrl(){var hash=window.location.hash||"";var im=hash.match(/invite=([^&]+)/);var am=hash.match(/answer=([^&]+)/);if(im){var code=decodeURIComponent(im[1]);setTimeout(function(){if(!window.RTCPeerConnection)return;var btnR=document.getElementById("btnRemote");if(btnR)btnR.click();setTimeout(function(){var btnJ=document.getElementById("btnRtcJoin");if(btnJ)btnJ.click();setTimeout(function(){var oi=document.getElementById("rtcOfferIn");if(oi){oi.value=code;}var btnG=document.getElementById("btnRtcJoinGen");if(btnG)btnG.click();},400);},400);},800);}else if(am){var acode=decodeURIComponent(am[1]);setTimeout(function(){if(!window.RTCPeerConnection)return;var btnR=document.getElementById("btnRemote");if(btnR)btnR.click();setTimeout(function(){var btnH=document.getElementById("btnRtcHost");if(btnH)btnH.click();setTimeout(function(){var ai=document.getElementById("rtcAnswerIn");if(ai)ai.value=acode;var btnC=document.getElementById("btnRtcConnect");if(btnC)btnC.click();},1500);},400);},800);}}
+document.addEventListener("DOMContentLoaded",function(){setTimeout(function(){var b1=document.getElementById("btnShareLink");if(b1)b1.addEventListener("click",rtcGenShareLink);var b2=document.getElementById("btnCopyShareLink");if(b2)b2.addEventListener("click",rtcCopyShareLink);var b3=document.getElementById("btnAnswerLink");if(b3)b3.addEventListener("click",rtcGenAnswerLink);var b4=document.getElementById("btnCopyAnswerLink");if(b4)b4.addEventListener("click",rtcCopyAnswerLink);rtcCheckUrl();},500);});
 
 </script>
 <div id="startAnim" class="hidden" aria-hidden="true">
