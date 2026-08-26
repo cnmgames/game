@@ -58,6 +58,7 @@ const games = [
     { emoji: "🃏", title: "情侣脱衣卡牌", desc: "扑克牌对战，输了脱衣或执行亲密惩罚，功能牌触发特殊挑战，越玩越火辣。", path: "/strip-cards", type: "paid" },
     { emoji: "🌙", title: "感官探索", desc: "蒙眼感官游戏，触觉嗅觉味觉探索对方，各种感官挑战，放大每一次触碰的快感。", path: "/senses", type: "paid" },
     { emoji: "👨‍❤️‍👨", title: "他与他", desc: "专为男同情侣设计，真心话、大冒险、亲密任务三种模式，属于两个男生的深夜专属游戏。", path: "/gay", type: "paid" },
+    { emoji: "🌡️", title: "无界升温", desc: "温度无上限的情侣升温卡牌游戏，投骰子定先后，轮流抽卡完成任务，安全词是唯一刹车。", path: "/infinite-celsius/", type: "paid" },
   ];
 
   return (
