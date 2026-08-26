@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
+import Script from 'next/script'
 import AntiDebugProvider from '../components/AntiDebugProvider'
 
 export const metadata: Metadata = {
@@ -43,6 +44,8 @@ export default function RootLayout({
         {/* 预连接API，加速移动端请求 */}
         <link rel="preconnect" href="https://api.ttla.top" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.ttla.top" />
+        {/* Google AdSense */}
+        <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7156604582462189" crossorigin="anonymous" strategy="afterInteractive" />
         <AntiDebugProvider>
           {children}
                   </AntiDebugProvider>
