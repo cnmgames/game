@@ -556,9 +556,168 @@ body {
     linear-gradient(180deg, #0a0a12 0%, #060609 100%) !important;
 }
 
+
+/* ========== 激活码验证界面 ========== */
+#activationGate {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(255,55,95,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 10%, rgba(191,90,242,0.12) 0%, transparent 50%),
+    linear-gradient(180deg, #0a0a12 0%, #060609 100%);
+  padding: 20px;
+}
+#activationGate.hidden { display: none !important; }
+.activation-box {
+  width: 100%;
+  max-width: 360px;
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 32px 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+  text-align: center;
+}
+.activation-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+.activation-title {
+  font-size: 24px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff 0%, #FF375F 50%, #BF5AF2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+.activation-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+.activation-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 14px 16px;
+  color: #fff;
+  font-size: 18px;
+  font-family: monospace;
+  letter-spacing: 0.15em;
+  text-align: center;
+  outline: none;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.activation-input:focus {
+  border-color: rgba(255,55,95,0.5);
+  box-shadow: 0 0 0 3px rgba(255,55,95,0.1);
+}
+.activation-input::placeholder {
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.05em;
+  font-family: inherit;
+}
+.activation-btn {
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%);
+  box-shadow: 0 4px 20px rgba(255,55,95,0.4);
+  transition: all 0.25s;
+  margin-bottom: 12px;
+}
+.activation-btn:hover {
+  box-shadow: 0 6px 28px rgba(255,55,95,0.55);
+  transform: translateY(-1px);
+}
+.activation-btn:active { transform: scale(0.98); }
+.activation-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+.activation-buy {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 999px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #FF6B8A;
+  background: rgba(255,55,95,0.08);
+  border: 1px solid rgba(255,55,95,0.25);
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+.activation-buy:hover {
+  background: rgba(255,55,95,0.12);
+  border-color: rgba(255,55,95,0.4);
+}
+.activation-result {
+  min-height: 20px;
+  font-size: 13px;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+.activation-result.success { color: #6BCB77; }
+.activation-result.error { color: #FF6B6B; }
+.activation-info {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.6;
+}
+.activation-back {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  cursor: pointer;
+}
+.activation-back:hover { color: rgba(255,255,255,0.8); }
+
 </style>
 </head>
 <body>
+
+<!-- ========== 激活码验证网关 ========== -->
+<div id="activationGate">
+  <div class="activation-box">
+    <div class="activation-icon">🔒</div>
+    <div class="activation-title">无界升温</div>
+    <div class="activation-sub">本游戏需激活后使用<br />激活码全部游戏通用</div>
+    <input id="actInput" class="activation-input" type="text" maxlength="7" placeholder="输入7位激活码" autocomplete="off" />
+    <button id="actBtn" class="activation-btn">立即激活</button>
+    <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" class="activation-buy">购买激活码</a>
+    <div id="actResult" class="activation-result"></div>
+    <div class="activation-info">激活后绑定本设备，一码一设备<br />支持天卡/周卡/月卡/季卡/年卡</div>
+    <a href="/" class="activation-back">← 返回首页</a>
+  </div>
+</div>
+
 <div id="app">
 
   <!-- ============ 设置屏 ============ -->
@@ -2569,6 +2728,222 @@ document.addEventListener("DOMContentLoaded", function() {
     rtcCheckUrlParams();
   }, 300);
 });
+
+
+/* ========== 激活码验证系统（与主站共用） ========== */
+(function() {
+  var API_BASE = "https://api.ttla.top";
+  var CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  
+  function hashStr(str) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+      hash = (hash << 5) - hash + str.charCodeAt(i);
+      hash |= 0;
+    }
+    return Math.abs(hash);
+  }
+  
+  function getDeviceId() {
+    var nav = navigator;
+    var canvasFp = "";
+    try {
+      var canvas = document.createElement("canvas");
+      var ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.textBaseline = "top";
+        ctx.font = "14px 'Arial'";
+        ctx.fillText("fingerprint_ios_safe", 2, 2);
+        canvasFp = canvas.toDataURL();
+      }
+    } catch (e) {}
+    var raw = [
+      navigator.userAgent,
+      navigator.language,
+      navigator.platform,
+      screen.width + "x" + screen.height,
+      screen.colorDepth,
+      screen.pixelDepth,
+      new Date().getTimezoneOffset(),
+      nav.hardwareConcurrency || 0,
+      nav.deviceMemory || 0,
+      canvasFp.substring(0, 100)
+    ].join("|");
+    return "dev_" + hashStr(raw).toString(36);
+  }
+  
+  function getDeviceFingerprint() {
+    var nav = navigator;
+    var canvasFp = "";
+    try {
+      var canvas = document.createElement("canvas");
+      var ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.textBaseline = "top";
+        ctx.font = "14px 'Arial'";
+        ctx.fillText("fp_migrate", 2, 2);
+        canvasFp = canvas.toDataURL();
+      }
+    } catch (e) {}
+    var raw = [
+      navigator.userAgent,
+      navigator.language,
+      navigator.platform,
+      screen.width + "x" + screen.height,
+      screen.colorDepth,
+      new Date().getTimezoneOffset(),
+      nav.hardwareConcurrency || 0,
+      canvasFp.substring(0, 80)
+    ].join("|");
+    return "fp_" + hashStr(raw).toString(36);
+  }
+  
+  function calcCheckChar(raw6) {
+    var hash = hashStr(raw6);
+    return CHARS[hash % CHARS.length];
+  }
+  
+  function parseCode(code) {
+    var clean = code.toUpperCase().trim().replace(/[^A-Z0-9]/g, "");
+    if (clean.length !== 7) return null;
+    var typeChar = clean[0];
+    var typeMap = { E:0, A:1, B:2, C:3, D:4, T:5 };
+    var type = typeMap[typeChar];
+    if (type === undefined) return null;
+    var raw6 = clean.slice(0, 6);
+    var check = clean[6];
+    var expectedCheck = calcCheckChar(raw6);
+    if (check !== expectedCheck) return null;
+    return { type: type };
+  }
+  
+  function checkActivation() {
+    var data = localStorage.getItem("lg_activation");
+    if (!data) return { active: false };
+    try {
+      var act = JSON.parse(data);
+      var now = Date.now();
+      var expireAt = act.expireAt || act.expiresAt;
+      if (!expireAt || now > expireAt) return { active: false };
+      return { active: true, type: act.type, expireAt: expireAt, code: act.code };
+    } catch (e) {
+      return { active: false };
+    }
+  }
+  
+  async function activateCode(code) {
+    var parsed = parseCode(code);
+    if (parsed === null) {
+      return { success: false, message: "激活码格式不正确" };
+    }
+    var clean = code.toUpperCase().trim().replace(/[^A-Z0-9]/g, "");
+    try {
+      var deviceId = getDeviceId();
+      var deviceFingerprint = getDeviceFingerprint();
+      var res = await fetch(API_BASE + "/activate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: clean, deviceId: deviceId, deviceFingerprint: deviceFingerprint, migrate: true })
+      });
+      if (!res.ok) {
+        return { success: false, message: "网络异常，请检查网络后重试" };
+      }
+      var data = await res.json();
+      if (!data.success) {
+        return { success: false, message: data.message || "激活码无效" };
+      }
+      var now = Date.now();
+      var expireAt = data.expireAt || 0;
+      if (!expireAt) {
+        var daysMap = { E:1, A:7, B:30, C:90, D:365, T:0 };
+        if (clean[0] === "T") {
+          expireAt = now + 5 * 60 * 1000;
+        } else {
+          var days = daysMap[clean[0]] || 7;
+          expireAt = now + days * 24 * 60 * 60 * 1000;
+        }
+      }
+      localStorage.setItem("lg_activation", JSON.stringify({
+        code: clean,
+        type: parsed.type,
+        activatedAt: now,
+        expireAt: expireAt
+      }));
+      return { success: true, message: data.message || "激活成功" };
+    } catch (e) {
+      return { success: false, message: "网络异常，请检查网络后重试" };
+    }
+  }
+  
+  function showActivationGate() {
+    var gate = document.getElementById("activationGate");
+    if (gate) gate.classList.remove("hidden");
+  }
+  
+  function hideActivationGate() {
+    var gate = document.getElementById("activationGate");
+    if (gate) gate.classList.add("hidden");
+  }
+  
+  // 页面加载时检查激活状态
+  function initActivation() {
+    var status = checkActivation();
+    if (status.active) {
+      hideActivationGate();
+      return;
+    }
+    showActivationGate();
+    
+    var input = document.getElementById("actInput");
+    var btn = document.getElementById("actBtn");
+    var result = document.getElementById("actResult");
+    
+    if (input) {
+      input.addEventListener("input", function() {
+        this.value = this.value.toUpperCase();
+      });
+      input.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") doActivate();
+      });
+    }
+    if (btn) btn.addEventListener("click", doActivate);
+    
+    async function doActivate() {
+      var code = input.value.trim();
+      if (!code) {
+        result.className = "activation-result error";
+        result.textContent = "请输入激活码";
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = "验证中...";
+      result.className = "activation-result";
+      result.textContent = "";
+      
+      var res = await activateCode(code);
+      btn.disabled = false;
+      btn.textContent = "立即激活";
+      
+      if (res.success) {
+        result.className = "activation-result success";
+        result.textContent = res.message;
+        setTimeout(function() {
+          hideActivationGate();
+        }, 800);
+      } else {
+        result.className = "activation-result error";
+        result.textContent = res.message;
+      }
+    }
+  }
+  
+  // DOM ready后初始化
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initActivation);
+  } else {
+    initActivation();
+  }
+})();
 
 </script>
 <div id="startAnim" class="hidden" aria-hidden="true">
