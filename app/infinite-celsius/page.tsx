@@ -30,7 +30,6 @@ html, body {
 }
 #app {
   min-height: 100vh;
-  padding-top: 50px;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
@@ -298,7 +297,7 @@ html, body {
 #actGate.hide{display:none!important}
 .act-box{width:100%;max-width:360px;background:rgba(255,255,255,.03);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:32px 24px;box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06);text-align:center}
 .act-icon{font-size:48px;margin-bottom:12px}
-.act-title{font-size:26px;font-weight:800;background:linear-gradient(135deg,#fff 0%,#FF375F 50%,#BF5AF2 100%)!important;-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent!important;margin-bottom:8px;filter:drop-shadow(0 0 12px rgba(255,55,95,.3))}
+.act-title{font-size:24px;font-weight:800;background:linear-gradient(135deg,#fff 0%,#FF375F 50%,#BF5AF2 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
 .act-sub{font-size:14px;color:rgba(255,255,255,.7);margin-bottom:24px;line-height:1.8;font-weight:500;letter-spacing:.02em}.act-sub-hint{font-size:12px;color:rgba(255,107,138,.6);font-weight:400}
 .act-input{width:100%;box-sizing:border-box;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 16px;color:#fff;font-size:18px;font-family:monospace;letter-spacing:.15em;text-align:center;outline:none;transition:all .2s;text-transform:uppercase;margin-bottom:12px}
 .act-input:focus{border-color:rgba(255,55,95,.5);box-shadow:0 0 0 3px rgba(255,55,95,.1)}
@@ -399,7 +398,21 @@ const GAME_BODY = `
       </div>
       <button id="btnRemote" class="btn btn-ghost btn-block">🔗 邀请好友联机 · 两地同玩一局</button>
       <button id="btnLib" class="btn btn-ghost btn-block">📚 编辑卡片库（改内容 · 留意见）</button>
+      <div style="display:flex;gap:10px;">
+        <button id="btnSound" class="btn btn-ghost" style="flex:1;">🔊 音效</button>
+        <button id="btnRules" class="btn btn-ghost" style="flex:1;">📖 规则</button>
+      </div>
       <button id="btnStart" class="btn btn-primary btn-block">开始游戏</button>
+    </div>
+    <div id="rulesPanel" class="rules-panel hidden" style="background:var(--panel);border:1px solid var(--panel-border);border-radius:var(--radius);padding:18px;font-size:13px;line-height:1.8;color:var(--text-dim);">
+      <div style="font-weight:700;color:var(--text);margin-bottom:10px;font-size:15px;">📖 游戏规则</div>
+      <p><b>1. 设置安全词：</b>任何一方说出安全词，游戏立即停止，不可追问。</p>
+      <p><b>2. 投骰子定先后：</b>开局投骰子，点数大的一方先抽卡。</p>
+      <p><b>3. 轮流抽卡：</b>每人轮流抽一张任务卡，按卡片指示完成动作。</p>
+      <p><b>4. 升温机制：</b>完成任务+升温，跳过不升温。温度越高，卡片越火辣。</p>
+      <p><b>5. 沸腾模式：</b>温度达到100℃进入沸腾模式，升温速度翻倍。</p>
+      <p><b>6. 尺度偏好：</b>可在设置中选择轻度/中度/高度，系统按偏好发牌。</p>
+      <p style="margin-top:10px;color:var(--accent);"><b>⚠️ 双方自愿、不适即停、尊重为最高级亲密。</b></p>
     </div>
     <div id="resumeBar" class="resume-bar hidden">
       <span>检测到未完成的上一局</span>
@@ -409,7 +422,6 @@ const GAME_BODY = `
       </div>
     </div>
     <div id="setupInsight" class="report-insight hidden"></div>
-    <p class="safety-note">所有数据仅存于本设备浏览器，不上传任何服务器。<br/>安全词触发后不可追问、不可反驳——尊重为最高级亲密。</p>
   </section>
 
   <!-- ============ 游戏屏 ============ -->
@@ -2407,6 +2419,22 @@ function init() {
   $("btnHome").addEventListener("click", onHome);
   $("btnAudio").addEventListener("click", toggleAudio);
 
+  // 设置页音效按钮
+  if ($("btnSound")) {
+    $("btnSound").addEventListener("click", function() {
+      toggleAudio();
+      this.textContent = audioOn ? "🔊 音效" : "🔇 静音";
+    });
+  }
+  // 设置页规则按钮
+  if ($("btnRules")) {
+    $("btnRules").addEventListener("click", function() {
+      var panel = $("rulesPanel");
+      panel.classList.toggle("hidden");
+      this.textContent = panel.classList.contains("hidden") ? "📖 规则" : "✕ 收起";
+    });
+  }
+
   /* 远程同玩（WebRTC P2P，手动互贴码） */
   $("btnRemote").addEventListener("click", function () {
     if (!window.RTCPeerConnection) { toast("当前浏览器不支持远程同玩"); return; }
@@ -2482,18 +2510,15 @@ export default function InfiniteCelsiusPage() {
   const injectedRef = useRef<{ style?: HTMLStyleElement; scripts?: HTMLScriptElement[] }>({});
 
   useEffect(() => {
-    // 注入样式
     const styleEl = document.createElement("style");
     styleEl.textContent = GAME_STYLE;
     document.head.appendChild(styleEl);
     injectedRef.current.style = styleEl;
 
-    // 注入HTML结构
     if (containerRef.current) {
       containerRef.current.innerHTML = GAME_BODY;
     }
 
-    // 按顺序注入所有脚本
     const scriptEls: HTMLScriptElement[] = [];
     GAME_SCRIPTS.forEach((scriptContent) => {
       const scriptEl = document.createElement("script");
@@ -2504,16 +2529,9 @@ export default function InfiniteCelsiusPage() {
     injectedRef.current.scripts = scriptEls;
 
     return () => {
-      // 清理
-      if (injectedRef.current.style) {
-        injectedRef.current.style.remove();
-      }
-      if (injectedRef.current.scripts) {
-        injectedRef.current.scripts.forEach((s) => s.remove());
-      }
-      if (containerRef.current) {
-        containerRef.current.innerHTML = "";
-      }
+      if (injectedRef.current.style) injectedRef.current.style.remove();
+      if (injectedRef.current.scripts) injectedRef.current.scripts.forEach((s) => s.remove());
+      if (containerRef.current) containerRef.current.innerHTML = "";
     };
   }, []);
 
