@@ -354,12 +354,12 @@ html, body {
 
 /* ===== 分享链接 ===== */
 function rtcBaseUrl(){return window.location.origin+window.location.pathname;}
-function rtcGenShareLink(){var code=document.getElementById("rtcOfferOut").value;if(!code.trim()){return;}var url=rtcBaseUrl()+"#invite="+encodeURIComponent(code);document.getElementById("shareLinkText").textContent=url;document.getElementById("shareLinkBox").classList.add("show");document.getElementById("btnCopyShareLink").style.display="";}
+function rtcGenShareLink(){var code=document.getElementById("rtcOfferOut").value;if(!code.trim()){return;}var url=rtcBaseUrl()+"#invite="+code;document.getElementById("shareLinkText").textContent=url;document.getElementById("shareLinkBox").classList.add("show");document.getElementById("btnCopyShareLink").style.display="";document.getElementById("shareCopyRow").style.display="flex";}
 function rtcCopyShareLink(){var url=document.getElementById("shareLinkText").textContent;if(!url)return;var btn=document.getElementById("btnCopyShareLink");var ok=function(){if(btn){btn.textContent="✅ 已复制";setTimeout(function(){btn.textContent="📋 复制链接";},1500);}};if(navigator.clipboard){navigator.clipboard.writeText(url).then(ok).catch(function(){rtcFallbackCopy(url);ok();});}else{rtcFallbackCopy(url);ok();}}
-function rtcGenAnswerLink(){var code=document.getElementById("rtcAnswerOut").value;if(!code.trim())return;var url=rtcBaseUrl()+"#answer="+encodeURIComponent(code);document.getElementById("answerLinkText").textContent=url;document.getElementById("answerLinkBox").classList.add("show");document.getElementById("btnCopyAnswerLink").style.display="";}
+function rtcGenAnswerLink(){var code=document.getElementById("rtcAnswerOut").value;if(!code.trim())return;var url=rtcBaseUrl()+"#answer="+code;document.getElementById("answerLinkText").textContent=url;document.getElementById("answerLinkBox").classList.add("show");document.getElementById("btnCopyAnswerLink").style.display="";document.getElementById("answerCopyRow").style.display="flex";}
 function rtcCopyAnswerLink(){var url=document.getElementById("answerLinkText").textContent;if(!url)return;var btn=document.getElementById("btnCopyAnswerLink");var ok=function(){if(btn){btn.textContent="✅ 已复制";setTimeout(function(){btn.textContent="📋 复制链接";},1500);}};if(navigator.clipboard){navigator.clipboard.writeText(url).then(ok).catch(function(){rtcFallbackCopy(url);ok();});}else{rtcFallbackCopy(url);ok();}}
 function rtcFallbackCopy(text){var t=document.createElement("textarea");t.value=text;document.body.appendChild(t);t.select();try{document.execCommand("copy");}catch(e){}document.body.removeChild(t);}
-function rtcCheckUrl(){var hash=window.location.hash||"";var im=hash.match(/invite=([^&]+)/);var am=hash.match(/answer=([^&]+)/);if(im){var code=decodeURIComponent(im[1]);setTimeout(function(){if(!window.RTCPeerConnection)return;var btnR=document.getElementById("btnRemote");if(btnR)btnR.click();setTimeout(function(){var btnJ=document.getElementById("btnRtcJoin");if(btnJ)btnJ.click();setTimeout(function(){var oi=document.getElementById("rtcOfferIn");if(oi){oi.value=code;}var btnG=document.getElementById("btnRtcJoinGen");if(btnG)btnG.click();},400);},400);},800);}else if(am){var acode=decodeURIComponent(am[1]);setTimeout(function(){if(!window.RTCPeerConnection)return;var btnR=document.getElementById("btnRemote");if(btnR)btnR.click();setTimeout(function(){var btnH=document.getElementById("btnRtcHost");if(btnH)btnH.click();setTimeout(function(){var ai=document.getElementById("rtcAnswerIn");if(ai)ai.value=acode;var btnC=document.getElementById("btnRtcConnect");if(btnC)btnC.click();},1500);},400);},800);}}
+function rtcCheckUrl(){var hash=window.location.hash||"";var im=hash.match(/invite=([^&]+)/);var am=hash.match(/answer=([^&]+)/);if(im){var code=im[1].toUpperCase();setTimeout(function(){if(!window.RTCPeerConnection)return;var btnR=document.getElementById("btnRemote");if(btnR)btnR.click();setTimeout(function(){var btnJ=document.getElementById("btnRtcJoin");if(btnJ)btnJ.click();setTimeout(function(){var oi=document.getElementById("rtcOfferIn");if(oi){oi.value=code;}var btnG=document.getElementById("btnRtcJoinGen");if(btnG)btnG.click();},400);},400);},800);}else if(am){var acode=am[1].toUpperCase();setTimeout(function(){if(!window.RTCPeerConnection)return;var btnR=document.getElementById("btnRemote");if(btnR)btnR.click();setTimeout(function(){var btnH=document.getElementById("btnRtcHost");if(btnH)btnH.click();setTimeout(function(){var ai=document.getElementById("rtcAnswerIn");if(ai)ai.value=acode;var btnC=document.getElementById("btnRtcConnect");if(btnC)btnC.click();},1500);},400);},800);}}
 document.addEventListener("DOMContentLoaded",function(){setTimeout(function(){var b1=document.getElementById("btnShareLink");if(b1)b1.addEventListener("click",rtcGenShareLink);var b2=document.getElementById("btnCopyShareLink");if(b2)b2.addEventListener("click",rtcCopyShareLink);var b3=document.getElementById("btnAnswerLink");if(b3)b3.addEventListener("click",rtcGenAnswerLink);var b4=document.getElementById("btnCopyAnswerLink");if(b4)b4.addEventListener("click",rtcCopyAnswerLink);rtcCheckUrl();},500);});
 
 </script>
@@ -693,39 +693,43 @@ document.addEventListener("DOMContentLoaded",function(){setTimeout(function(){va
         <button id="btnRtcJoin" class="btn btn-ghost">📲 我是加入方</button>
       </div>
       <div id="rtcHostBox" class="hidden">
-        <p class="rtc-step">① 生成邀请码，发给对方（微信 / QQ 直接粘贴文字）</p>
-        <textarea id="rtcOfferOut" class="rtc-code" readonly placeholder="点「我是房主」自动生成…"></textarea>
+        <p class="rtc-step">① 生成10位短邀请码，发给对方</p>
+        <textarea id="rtcOfferOut" class="rtc-code" readonly placeholder="10位短邀请码（自动生成）"></textarea>
         <div class="rtc-btnrow">
           <button id="btnCopyOffer" class="btn btn-text">📋 复制邀请码</button>
           <button id="btnShareLink" class="btn btn-primary">🔗 生成分享链接</button>
         </div>
         <div id="shareLinkBox" class="share-link-box">
           <div class="share-link-label">💌 分享链接（发给好友，点开自动加入）</div>
-          <div id="shareLinkText" style="margin-bottom:10px;"></div>
-          <button id="btnCopyShareLink" class="btn btn-ghost" style="display:none;width:100%;">📋 复制链接</button>
+          <div id="shareLinkText"></div>
         </div>
-        <p class="rtc-step">② 对方生成回执码后，粘贴到下面并点「接通」（或让对方发回执链接）</p>
-        <textarea id="rtcAnswerIn" class="rtc-code" placeholder="粘贴对方的回执码…"></textarea>
+        <div class="rtc-btnrow" id="shareCopyRow" style="display:none;">
+          <button id="btnCopyShareLink" class="btn btn-ghost" style="flex:1;">📋 复制链接</button>
+        </div>
+        <p class="rtc-step">② 对方生成10位回执短码后，输入到下面并点「接通」</p>
+        <textarea id="rtcAnswerIn" class="rtc-code" placeholder="输入对方的10位回执短码"></textarea>
         <div class="rtc-btnrow">
           <button id="btnRtcConnect" class="btn btn-primary">🔗 接通</button>
         </div>
       </div>
       <div id="rtcJoinBox" class="hidden">
-        <p class="rtc-step">① 粘贴房主发来的邀请码，生成你的回执码</p>
-        <textarea id="rtcOfferIn" class="rtc-code" placeholder="粘贴房主的邀请码…"></textarea>
+        <p class="rtc-step">① 输入房主的10位短邀请码，生成你的回执短码</p>
+        <textarea id="rtcOfferIn" class="rtc-code" placeholder="输入房主的10位短邀请码"></textarea>
         <div class="rtc-btnrow">
           <button id="btnRtcJoinGen" class="btn btn-primary">生成回执码</button>
         </div>
-        <p class="rtc-step">② 把回执码发给房主，房主点「接通」后自动同步，等房主开始游戏</p>
-        <textarea id="rtcAnswerOut" class="rtc-code" readonly placeholder="回执码将显示在这里…"></textarea>
+        <p class="rtc-step">② 把10位回执短码发给房主，房主点「接通」后自动同步</p>
+        <textarea id="rtcAnswerOut" class="rtc-code" readonly placeholder="10位回执短码（自动生成）"></textarea>
         <div class="rtc-btnrow">
           <button id="btnCopyAnswer" class="btn btn-text">📋 复制回执码</button>
           <button id="btnAnswerLink" class="btn btn-primary">🔗 生成回执链接</button>
         </div>
         <div id="answerLinkBox" class="share-link-box">
           <div class="share-link-label">📤 回执链接（发给房主，点开自动接通）</div>
-          <div id="answerLinkText" style="margin-bottom:10px;"></div>
-          <button id="btnCopyAnswerLink" class="btn btn-ghost" style="display:none;width:100%;">📋 复制链接</button>
+          <div id="answerLinkText"></div>
+        </div>
+        <div class="rtc-btnrow" id="answerCopyRow" style="display:none;">
+          <button id="btnCopyAnswerLink" class="btn btn-ghost" style="flex:1;">📋 复制链接</button>
         </div>
       </div>
       <div id="rtcStatus" class="rtc-status"></div>
@@ -2008,17 +2012,29 @@ async function rtcHostCreate() {
     var offer = await RTC.pc.createOffer();
     await RTC.pc.setLocalDescription(offer);
     var desc = await rtcWaitIce(RTC.pc);
-    $("rtcOfferOut").value = rtcEnc({ t: "o", type: desc.type, sdp: desc.sdp });
-    rtcStatus("邀请码已生成，发给对方后等回执");
+    rtcStatus("正在生成10位短邀请码…");
+    var res = await fetch("https://api.ttla.top/signal/create", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: "offer", data: rtcEnc({ t: "o", type: desc.type, sdp: desc.sdp }) })
+    });
+    var j = await res.json();
+    if (!j.success) { rtcStatus("生成失败：" + (j.message || "未知错误")); return; }
+    $("rtcOfferOut").value = j.code;
+    rtcStatus("10位短邀请码已生成，发给对方后等回执");
   } catch (e) { rtcStatus("创建失败：" + (e && e.message ? e.message : e)); }
 }
 
 async function rtcJoinGen() {
   try {
-    var code = $("rtcOfferIn").value;
-    if (!code.trim()) { rtcStatus("请先粘贴房主的邀请码"); return; }
-    var o = rtcDec(code);
-    if (o.t !== "o") { rtcStatus("邀请码无效，请检查是否完整粘贴"); return; }
+    var code = $("rtcOfferIn").value.trim().toUpperCase();
+    if (!code) { rtcStatus("请先输入房主的10位短邀请码"); return; }
+    if (code.length !== 10) { rtcStatus("邀请码应为10位字母数字"); return; }
+    rtcStatus("正在获取邀请信息…");
+    var res = await fetch("https://api.ttla.top/signal/get?code=" + code);
+    var j = await res.json();
+    if (!j.success) { rtcStatus("获取失败：" + (j.message || "短码已过期")); return; }
+    var o = rtcDec(j.data);
+    if (o.t !== "o") { rtcStatus("邀请码无效"); return; }
     rtcCleanup(false);
     RTC.role = "join";
     RTC.pc = rtcNewPC();
@@ -2027,18 +2043,30 @@ async function rtcJoinGen() {
     var answer = await RTC.pc.createAnswer();
     await RTC.pc.setLocalDescription(answer);
     var desc = await rtcWaitIce(RTC.pc);
-    $("rtcAnswerOut").value = rtcEnc({ t: "a", type: desc.type, sdp: desc.sdp });
-    rtcStatus("回执码已生成，发给房主并等对方「接通」");
+    rtcStatus("正在生成10位回执短码…");
+    var res2 = await fetch("https://api.ttla.top/signal/create", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: "answer", data: rtcEnc({ t: "a", type: desc.type, sdp: desc.sdp }) })
+    });
+    var j2 = await res2.json();
+    if (!j2.success) { rtcStatus("生成回执失败"); return; }
+    $("rtcAnswerOut").value = j2.code;
+    rtcStatus("10位回执短码已生成，发给房主并等对方「接通」");
   } catch (e) { rtcStatus("加入失败：" + (e && e.message ? e.message : e)); }
 }
 
 async function rtcHostConnect() {
   try {
     if (!RTC.pc || RTC.role !== "host") { rtcStatus("请先点「我是房主」生成邀请码"); return; }
-    var code = $("rtcAnswerIn").value;
-    if (!code.trim()) { rtcStatus("请先粘贴对方的回执码"); return; }
-    var a = rtcDec(code);
-    if (a.t !== "a") { rtcStatus("回执码无效，请检查是否完整粘贴"); return; }
+    var code = $("rtcAnswerIn").value.trim().toUpperCase();
+    if (!code) { rtcStatus("请先输入对方的10位回执短码"); return; }
+    if (code.length !== 10) { rtcStatus("回执码应为10位字母数字"); return; }
+    rtcStatus("正在获取回执信息…");
+    var res = await fetch("https://api.ttla.top/signal/get?code=" + code);
+    var j = await res.json();
+    if (!j.success) { rtcStatus("获取失败：" + (j.message || "短码已过期")); return; }
+    var a = rtcDec(j.data);
+    if (a.t !== "a") { rtcStatus("回执码无效"); return; }
     await RTC.pc.setRemoteDescription({ type: a.type, sdp: a.sdp });
     rtcStatus("正在接通…");
   } catch (e) { rtcStatus("接通失败：" + (e && e.message ? e.message : e)); }
@@ -2420,12 +2448,12 @@ if (document.readyState === "loading") {
 
 /* ===== 分享链接 ===== */
 function rtcBaseUrl(){return window.location.origin+window.location.pathname;}
-function rtcGenShareLink(){var code=document.getElementById("rtcOfferOut").value;if(!code.trim()){return;}var url=rtcBaseUrl()+"#invite="+encodeURIComponent(code);document.getElementById("shareLinkText").textContent=url;document.getElementById("shareLinkBox").classList.add("show");document.getElementById("btnCopyShareLink").style.display="";}
+function rtcGenShareLink(){var code=document.getElementById("rtcOfferOut").value;if(!code.trim()){return;}var url=rtcBaseUrl()+"#invite="+code;document.getElementById("shareLinkText").textContent=url;document.getElementById("shareLinkBox").classList.add("show");document.getElementById("btnCopyShareLink").style.display="";document.getElementById("shareCopyRow").style.display="flex";}
 function rtcCopyShareLink(){var url=document.getElementById("shareLinkText").textContent;if(!url)return;var btn=document.getElementById("btnCopyShareLink");var ok=function(){if(btn){btn.textContent="✅ 已复制";setTimeout(function(){btn.textContent="📋 复制链接";},1500);}};if(navigator.clipboard){navigator.clipboard.writeText(url).then(ok).catch(function(){rtcFallbackCopy(url);ok();});}else{rtcFallbackCopy(url);ok();}}
-function rtcGenAnswerLink(){var code=document.getElementById("rtcAnswerOut").value;if(!code.trim())return;var url=rtcBaseUrl()+"#answer="+encodeURIComponent(code);document.getElementById("answerLinkText").textContent=url;document.getElementById("answerLinkBox").classList.add("show");document.getElementById("btnCopyAnswerLink").style.display="";}
+function rtcGenAnswerLink(){var code=document.getElementById("rtcAnswerOut").value;if(!code.trim())return;var url=rtcBaseUrl()+"#answer="+code;document.getElementById("answerLinkText").textContent=url;document.getElementById("answerLinkBox").classList.add("show");document.getElementById("btnCopyAnswerLink").style.display="";document.getElementById("answerCopyRow").style.display="flex";}
 function rtcCopyAnswerLink(){var url=document.getElementById("answerLinkText").textContent;if(!url)return;var btn=document.getElementById("btnCopyAnswerLink");var ok=function(){if(btn){btn.textContent="✅ 已复制";setTimeout(function(){btn.textContent="📋 复制链接";},1500);}};if(navigator.clipboard){navigator.clipboard.writeText(url).then(ok).catch(function(){rtcFallbackCopy(url);ok();});}else{rtcFallbackCopy(url);ok();}}
 function rtcFallbackCopy(text){var t=document.createElement("textarea");t.value=text;document.body.appendChild(t);t.select();try{document.execCommand("copy");}catch(e){}document.body.removeChild(t);}
-function rtcCheckUrl(){var hash=window.location.hash||"";var im=hash.match(/invite=([^&]+)/);var am=hash.match(/answer=([^&]+)/);if(im){var code=decodeURIComponent(im[1]);setTimeout(function(){if(!window.RTCPeerConnection)return;var btnR=document.getElementById("btnRemote");if(btnR)btnR.click();setTimeout(function(){var btnJ=document.getElementById("btnRtcJoin");if(btnJ)btnJ.click();setTimeout(function(){var oi=document.getElementById("rtcOfferIn");if(oi){oi.value=code;}var btnG=document.getElementById("btnRtcJoinGen");if(btnG)btnG.click();},400);},400);},800);}else if(am){var acode=decodeURIComponent(am[1]);setTimeout(function(){if(!window.RTCPeerConnection)return;var btnR=document.getElementById("btnRemote");if(btnR)btnR.click();setTimeout(function(){var btnH=document.getElementById("btnRtcHost");if(btnH)btnH.click();setTimeout(function(){var ai=document.getElementById("rtcAnswerIn");if(ai)ai.value=acode;var btnC=document.getElementById("btnRtcConnect");if(btnC)btnC.click();},1500);},400);},800);}}
+function rtcCheckUrl(){var hash=window.location.hash||"";var im=hash.match(/invite=([^&]+)/);var am=hash.match(/answer=([^&]+)/);if(im){var code=im[1].toUpperCase();setTimeout(function(){if(!window.RTCPeerConnection)return;var btnR=document.getElementById("btnRemote");if(btnR)btnR.click();setTimeout(function(){var btnJ=document.getElementById("btnRtcJoin");if(btnJ)btnJ.click();setTimeout(function(){var oi=document.getElementById("rtcOfferIn");if(oi){oi.value=code;}var btnG=document.getElementById("btnRtcJoinGen");if(btnG)btnG.click();},400);},400);},800);}else if(am){var acode=am[1].toUpperCase();setTimeout(function(){if(!window.RTCPeerConnection)return;var btnR=document.getElementById("btnRemote");if(btnR)btnR.click();setTimeout(function(){var btnH=document.getElementById("btnRtcHost");if(btnH)btnH.click();setTimeout(function(){var ai=document.getElementById("rtcAnswerIn");if(ai)ai.value=acode;var btnC=document.getElementById("btnRtcConnect");if(btnC)btnC.click();},1500);},400);},800);}}
 document.addEventListener("DOMContentLoaded",function(){setTimeout(function(){var b1=document.getElementById("btnShareLink");if(b1)b1.addEventListener("click",rtcGenShareLink);var b2=document.getElementById("btnCopyShareLink");if(b2)b2.addEventListener("click",rtcCopyShareLink);var b3=document.getElementById("btnAnswerLink");if(b3)b3.addEventListener("click",rtcGenAnswerLink);var b4=document.getElementById("btnCopyAnswerLink");if(b4)b4.addEventListener("click",rtcCopyAnswerLink);rtcCheckUrl();},500);});
 
 </script>
