@@ -297,7 +297,7 @@ html, body {
 #actGate.hide{display:none!important}
 .act-box{width:100%;max-width:360px;background:rgba(255,255,255,.03);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:32px 24px;box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06);text-align:center}
 .act-icon{font-size:48px;margin-bottom:12px}
-.act-title{font-size:24px;font-weight:800;background:linear-gradient(135deg,#fff 0%,#FF375F 50%,#BF5AF2 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+.act-title{font-size:26px;font-weight:800;background:linear-gradient(135deg,#fff 0%,#FF375F 50%,#BF5AF2 100%)!important;-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent!important;margin-bottom:8px;filter:drop-shadow(0 0 12px rgba(255,55,95,.3))}
 .act-sub{font-size:14px;color:rgba(255,255,255,.7);margin-bottom:24px;line-height:1.8;font-weight:500;letter-spacing:.02em}.act-sub-hint{font-size:12px;color:rgba(255,107,138,.6);font-weight:400}
 .act-input{width:100%;box-sizing:border-box;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 16px;color:#fff;font-size:18px;font-family:monospace;letter-spacing:.15em;text-align:center;outline:none;transition:all .2s;text-transform:uppercase;margin-bottom:12px}
 .act-input:focus{border-color:rgba(255,55,95,.5);box-shadow:0 0 0 3px rgba(255,55,95,.1)}
