@@ -31,7 +31,7 @@ export default function Home() {
       if (!document.hidden) {
         fetchOnline();
       }
-    }, 10000);
+    }, 5000);
     return () => clearInterval(timer);
   }, []);
 
