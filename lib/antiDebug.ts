@@ -12,6 +12,11 @@ export function initAntiDebug() {
 
   // 2. 禁止F12、Ctrl+Shift+I、Ctrl+Shift+J、Ctrl+U等快捷键
   document.addEventListener("keydown", (e) => {
+    // 输入框/文本域聚焦时不拦截，不影响正常输入
+    const tag = (e.target as HTMLElement)?.tagName;
+    const isInput = tag === "INPUT" || tag === "TEXTAREA" || (e.target as HTMLElement)?.isContentEditable;
+    if (isInput) return;
+
     // F12
     if (e.key === "F12") {
       e.preventDefault();

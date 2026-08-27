@@ -305,7 +305,7 @@ html, body {
 .act-box{width:100%;max-width:360px;background:rgba(255,255,255,.03);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:32px 24px;box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06);text-align:center}
 .act-icon{font-size:48px;margin-bottom:12px}
 .act-title{font-size:24px;font-weight:800;background:linear-gradient(135deg,#fff 0%,#FF375F 50%,#BF5AF2 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
-.act-sub{font-size:13px;color:rgba(255,255,255,.55);margin-bottom:24px;line-height:1.5}
+.act-sub{font-size:14px;color:rgba(255,255,255,.7);margin-bottom:24px;line-height:1.8;font-weight:500;letter-spacing:.02em}.act-sub-hint{font-size:12px;color:rgba(255,107,138,.6);font-weight:400}
 .act-input{width:100%;box-sizing:border-box;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 16px;color:#fff;font-size:18px;font-family:monospace;letter-spacing:.15em;text-align:center;outline:none;transition:all .2s;text-transform:uppercase;margin-bottom:12px}
 .act-input:focus{border-color:rgba(255,55,95,.5);box-shadow:0 0 0 3px rgba(255,55,95,.1)}
 .act-input::placeholder{color:rgba(255,255,255,.25);letter-spacing:.05em;font-family:inherit}
@@ -470,6 +470,23 @@ document.addEventListener("DOMContentLoaded",function(){setTimeout(function(){va
 })();
 </script>
 
+
+<script>
+(function(){
+  document.addEventListener('contextmenu',function(e){e.preventDefault();return false;});
+  document.addEventListener('keydown',function(e){
+    var t=e.target;var tag=t?t.tagName:'';
+    var isInput=tag==='INPUT'||tag==='TEXTAREA'||(t&&t.isContentEditable);
+    if(isInput)return;
+    if(e.key==='F12'){e.preventDefault();return false;}
+    if(e.ctrlKey&&e.shiftKey&&['I','J','C'].indexOf(e.key.toUpperCase())>=0){e.preventDefault();return false;}
+    if(e.ctrlKey&&e.key.toUpperCase()==='U'){e.preventDefault();return false;}
+    if(e.ctrlKey&&e.key.toUpperCase()==='S'){e.preventDefault();return false;}
+  });
+  document.addEventListener('dragstart',function(e){e.preventDefault();return false;});
+})();
+</script>
+
 </head>
 <body>
 
@@ -477,12 +494,11 @@ document.addEventListener("DOMContentLoaded",function(){setTimeout(function(){va
   <div class="act-box">
     <div class="act-icon">🔒</div>
     <div class="act-title">无界升温</div>
-    <div class="act-sub">本游戏需激活后使用<br />激活码全部游戏通用</div>
+    <div class="act-sub">✨ 一码通用 · 解锁全部游戏<br/><span class="act-sub-hint">激活后所有游戏畅玩无阻</span></div>
     <input id="actInp" class="act-input" type="text" maxlength="7" placeholder="输入7位激活码" autocomplete="off" />
     <button id="actBtn" class="act-btn">立即激活</button>
     <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" class="act-buy">购买激活码</a>
     <div id="actRes" class="act-result"></div>
-    <div class="act-info">激活后绑定本设备，一码一设备<br />支持天卡/周卡/月卡/季卡/年卡</div>
     <a href="/" class="act-back">← 返回首页</a>
   </div>
 </div>
