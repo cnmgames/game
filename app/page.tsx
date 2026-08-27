@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 export default function Home() {
   const [visitCount, setVisitCount] = useState(0);
   const [onlineCount, setOnlineCount] = useState(-1);
+  const [freeMode, setFreeMode] = useState(false);
 
   // 云端真实在线人数：上报访问 + 定时查询
   useEffect(() => {
@@ -32,7 +33,38 @@ export default function Home() {
         fetchOnline();
       }
     }, 5000);
-    return () => clearInterval(timer);
+    // 获取全局免费模式状态
+    const fetchFreeMode = () => {
+      fetch("https://api.ttla.top/config/free-mode", { cache: "no-store" })
+        .then((r) => r.json())
+        .then((data) => {
+          setFreeMode(!!data.freeMode);
+          // 免费模式开启时，自动设置激活状态，让所有游戏免费玩
+          if (data.freeMode) {
+            const act = localStorage.getItem("lg_activation");
+            if (!act) {
+              localStorage.setItem("lg_activation", JSON.stringify({
+                code: "FREE_MODE",
+                type: 99,
+                activatedAt: Date.now(),
+                expireAt: Date.now() + 86400000
+              }));
+            }
+          } else {
+            // 关闭免费模式时，清除自动设置的免费激活
+            try {
+              const act = JSON.parse(localStorage.getItem("lg_activation") || "{}");
+              if (act.code === "FREE_MODE") {
+                localStorage.removeItem("lg_activation");
+              }
+            } catch (e) {}
+          }
+        })
+        .catch(() => {});
+    };
+    fetchFreeMode();
+    const freeTimer = setInterval(fetchFreeMode, 30000);
+    return () => { clearInterval(timer); clearInterval(freeTimer); };
   }, []);
 
   // 本地累计访问次数
@@ -117,7 +149,11 @@ const games = [
                         boxShadow: '0 0 8px rgba(255,55,95,0.5)'
                       }} />
                     </span>
-                    {game.type === "free" ? (
+                    {freeMode ? (
+                      <span className="inline-flex items-center rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-md animate-pulse">
+                        限时免费
+                      </span>
+                    ) : game.type === "free" ? (
                       <span className="inline-flex items-center rounded-full bg-gradient-to-r from-green-500 to-emerald-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-md">
                         免费
                       </span>

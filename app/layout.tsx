@@ -120,6 +120,36 @@ export default function RootLayout({
                   }
                 }, true);
               })();
+              // 全局免费模式检测：开启时自动激活所有游戏
+              (function() {
+                function checkFreeMode() {
+                  fetch('https://api.ttla.top/config/free-mode', { cache: 'no-store' })
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                      if (data.freeMode) {
+                        var act = localStorage.getItem('lg_activation');
+                        if (!act) {
+                          localStorage.setItem('lg_activation', JSON.stringify({
+                            code: 'FREE_MODE',
+                            type: 99,
+                            activatedAt: Date.now(),
+                            expireAt: Date.now() + 86400000
+                          }));
+                        }
+                      } else {
+                        try {
+                          var act2 = JSON.parse(localStorage.getItem('lg_activation') || '{}');
+                          if (act2.code === 'FREE_MODE') {
+                            localStorage.removeItem('lg_activation');
+                          }
+                        } catch(e) {}
+                      }
+                    })
+                    .catch(function() {});
+                }
+                checkFreeMode();
+                setInterval(checkFreeMode, 30000);
+              })();
             `,
           }}
         />
