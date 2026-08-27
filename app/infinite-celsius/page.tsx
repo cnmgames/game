@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef } from "react";
-
 const GAME_STYLE = `
 :root {
   --bg: #08080f;
@@ -55,8 +54,6 @@ html, body {
 
 /* 设置屏 */
 .setup-card { background: var(--panel); border: 1px solid var(--panel-border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; gap: 14px; }
-.top-icon-btn { width:36px;height:36px;border-radius:10px;border:1px solid var(--panel-border);background:rgba(255,255,255,.05);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s; }
-.top-icon-btn:hover { border-color:var(--accent);background:rgba(255,55,95,.1); }
 .brand { text-align: center; font-size: 30px; font-weight: 800; letter-spacing: 1px; margin: 0; }
 .brand span { color: var(--accent); }
 .brand-sub { text-align: center; color: var(--text-dim); font-size: 13px; margin: 0; line-height: 1.5; }
@@ -329,7 +326,6 @@ html, body {
 .share-link-label{font-size:11px;color:#BF5AF2;font-weight:700;margin-bottom:4px}
 
 `;
-
 const GAME_BODY = `
 
 <div id="actGate">
@@ -345,12 +341,19 @@ const GAME_BODY = `
   </div>
 </div>
 
-<a href="/" style="position:fixed;top:max(12px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:99999;padding:6px 14px;border-radius:9999px;border:1px solid rgba(255,255,255,0.2);background:rgba(0,0,0,0.6);color:rgba(255,255,255,0.85);font-size:12px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);white-space:nowrap;text-decoration:none;line-height:1.5;font-weight:500;">← 返回游戏列表</a>
 <div id="app">
+    <!-- 顶部导航栏 -->
+    <div class="top-nav-bar" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:10px;flex-wrap:wrap;">
+      <a href="/" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:9999px;border:1px solid rgba(255,255,255,0.2);background:rgba(0,0,0,0.5);color:rgba(255,255,255,0.85);font-size:13px;text-decoration:none;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-weight:500;">← 返回游戏列表</a>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span id="topLicenseStatus" style="padding:6px 14px;border-radius:9999px;border:1px solid rgba(34,197,94,0.4);background:rgba(34,197,94,0.1);color:#4ade80;font-size:13px;font-weight:600;">加载中...</span>
+        <a href="https://docs.qq.com/form/page/DRVp4a25wZ3l4eHdQ" target="_blank" rel="noopener noreferrer" style="padding:6px 14px;border-radius:9999px;border:1px solid rgba(255,55,95,0.4);background:rgba(255,55,95,0.1);color:#ff6b8a;font-size:13px;font-weight:600;text-decoration:none;">建议反馈</a>
+      </div>
+    </div>
 
   <!-- ============ 设置屏 ============ -->
   <section id="screen-setup" class="screen">
-    <h1 class="brand">∞<span>℃</span> 无界升温</h1>
+    <h1 class="brand">无界升温</h1>
     <div class="setup-card">
       <div class="field">
         <label>🛑 安全词（必填）— 任何一方说出立即停止</label>
@@ -463,7 +466,7 @@ const GAME_BODY = `
   <!-- ============ 报告屏 ============ -->
   <section id="screen-report" class="screen hidden">
     <div class="report-card">
-      <h2 class="report-title">∞℃ 升温报告</h2>
+      <h2 class="report-title">升温报告</h2>
       <div class="report-temp" id="reportTemp">0℃</div>
       <div class="report-title" id="reportTitle">破冰期</div>
       <div class="report-stats">
@@ -624,7 +627,6 @@ const GAME_BODY = `
   </div>
 </div>
 `;
-
 const GAME_SCRIPTS = [
   `
 (function(){
@@ -1342,6 +1344,41 @@ function ensureAudio() {
 }
 
 /* ================= 游戏逻辑 ================= */
+// 顶部激活状态显示
+  (function() {
+    try {
+      var act = JSON.parse(localStorage.getItem("lg_activation") || "null");
+      var el = document.getElementById("topLicenseStatus");
+      if (!el) return;
+      if (act && act.code && act.code !== "FREE_MODE" && act.expireAt) {
+        var days = Math.ceil((act.expireAt - Date.now()) / 86400000);
+        var typeMap = {1:"天卡",2:"周卡",3:"月卡",4:"季卡",5:"年卡",99:"免费模式"};
+        var typeName = typeMap[act.type] || "激活";
+        if (days > 0) {
+          el.textContent = typeName + "·剩" + days + "天";
+          el.style.borderColor = "rgba(34,197,94,0.4)";
+          el.style.background = "rgba(34,197,94,0.1)";
+          el.style.color = "#4ade80";
+        } else {
+          el.textContent = "已过期";
+          el.style.borderColor = "rgba(239,68,68,0.4)";
+          el.style.background = "rgba(239,68,68,0.1)";
+          el.style.color = "#f87171";
+        }
+      } else if (act && act.code === "FREE_MODE") {
+        el.textContent = "限时免费";
+        el.style.borderColor = "rgba(251,191,36,0.4)";
+        el.style.background = "rgba(251,191,36,0.1)";
+        el.style.color = "#fbbf24";
+      } else {
+        el.textContent = "未激活";
+        el.style.borderColor = "rgba(255,255,255,0.2)";
+        el.style.background = "rgba(255,255,255,0.05)";
+        el.style.color = "rgba(255,255,255,0.5)";
+      }
+    } catch(e) {}
+  })();
+
 var state = null;
 var deck = [];
 var lastCard = null;
@@ -2420,19 +2457,7 @@ function init() {
   $("btnHome").addEventListener("click", onHome);
   $("btnAudio").addEventListener("click", toggleAudio);
 
-  // 顶部音效按钮
-  if ($("btnTopSound")) {
-    $("btnTopSound").addEventListener("click", function() {
-      toggleAudio();
-      this.textContent = audioOn ? "🔊" : "🔇";
-    });
-  }
-  // 顶部反馈按钮
-  if ($("btnTopFeedback")) {
-    $("btnTopFeedback").addEventListener("click", function() {
-      window.open("https://docs.qq.com/form/page/DRVp4a25wZ3l4eHdQ", "_blank");
-    });
-  }
+
 
   // 设置页音效按钮
   if ($("btnSound")) {
@@ -2519,22 +2544,16 @@ document.addEventListener("DOMContentLoaded",function(){setTimeout(function(){va
 
 `
 ];
-
 export default function InfiniteCelsiusPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const injectedRef = useRef<{ style?: HTMLStyleElement; scripts?: HTMLScriptElement[] }>({});
-
   useEffect(() => {
     const styleEl = document.createElement("style");
     styleEl.textContent = GAME_STYLE;
     document.head.appendChild(styleEl);
     injectedRef.current.style = styleEl;
-
-    if (containerRef.current) {
-      containerRef.current.innerHTML = GAME_BODY;
-    }
-
-    const scriptEls: HTMLScriptElement[] = [];
+    if (containerRef.current) containerRef.current.innerHTML = GAME_BODY;
+    const scriptEls = [];
     GAME_SCRIPTS.forEach((scriptContent) => {
       const scriptEl = document.createElement("script");
       scriptEl.textContent = scriptContent;
@@ -2542,13 +2561,11 @@ export default function InfiniteCelsiusPage() {
       scriptEls.push(scriptEl);
     });
     injectedRef.current.scripts = scriptEls;
-
     return () => {
       if (injectedRef.current.style) injectedRef.current.style.remove();
       if (injectedRef.current.scripts) injectedRef.current.scripts.forEach((s) => s.remove());
       if (containerRef.current) containerRef.current.innerHTML = "";
     };
   }, []);
-
   return <div ref={containerRef} />;
 }
