@@ -30,6 +30,7 @@ html, body {
 }
 #app {
   min-height: 100vh;
+  padding-top: 50px;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
@@ -343,11 +344,12 @@ const GAME_BODY = `
   </div>
 </div>
 
+<a href="/" style="position:fixed;top:max(12px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:99999;padding:6px 14px;border-radius:9999px;border:1px solid rgba(255,255,255,0.2);background:rgba(0,0,0,0.6);color:rgba(255,255,255,0.85);font-size:12px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);white-space:nowrap;text-decoration:none;line-height:1.5;font-weight:500;">← 返回游戏列表</a>
 <div id="app">
 
   <!-- ============ 设置屏 ============ -->
   <section id="screen-setup" class="screen">
-    <h1 class="brand">∞<span>℃</span> 无界升温</h1>
+    <h1 class="brand">无界升温</h1>
     <p class="brand-sub">温度无上限 · 安全词是唯一刹车<br/>让每一次靠近，都有迹可循</p>
     <div class="setup-card">
       <div class="field">
