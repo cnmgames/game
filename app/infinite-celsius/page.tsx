@@ -55,6 +55,8 @@ html, body {
 
 /* 设置屏 */
 .setup-card { background: var(--panel); border: 1px solid var(--panel-border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+.top-icon-btn { width:36px;height:36px;border-radius:10px;border:1px solid var(--panel-border);background:rgba(255,255,255,.05);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s; }
+.top-icon-btn:hover { border-color:var(--accent);background:rgba(255,55,95,.1); }
 .brand { text-align: center; font-size: 30px; font-weight: 800; letter-spacing: 1px; margin: 0; }
 .brand span { color: var(--accent); }
 .brand-sub { text-align: center; color: var(--text-dim); font-size: 13px; margin: 0; line-height: 1.5; }
@@ -348,8 +350,7 @@ const GAME_BODY = `
 
   <!-- ============ 设置屏 ============ -->
   <section id="screen-setup" class="screen">
-    <h1 class="brand">无界升温</h1>
-    <p class="brand-sub">温度无上限 · 安全词是唯一刹车<br/>让每一次靠近，都有迹可循</p>
+    <h1 class="brand">∞<span>℃</span> 无界升温</h1>
     <div class="setup-card">
       <div class="field">
         <label>🛑 安全词（必填）— 任何一方说出立即停止</label>
@@ -2418,6 +2419,20 @@ function init() {
   $("btnAgain").addEventListener("click", onAgain);
   $("btnHome").addEventListener("click", onHome);
   $("btnAudio").addEventListener("click", toggleAudio);
+
+  // 顶部音效按钮
+  if ($("btnTopSound")) {
+    $("btnTopSound").addEventListener("click", function() {
+      toggleAudio();
+      this.textContent = audioOn ? "🔊" : "🔇";
+    });
+  }
+  // 顶部反馈按钮
+  if ($("btnTopFeedback")) {
+    $("btnTopFeedback").addEventListener("click", function() {
+      window.open("https://docs.qq.com/form/page/DRVp4a25wZ3l4eHdQ", "_blank");
+    });
+  }
 
   // 设置页音效按钮
   if ($("btnSound")) {
