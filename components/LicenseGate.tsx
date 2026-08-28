@@ -196,9 +196,10 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
         <div className="bg-aurora" />
         <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-4 py-8">
           <div
-            className="w-full rounded-[24px] p-8 text-center"
+            className="w-full p-8 text-center"
             style={{
               background: 'rgba(20,20,30,0.85)',
+              borderRadius: '24px',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)',
               border: '1px solid rgba(255,255,255,0.08)',
@@ -305,9 +306,10 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
         <div className="bg-aurora" />
         <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-4 py-8">
           <div
-            className="w-full rounded-[24px] p-8 text-center"
+            className="w-full p-8 text-center"
             style={{
               background: 'rgba(20,20,30,0.85)',
+              borderRadius: '24px',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)',
               border: '1px solid rgba(255,255,255,0.08)',
