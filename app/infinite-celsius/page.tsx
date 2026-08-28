@@ -2553,7 +2553,7 @@ export default function InfiniteCelsiusPage() {
     document.head.appendChild(styleEl);
     injectedRef.current.style = styleEl;
     if (containerRef.current) containerRef.current.innerHTML = GAME_BODY;
-    const scriptEls = [];
+    const scriptEls: HTMLScriptElement[] = [];
     GAME_SCRIPTS.forEach((scriptContent) => {
       const scriptEl = document.createElement("script");
       scriptEl.textContent = scriptContent;
