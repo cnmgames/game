@@ -195,14 +195,35 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
       <>
         <div className="bg-aurora" />
         <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-4 py-8">
-          <div className="mb-6 text-center">
-            <Link href="/" className="back-btn inline-flex">← 返回首页</Link>
-          </div>
-          <div className="game-container">
+          <div
+            className="w-full rounded-[24px] p-8 text-center"
+            style={{
+              background: 'rgba(20,20,30,0.85)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+            }}
+          >
             <div className="text-center mb-6">
               <div className="text-5xl mb-4">🔒</div>
-              <h1 className="text-2xl font-bold text-white mb-2">{gameName}</h1>
-              <p className="text-sm text-white/60">该游戏需要激活码才能使用</p>
+              <h1
+                className="text-2xl font-extrabold mb-2"
+                style={{
+                  background: 'linear-gradient(135deg, #FF375F 0%, #FF2D55 100%)',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                {gameName}
+              </h1>
+              <p className="text-sm mb-1" style={{ color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>
+                ✨ 一码通用 · 解锁全部游戏
+              </p>
+              <p className="text-xs" style={{ color: '#FF6B8A' }}>
+                激活后所有游戏畅玩无阻
+              </p>
             </div>
             <div className="space-y-4">
               {bannedMessage && (
@@ -210,20 +231,34 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
                   ⚠️ {bannedMessage}
                 </div>
               )}
-              <div>
-                <label className="block text-sm text-white/70 mb-2">输入激活码</label>
-                <input
-                  type="text"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value.toUpperCase())}
-                  onKeyDown={(e) => e.key === "Enter" && handleActivate()}
-                  placeholder="7位激活码"
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-center text-lg font-mono tracking-wider text-white placeholder:text-white/30 focus:outline-none focus:border-pink-400/50"
-                />
-              </div>
+              <input
+                type="text"
+                value={code}
+                onChange={(e) => setCode(e.target.value.toUpperCase())}
+                onKeyDown={(e) => e.key === "Enter" && handleActivate()}
+                placeholder="输入7位激活码"
+                maxLength={7}
+                className="w-full rounded-2xl px-4 py-3.5 text-center text-lg font-mono tracking-widest text-white outline-none transition"
+                style={{
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = 'rgba(255,55,95,0.5)';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(255,55,95,0.1)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(255,255,255,0.1)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
               <button
                 onClick={handleActivate}
-                className="w-full rounded-full bg-pink-500 py-3 text-base font-semibold text-white shadow-lg shadow-pink-500/40 hover:bg-pink-400 transition"
+                className="w-full rounded-full py-3.5 text-base font-bold text-white transition"
+                style={{
+                  background: 'linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%)',
+                  boxShadow: '0 4px 20px rgba(255,55,95,0.4)',
+                }}
               >
                 立即激活
               </button>
@@ -231,33 +266,32 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
                 href="https://weidian.com/?userid=1388425837"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex w-full items-center justify-center rounded-full border-2 border-pink-500/50 bg-black/40 py-3 text-base font-bold shadow-lg shadow-pink-500/30 hover:border-pink-400/70 hover:bg-black/60 hover:shadow-pink-500/50 transition"
+                className="flex w-full items-center justify-center rounded-full py-3 text-sm font-bold transition"
                 style={{
-                  background: 'linear-gradient(90deg, rgba(0,0,0,0.4), rgba(20,0,30,0.6), rgba(0,0,0,0.4))',
-                  backgroundSize: '200% auto',
-                  animation: 'btnShine 3s ease infinite'
+                  color: '#FF6B8A',
+                  background: 'rgba(255,55,95,0.08)',
+                  border: '1px solid rgba(255,55,95,0.25)',
                 }}
               >
-                <span style={{
-                  background: 'linear-gradient(90deg, #FF6B9D, #C44DFF, #FF6B9D)',
-                  backgroundSize: '200% auto',
-                  WebkitBackgroundClip: 'text',
-                  backgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  animation: 'textShine 2s linear infinite',
-                  filter: 'drop-shadow(0 0 8px rgba(255,107,157,0.6))'
-                }}>
-                  购买激活码（全部通用）
-                </span>
+                购买激活码
               </a>
               {result && (
-                <div className={`rounded-xl p-3 text-center text-sm ${
-                  result.success ? "border border-green-400/30 bg-green-500/10 text-green-200" : "border border-red-400/30 bg-red-500/10 text-red-200"
-                }`}>
+                <div
+                  className="text-sm text-center"
+                  style={{
+                    color: result.success ? '#6BCB77' : '#FF6B6B',
+                    minHeight: '20px',
+                  }}
+                >
                   {result.message}
                 </div>
               )}
             </div>
+          </div>
+          <div className="mt-6 text-center">
+            <Link href="/" className="text-sm transition hover:text-white/80" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              ← 返回首页
+            </Link>
           </div>
         </div>
       </>
@@ -270,29 +304,62 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
       <>
         <div className="bg-aurora" />
         <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-4 py-8">
-          <div className="game-container">
+          <div
+            className="w-full rounded-[24px] p-8 text-center"
+            style={{
+              background: 'rgba(20,20,30,0.85)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+            }}
+          >
             <div className="text-center mb-6">
               <div className="text-5xl mb-4">🚫</div>
-              <h1 className="text-2xl font-bold text-white mb-2">{gameName}</h1>
+              <h1
+                className="text-2xl font-extrabold mb-2"
+                style={{
+                  background: 'linear-gradient(135deg, #FF375F 0%, #FF2D55 100%)',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                {gameName}
+              </h1>
               <div className="rounded-xl border border-red-400/30 bg-red-500/10 p-4 text-center text-sm text-red-200">
                 ⚠️ {bannedMessage}
               </div>
             </div>
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm text-white/70 mb-2">输入激活码</label>
-                <input
-                  type="text"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value.toUpperCase())}
-                  onKeyDown={(e) => e.key === "Enter" && handleActivate()}
-                  placeholder="7位激活码"
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-center text-lg font-mono tracking-wider text-white placeholder:text-white/30 focus:outline-none focus:border-pink-400/50"
-                />
-              </div>
+              <input
+                type="text"
+                value={code}
+                onChange={(e) => setCode(e.target.value.toUpperCase())}
+                onKeyDown={(e) => e.key === "Enter" && handleActivate()}
+                placeholder="输入7位激活码"
+                maxLength={7}
+                className="w-full rounded-2xl px-4 py-3.5 text-center text-lg font-mono tracking-widest text-white outline-none transition"
+                style={{
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = 'rgba(255,55,95,0.5)';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(255,55,95,0.1)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(255,255,255,0.1)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
               <button
                 onClick={handleActivate}
-                className="w-full rounded-full bg-pink-500 py-3 text-base font-semibold text-white shadow-lg shadow-pink-500/40 hover:bg-pink-400 transition"
+                className="w-full rounded-full py-3.5 text-base font-bold text-white transition"
+                style={{
+                  background: 'linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%)',
+                  boxShadow: '0 4px 20px rgba(255,55,95,0.4)',
+                }}
               >
                 立即激活
               </button>
@@ -300,33 +367,32 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
                 href="https://weidian.com/?userid=1388425837"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex w-full items-center justify-center rounded-full border-2 border-pink-500/50 bg-black/40 py-3 text-base font-bold shadow-lg shadow-pink-500/30 hover:border-pink-400/70 hover:bg-black/60 hover:shadow-pink-500/50 transition"
+                className="flex w-full items-center justify-center rounded-full py-3 text-sm font-bold transition"
                 style={{
-                  background: 'linear-gradient(90deg, rgba(0,0,0,0.4), rgba(20,0,30,0.6), rgba(0,0,0,0.4))',
-                  backgroundSize: '200% auto',
-                  animation: 'btnShine 3s ease infinite'
+                  color: '#FF6B8A',
+                  background: 'rgba(255,55,95,0.08)',
+                  border: '1px solid rgba(255,55,95,0.25)',
                 }}
               >
-                <span style={{
-                  background: 'linear-gradient(90deg, #FF6B9D, #C44DFF, #FF6B9D)',
-                  backgroundSize: '200% auto',
-                  WebkitBackgroundClip: 'text',
-                  backgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  animation: 'textShine 2s linear infinite',
-                  filter: 'drop-shadow(0 0 8px rgba(255,107,157,0.6))'
-                }}>
-                  购买激活码（全部通用）
-                </span>
+                购买激活码
               </a>
               {result && (
-                <div className={`rounded-xl p-3 text-center text-sm ${
-                  result.success ? "border border-green-400/30 bg-green-500/10 text-green-200" : "border border-red-400/30 bg-red-500/10 text-red-200"
-                }`}>
+                <div
+                  className="text-sm text-center"
+                  style={{
+                    color: result.success ? '#6BCB77' : '#FF6B6B',
+                    minHeight: '20px',
+                  }}
+                >
                   {result.message}
                 </div>
               )}
             </div>
+          </div>
+          <div className="mt-6 text-center">
+            <Link href="/" className="text-sm transition hover:text-white/80" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              ← 返回首页
+            </Link>
           </div>
         </div>
       </>
@@ -396,15 +462,7 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
           {activation.type ? TYPE_NAMES[activation.type] : "已激活"}·{activation.timeLeftText ? "剩" + activation.timeLeftText : "永久有效"}
         </div>
       )}
-    <style jsx global>{`
-      @keyframes textShine {
-        to { background-position: 200% center; }
-      }
-      @keyframes btnShine {
-        0%, 100% { background-position: 0% center; }
-        50% { background-position: 100% center; }
-      }
-    `}</style>
+
     </>
   );
 }

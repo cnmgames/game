@@ -46,7 +46,7 @@ export default function ActivatePage() {
           <h1
             className="text-2xl font-extrabold mb-1.5"
             style={{
-              background: 'linear-gradient(135deg, #fff 0%, #FF375F 50%, #BF5AF2 100%)',
+              background: 'linear-gradient(135deg, #FF375F 0%, #FF2D55 100%)',
               WebkitBackgroundClip: 'text',
               backgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
