@@ -4,7 +4,24 @@ import Link from "next/link";
 import { checkActivation, activateCode, clearActivation, TYPE_NAMES } from "../lib/license";
 import GameFeedbackButton from "./GameFeedbackButton";
 
-const API_BASE_URL = "https://api.ttla.top";
+// API 地址（域名混淆拼接，不在代码中出现完整域名）
+const _API_HOST = ["k", "ttla", "top"];
+const API_BASE_URL = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
+
+// 日期字符串转时间戳
+function dateToTs(dateStr: string | null | undefined): number {
+  if (!dateStr) return 0;
+  const t = new Date(dateStr.replace(" ", "T")).getTime();
+  return isNaN(t) ? 0 : t;
+}
+
+// 激活码输入自动格式化：转大写、每4位加横杠、最多16位
+function formatCodeInput(raw: string): string {
+  const v = raw.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 16);
+  const parts: string[] = [];
+  for (let i = 0; i < v.length; i += 4) parts.push(v.slice(i, i + 4));
+  return parts.join("-");
+}
 
 export default function LicenseGate({ children, gameName }: { children: React.ReactNode; gameName: string }) {
   const [activated, setActivated] = useState(false);
@@ -17,27 +34,27 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
   const [bannedMessage, setBannedMessage] = useState<string>("");
 
-  // 云端验证函数：检查激活码是否被封禁
+  // 云端验证：检查激活码是否被封禁/过期
   const verifyWithCloud = async (): Promise<{ valid: boolean; message?: string }> => {
     try {
       const activationData = JSON.parse(localStorage.getItem("lg_activation") || "{}");
       const savedCode = activationData.code;
       if (!savedCode) return { valid: false, message: "未激活" };
-      
-      const res = await fetch(`${API_BASE_URL}/check?code=${encodeURIComponent(savedCode)}`, {
+
+      const res = await fetch(API_BASE_URL + "check&code=" + encodeURIComponent(savedCode), {
         signal: AbortSignal.timeout(8000),
       });
       const data = await res.json();
-      
-      // 检查是否被封禁
-      if (data.disabled || data.message?.includes("封禁") || data.message?.includes("禁用")) {
+
+      if (data.status === "disabled") {
         return { valid: false, message: data.message || "激活码被封禁，请联系客服" };
       }
-      // 检查是否已使用（确实已激活）
+      if (data.expired) {
+        return { valid: false, message: "激活码已过期，请重新购买" };
+      }
       if (data.used && data.exists) {
         return { valid: true };
       }
-      // 其他情况视为无效
       return { valid: false, message: data.message || "激活码无效" };
     } catch {
       // 云端不可用时，信任本地状态（降级）
@@ -46,17 +63,14 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
   };
 
   useEffect(() => {
-    // 进入游戏页面时重置滚动位置，防止列表页滚动影响游戏内
-    // 多重重置确保生效
     const resetScroll = () => {
       window.scrollTo(0, 0);
-      if (typeof document !== 'undefined') {
+      if (typeof document !== "undefined") {
         document.documentElement.scrollTop = 0;
         document.body.scrollTop = 0;
       }
     };
     resetScroll();
-    // 延迟再次重置，确保页面渲染完成后也在顶部
     const timer1 = setTimeout(resetScroll, 0);
     const timer2 = setTimeout(resetScroll, 100);
     const timer3 = setTimeout(resetScroll, 300);
@@ -65,17 +79,15 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
 
     const init = async () => {
       if (status.active) {
-        // 本地显示已激活，需要云端验证
         setCloudVerifying(true);
         const result = await verifyWithCloud();
         if (result.valid) {
           setActivated(true);
         } else {
-          // 云端验证失败或被封禁，清除本地状态
           clearActivation();
           setActivated(false);
           setActivation({ active: false });
-          if (result.message?.includes("封禁")) {
+          if (result.message?.includes("封禁") || result.message?.includes("禁用")) {
             setBanned(true);
             setBanMessage(result.message);
           }
@@ -83,10 +95,10 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
         setCloudVerifying(false);
         setChecking(false);
       } else {
-        // 本地未激活，尝试通过IP查询云端激活状态（清理缓存后恢复）
+        // 本地未激活，尝试通过IP查询云端激活状态
         setCloudVerifying(true);
         try {
-          const res = await fetch(`${API_BASE_URL}/ip-check`, {
+          const res = await fetch(API_BASE_URL + "ip-check", {
             signal: AbortSignal.timeout(8000),
           });
           const data = await res.json();
@@ -94,10 +106,10 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
             // IP已激活，恢复激活状态到本地
             const activationData = {
               code: data.code,
-              type: data.type,
-              activatedAt: data.activatedAt,
-              expiresAt: data.expiresAt,
-              active: true
+              type: data.type || "forever",
+              activatedAt: dateToTs(data.activatedAt) || Date.now(),
+              expireAt: dateToTs(data.expiresAt), // 0=永久
+              active: true,
             };
             localStorage.setItem("lg_activation", JSON.stringify(activationData));
             const newStatus = checkActivation();
@@ -115,13 +127,12 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
     };
     init();
 
-    // 定时检查：每3分钟检查一次激活码是否被封禁
+    // 定时检查：每3分钟检查一次激活码状态
     const interval = setInterval(async () => {
       const currentStatus = checkActivation();
       if (currentStatus.active) {
         const result = await verifyWithCloud();
-        if (!result.valid && result.message?.includes("封禁")) {
-          // 被封禁，立即踢出
+        if (!result.valid && (result.message?.includes("封禁") || result.message?.includes("禁用"))) {
           clearActivation();
           setActivated(false);
           setActivation({ active: false });
@@ -129,7 +140,7 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
           setBanMessage(result.message);
         }
       }
-    }, 3 * 60 * 1000); // 每3分钟检查一次
+    }, 3 * 60 * 1000);
 
     return () => clearInterval(interval);
   }, []);
@@ -153,6 +164,31 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
     }
   };
 
+  // 输入框组件（统一格式）
+  const CodeInput = () => (
+    <input
+      type="text"
+      value={code}
+      onChange={(e) => setCode(formatCodeInput(e.target.value))}
+      onKeyDown={(e) => e.key === "Enter" && handleActivate()}
+      placeholder="LOVE-RTXD-JDE5-GHHJ"
+      maxLength={19}
+      className="w-full rounded-2xl px-4 py-3.5 text-center text-lg font-mono tracking-widest text-white outline-none transition"
+      style={{
+        background: "rgba(255,255,255,0.04)",
+        border: "1px solid rgba(255,255,255,0.1)",
+      }}
+      onFocus={(e) => {
+        e.target.style.borderColor = "rgba(255,55,95,0.5)";
+        e.target.style.boxShadow = "0 0 0 3px rgba(255,55,95,0.1)";
+      }}
+      onBlur={(e) => {
+        e.target.style.borderColor = "rgba(255,255,255,0.1)";
+        e.target.style.boxShadow = "none";
+      }}
+    />
+  );
+
   if (checking || cloudVerifying) {
     return (
       <>
@@ -164,7 +200,7 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
     );
   }
 
-  // 被封禁，显示封禁提示
+  // 被封禁
   if (banned) {
     return (
       <>
@@ -198,12 +234,12 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
           <div
             className="w-full p-8 text-center"
             style={{
-              background: 'rgba(20,20,30,0.85)',
-              borderRadius: '24px',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+              background: "rgba(20,20,30,0.85)",
+              borderRadius: "24px",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
             }}
           >
             <div className="text-center mb-6">
@@ -211,18 +247,18 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
               <h1
                 className="text-2xl font-extrabold mb-2"
                 style={{
-                  background: 'linear-gradient(135deg, #FF375F 0%, #FF2D55 100%)',
-                  WebkitBackgroundClip: 'text',
-                  backgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
+                  background: "linear-gradient(135deg, #FF375F 0%, #FF2D55 100%)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
                 }}
               >
                 {gameName}
               </h1>
-              <p className="text-sm mb-1" style={{ color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>
+              <p className="text-sm mb-1" style={{ color: "rgba(255,255,255,0.85)", fontWeight: 500 }}>
                 ✨ 一码通用 · 解锁全部游戏
               </p>
-              <p className="text-xs" style={{ color: '#FF6B8A' }}>
+              <p className="text-xs" style={{ color: "#FF6B8A" }}>
                 激活后所有游戏畅玩无阻
               </p>
             </div>
@@ -232,33 +268,13 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
                   ⚠️ {bannedMessage}
                 </div>
               )}
-              <input
-                type="text"
-                value={code}
-                onChange={(e) => setCode(e.target.value.toUpperCase())}
-                onKeyDown={(e) => e.key === "Enter" && handleActivate()}
-                placeholder="输入7位激活码"
-                maxLength={7}
-                className="w-full rounded-2xl px-4 py-3.5 text-center text-lg font-mono tracking-widest text-white outline-none transition"
-                style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = 'rgba(255,55,95,0.5)';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(255,55,95,0.1)';
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = 'rgba(255,255,255,0.1)';
-                  e.target.style.boxShadow = 'none';
-                }}
-              />
+              <CodeInput />
               <button
                 onClick={handleActivate}
                 className="w-full rounded-full py-3.5 text-base font-bold text-white transition"
                 style={{
-                  background: 'linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%)',
-                  boxShadow: '0 4px 20px rgba(255,55,95,0.4)',
+                  background: "linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%)",
+                  boxShadow: "0 4px 20px rgba(255,55,95,0.4)",
                 }}
               >
                 立即激活
@@ -269,9 +285,9 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
                 rel="noopener noreferrer"
                 className="flex w-full items-center justify-center rounded-full py-3 text-sm font-bold transition"
                 style={{
-                  color: '#FF6B8A',
-                  background: 'rgba(255,55,95,0.08)',
-                  border: '1px solid rgba(255,55,95,0.25)',
+                  color: "#FF6B8A",
+                  background: "rgba(255,55,95,0.08)",
+                  border: "1px solid rgba(255,55,95,0.25)",
                 }}
               >
                 购买激活码
@@ -280,8 +296,8 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
                 <div
                   className="text-sm text-center"
                   style={{
-                    color: result.success ? '#6BCB77' : '#FF6B6B',
-                    minHeight: '20px',
+                    color: result.success ? "#6BCB77" : "#FF6B6B",
+                    minHeight: "20px",
                   }}
                 >
                   {result.message}
@@ -290,7 +306,7 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
             </div>
           </div>
           <div className="mt-6 text-center">
-            <Link href="/" className="text-sm transition hover:text-white/80" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <Link href="/" className="text-sm transition hover:text-white/80" style={{ color: "rgba(255,255,255,0.5)" }}>
               ← 返回首页
             </Link>
           </div>
@@ -299,7 +315,7 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
     );
   }
 
-  // 已激活，显示游戏内容，并在顶部显示激活状态
+  // bannedMessage 状态（已激活但有封禁提示）
   if (bannedMessage) {
     return (
       <>
@@ -308,12 +324,12 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
           <div
             className="w-full p-8 text-center"
             style={{
-              background: 'rgba(20,20,30,0.85)',
-              borderRadius: '24px',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+              background: "rgba(20,20,30,0.85)",
+              borderRadius: "24px",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
             }}
           >
             <div className="text-center mb-6">
@@ -321,10 +337,10 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
               <h1
                 className="text-2xl font-extrabold mb-2"
                 style={{
-                  background: 'linear-gradient(135deg, #FF375F 0%, #FF2D55 100%)',
-                  WebkitBackgroundClip: 'text',
-                  backgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
+                  background: "linear-gradient(135deg, #FF375F 0%, #FF2D55 100%)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
                 }}
               >
                 {gameName}
@@ -334,33 +350,13 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
               </div>
             </div>
             <div className="space-y-4">
-              <input
-                type="text"
-                value={code}
-                onChange={(e) => setCode(e.target.value.toUpperCase())}
-                onKeyDown={(e) => e.key === "Enter" && handleActivate()}
-                placeholder="输入7位激活码"
-                maxLength={7}
-                className="w-full rounded-2xl px-4 py-3.5 text-center text-lg font-mono tracking-widest text-white outline-none transition"
-                style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = 'rgba(255,55,95,0.5)';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(255,55,95,0.1)';
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = 'rgba(255,255,255,0.1)';
-                  e.target.style.boxShadow = 'none';
-                }}
-              />
+              <CodeInput />
               <button
                 onClick={handleActivate}
                 className="w-full rounded-full py-3.5 text-base font-bold text-white transition"
                 style={{
-                  background: 'linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%)',
-                  boxShadow: '0 4px 20px rgba(255,55,95,0.4)',
+                  background: "linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%)",
+                  boxShadow: "0 4px 20px rgba(255,55,95,0.4)",
                 }}
               >
                 立即激活
@@ -371,9 +367,9 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
                 rel="noopener noreferrer"
                 className="flex w-full items-center justify-center rounded-full py-3 text-sm font-bold transition"
                 style={{
-                  color: '#FF6B8A',
-                  background: 'rgba(255,55,95,0.08)',
-                  border: '1px solid rgba(255,55,95,0.25)',
+                  color: "#FF6B8A",
+                  background: "rgba(255,55,95,0.08)",
+                  border: "1px solid rgba(255,55,95,0.25)",
                 }}
               >
                 购买激活码
@@ -382,8 +378,8 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
                 <div
                   className="text-sm text-center"
                   style={{
-                    color: result.success ? '#6BCB77' : '#FF6B6B',
-                    minHeight: '20px',
+                    color: result.success ? "#6BCB77" : "#FF6B6B",
+                    minHeight: "20px",
                   }}
                 >
                   {result.message}
@@ -392,7 +388,7 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
             </div>
           </div>
           <div className="mt-6 text-center">
-            <Link href="/" className="text-sm transition hover:text-white/80" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <Link href="/" className="text-sm transition hover:text-white/80" style={{ color: "rgba(255,255,255,0.5)" }}>
               ← 返回首页
             </Link>
           </div>
@@ -400,9 +396,10 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
       </>
     );
   }
+
+  // 已激活，显示游戏内容
   return (
     <>
-      {/* 顶部背景条，让固定按钮有背景不透明 */}
       <div style={{
         position: "fixed",
         top: 0,
@@ -413,13 +410,10 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
         zIndex: 9998,
         pointerEvents: "none",
       }} />
-      {/* 游戏内容容器，顶部留空避免被固定按钮遮挡 */}
       <div style={{ paddingTop: "60px" }}>
         {children}
       </div>
-      {/* 游戏内反馈按钮 */}
       <GameFeedbackButton gameName={gameName} />
-      {/* 返回游戏列表按钮（固定在左上角） */}
       <Link href="/" style={{
         position: "fixed",
         top: "max(12px, env(safe-area-inset-top))",
@@ -440,7 +434,7 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
         ← 返回游戏列表
       </Link>
 
-      {/* 激活状态指示器（固定在右上角） */}
+      {/* 激活状态指示器 */}
       {activated && activation && activation.active && (
         <div style={{
           position: "fixed",
@@ -461,10 +455,10 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
           textOverflow: "ellipsis",
           lineHeight: "1.5",
         }}>
-          {activation.type ? TYPE_NAMES[activation.type] : "已激活"}·{activation.timeLeftText ? "剩" + activation.timeLeftText : "永久有效"}
+          {activation.type ? TYPE_NAMES[activation.type] || "已激活" : "已激活"}
+          {activation.timeLeftText ? "·" + activation.timeLeftText : ""}
         </div>
       )}
-
     </>
   );
 }
