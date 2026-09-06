@@ -171,7 +171,7 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
       value={code}
       onChange={(e) => setCode(formatCodeInput(e.target.value))}
       onKeyDown={(e) => e.key === "Enter" && handleActivate()}
-      placeholder="LOVE-RTXD-JDE5-GHHJ"
+      placeholder="请输入激活码"
       maxLength={19}
       className="w-full rounded-2xl px-4 py-3.5 text-center text-lg font-mono tracking-widest text-white outline-none transition"
       style={{
