@@ -93,7 +93,7 @@ function dateToTs(dateStr: string | null | undefined): number {
 }
 
 // 云端验证：检查码状态
-async function cloudCheck(code: string): Promise<{ exists: boolean; used: boolean; status: string; type: string; expired: boolean; expiry_at: string | null } | null> {
+async function cloudCheck(code: string): Promise<{ exists: boolean; used: boolean; status: string; type: string; expired: boolean; expiry_at: string | null; message: string } | null> {
   try {
     const res = await fetch(API_BASE_URL + "check&code=" + encodeURIComponent(code), {
       method: "GET",
@@ -108,11 +108,34 @@ async function cloudCheck(code: string): Promise<{ exists: boolean; used: boolea
         type: data.type || "forever",
         expired: !!data.expired,
         expiry_at: data.expiry_at || null,
+        message: data.message || "",
       };
     }
     return null;
   } catch {
     return null;
+  }
+}
+
+// 云端验证当前激活码是否被禁用（已激活状态下调用）
+export async function verifyActivation(): Promise<{ valid: boolean; message?: string }> {
+  if (typeof window === "undefined") return { valid: true };
+  const data = localStorage.getItem("lg_activation");
+  if (!data) return { valid: false };
+  try {
+    const activation = JSON.parse(data);
+    if (!activation.code) return { valid: false };
+    const result = await cloudCheck(activation.code);
+    if (result === null) return { valid: true }; // 网络异常时不拦截
+    if (result.status === "disabled") {
+      return { valid: false, message: result.message || "该激活码已被禁用，请联系客服" };
+    }
+    if (result.expired) {
+      return { valid: false, message: "激活码已过期，请重新激活" };
+    }
+    return { valid: true };
+  } catch {
+    return { valid: true };
   }
 }
 
