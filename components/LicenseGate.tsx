@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { checkActivation, activateCode, clearActivation, TYPE_NAMES } from "../lib/license";
+import { checkActivation, activateCode, clearActivation, TYPE_NAMES, getDeviceId } from "../lib/license";
 import GameFeedbackButton from "./GameFeedbackButton";
 
 // API 地址（域名混淆拼接，不在代码中出现完整域名）
@@ -142,7 +142,23 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
       }
     }, 3 * 60 * 1000);
 
-    return () => clearInterval(interval);
+    // 心跳上报：每30秒一次，保持在线状态
+    const sendHeartbeat = () => {
+      try {
+        const act = JSON.parse(localStorage.getItem("lg_activation") || "{}");
+        if (act.code) {
+          fetch(API_BASE_URL + "online/visit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code: act.code, device_id: getDeviceId() }),
+          }).catch(() => {});
+        }
+      } catch {}
+    };
+    sendHeartbeat(); // 立即上报一次
+    const heartbeat = setInterval(sendHeartbeat, 30000);
+
+    return () => { clearInterval(interval); clearInterval(heartbeat); };
   }, []);
 
   const handleActivate = async () => {
