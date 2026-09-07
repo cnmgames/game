@@ -8,13 +8,6 @@ import GameFeedbackButton from "./GameFeedbackButton";
 const _API_HOST = ["k", "ttla", "top"];
 const API_BASE_URL = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
 
-// 日期字符串转时间戳
-function dateToTs(dateStr: string | null | undefined): number {
-  if (!dateStr) return 0;
-  const t = new Date(dateStr.replace(" ", "T")).getTime();
-  return isNaN(t) ? 0 : t;
-}
-
 // 激活码输入自动格式化：转大写、每4位加横杠、最多16位
 function formatCodeInput(raw: string): string {
   const v = raw.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 16);
@@ -95,33 +88,8 @@ export default function LicenseGate({ children, gameName }: { children: React.Re
         setCloudVerifying(false);
         setChecking(false);
       } else {
-        // 本地未激活，尝试通过IP查询云端激活状态
-        setCloudVerifying(true);
-        try {
-          const res = await fetch(API_BASE_URL + "ip-check", {
-            signal: AbortSignal.timeout(8000),
-          });
-          const data = await res.json();
-          if (data.success && data.code) {
-            // IP已激活，恢复激活状态到本地
-            const activationData = {
-              code: data.code,
-              type: data.type || "forever",
-              activatedAt: dateToTs(data.activatedAt) || Date.now(),
-              expireAt: dateToTs(data.expiresAt), // 0=永久
-              active: true,
-            };
-            localStorage.setItem("lg_activation", JSON.stringify(activationData));
-            const newStatus = checkActivation();
-            setActivation(newStatus);
-            setActivated(true);
-          } else {
-            setActivated(false);
-          }
-        } catch {
-          setActivated(false);
-        }
-        setCloudVerifying(false);
+        // 本地未激活，直接显示激活页（不再通过IP自动恢复，防止同IP多设备共享）
+        setActivated(false);
         setChecking(false);
       }
     };
