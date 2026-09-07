@@ -43,7 +43,7 @@ export default function RootLayout({
         }}>
         {/* 微信拦截 */}
         <WechatBlocker />
-        {/* 预连接API服务器（国内宝塔），加速接口请求 */}
+        {/* 预连接API服务器 */}
         <link rel="preconnect" href="https://k.ttla.top" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://k.ttla.top" />
         {/* Google AdSense */}
@@ -51,6 +51,51 @@ export default function RootLayout({
         <AntiDebugProvider>
           {children}
                   </AntiDebugProvider>
+        {/* 访问记录上报 */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var _h = ["k","ttla","top"];
+                var _api = "https://" + _h[0] + "." + _h[1] + "." + _h[2] + "/api.php?action=";
+                function getDev() {
+                  try {
+                    var s = screen, n = navigator, c = document.createElement("canvas");
+                    var x = c.getContext("2d");
+                    if (x) { x.font = "14px Arial"; x.fillText("fp", 2, 2); }
+                    var r = [n.userAgent, n.language, s.width+"x"+s.height, s.colorDepth, new Date().getTimezoneOffset()].join("|");
+                    var h = 0;
+                    for (var i = 0; i < r.length; i++) { h = ((h << 5) - h + r.charCodeAt(i)) | 0; }
+                    return "dev_" + Math.abs(h).toString(36);
+                  } catch(e) { return "dev_unknown"; }
+                }
+                function logVisit() {
+                  try {
+                    var code = "";
+                    try {
+                      var a = JSON.parse(localStorage.getItem("lg_activation") || "{}");
+                      code = a.code || "";
+                    } catch(e) {}
+                    fetch(_api + "visit/log", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        page: window.location.pathname,
+                        device_id: getDev(),
+                        code: code
+                      })
+                    }).catch(function(){});
+                  } catch(e) {}
+                }
+                if (document.readyState === "loading") {
+                  document.addEventListener("DOMContentLoaded", logVisit);
+                } else {
+                  logVisit();
+                }
+              })();
+            `,
+          }}
+        />
         {/* 免责声明 */}
         <div className="global-disclaimer" style={{
           position: 'fixed',
