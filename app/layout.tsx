@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import Script from 'next/script'
 import AntiDebugProvider from '../components/AntiDebugProvider'
+import WechatBlocker from '../components/WechatBlocker'
 
 export const metadata: Metadata = {
   title: '情侣互动小游戏合集 | 约会之夜前戏必备',
@@ -41,6 +42,8 @@ export default function RootLayout({
           WebkitTouchCallout: 'none',
           touchAction: 'manipulation'
         }}>
+        {/* 微信拦截：微信内打开提示跳转浏览器 */}
+        <WechatBlocker />
         {/* 预连接API，加速移动端请求 */}
         <link rel="preconnect" href="https://api.ttla.top" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.ttla.top" />
