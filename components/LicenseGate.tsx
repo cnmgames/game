@@ -1,446 +1,167 @@
 "use client";
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { checkActivation, activateCode, clearActivation, TYPE_NAMES, getDeviceId } from "../lib/license";
-import GameFeedbackButton from "./GameFeedbackButton";
+import { useState, useEffect, useCallback } from "react";
+import { activateCode, checkActivation, getDeviceId, clearActivation } from "../lib/license";
 
-// API 地址（域名混淆拼接，不在代码中出现完整域名）
-const _API_HOST = ["k", "ttla", "top"];
-const API_BASE_URL = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
+export default function LicenseGate({
+  children,
+  gameName,
+  gameIcon,
+}: {
+  children: React.ReactNode;
+  gameName: string;
+  gameIcon?: string;
+}) {
+  const [status, setStatus] = useState<"checking" | "unactivated" | "active">("checking");
+  const [inputCode, setInputCode] = useState("");
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [activationInfo, setActivationInfo] = useState<{ type?: string; timeLeftText?: string } | null>(null);
 
-// 激活码输入自动格式化：转大写、每4位加横杠、最多16位
-function formatCodeInput(raw: string): string {
-  const v = raw.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 16);
-  const parts: string[] = [];
-  for (let i = 0; i < v.length; i += 4) parts.push(v.slice(i, i + 4));
-  return parts.join("-");
-}
-
-export default function LicenseGate({ children, gameName }: { children: React.ReactNode; gameName: string }) {
-  const [activated, setActivated] = useState(false);
-  const [checking, setChecking] = useState(true);
-  const [cloudVerifying, setCloudVerifying] = useState(false);
-  const [activation, setActivation] = useState(checkActivation());
-  const [banned, setBanned] = useState(false);
-  const [banMessage, setBanMessage] = useState("");
-  const [code, setCode] = useState("");
-  const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
-  const [bannedMessage, setBannedMessage] = useState<string>("");
-
-  // 云端验证：检查激活码是否被封禁/过期
-  const verifyWithCloud = async (): Promise<{ valid: boolean; message?: string }> => {
+  const verify = useCallback(async () => {
+    setStatus("checking");
     try {
-      const activationData = JSON.parse(localStorage.getItem("lg_activation") || "{}");
-      const savedCode = activationData.code;
-      if (!savedCode) return { valid: false, message: "未激活" };
-
-      const res = await fetch(API_BASE_URL + "check&code=" + encodeURIComponent(savedCode), {
-        signal: AbortSignal.timeout(8000),
-      });
-      const data = await res.json();
-
-      if (data.status === "disabled") {
-        return { valid: false, message: data.message || "激活码被封禁，请联系客服" };
-      }
-      if (data.expired) {
-        return { valid: false, message: "激活码已过期，请重新购买" };
-      }
-      if (data.used && data.exists) {
-        return { valid: true };
-      }
-      return { valid: false, message: data.message || "激活码无效" };
-    } catch {
-      // 云端不可用时，信任本地状态（降级）
-      return { valid: true };
-    }
-  };
-
-  useEffect(() => {
-    const resetScroll = () => {
-      window.scrollTo(0, 0);
-      if (typeof document !== "undefined") {
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-      }
-    };
-    resetScroll();
-    const timer1 = setTimeout(resetScroll, 0);
-    const timer2 = setTimeout(resetScroll, 100);
-    const timer3 = setTimeout(resetScroll, 300);
-    const status = checkActivation();
-    setActivation(status);
-
-    const init = async () => {
-      if (status.active) {
-        setCloudVerifying(true);
-        const result = await verifyWithCloud();
-        if (result.valid) {
-          setActivated(true);
-        } else {
-          clearActivation();
-          setActivated(false);
-          setActivation({ active: false });
-          if (result.message?.includes("封禁") || result.message?.includes("禁用")) {
-            setBanned(true);
-            setBanMessage(result.message);
-          }
-        }
-        setCloudVerifying(false);
-        setChecking(false);
+      const result = await checkActivation();
+      if (result.active) {
+        setActivationInfo({ type: result.type, timeLeftText: result.timeLeftText });
+        setStatus("active");
       } else {
-        // 本地未激活，直接显示激活页（不再通过IP自动恢复，防止同IP多设备共享）
-        setActivated(false);
-        setChecking(false);
-      }
-    };
-    init();
-
-    // 定时检查：每3分钟检查一次激活码状态
-    const interval = setInterval(async () => {
-      const currentStatus = checkActivation();
-      if (currentStatus.active) {
-        const result = await verifyWithCloud();
-        if (!result.valid && (result.message?.includes("封禁") || result.message?.includes("禁用"))) {
-          clearActivation();
-          setActivated(false);
-          setActivation({ active: false });
-          setBanned(true);
-          setBanMessage(result.message);
+        if (result.message) {
+          setMessage({ type: "error", text: result.message });
         }
+        setStatus("unactivated");
       }
-    }, 3 * 60 * 1000);
-
-    // 心跳上报：每30秒一次，保持在线状态
-    const sendHeartbeat = () => {
-      try {
-        const act = JSON.parse(localStorage.getItem("lg_activation") || "{}");
-        if (act.code) {
-          fetch(API_BASE_URL + "online/visit", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ code: act.code, device_id: getDeviceId() }),
-          }).catch(() => {});
-        }
-      } catch {}
-    };
-    sendHeartbeat(); // 立即上报一次
-    const heartbeat = setInterval(sendHeartbeat, 30000);
-
-    return () => { clearInterval(interval); clearInterval(heartbeat); };
+    } catch {
+      setStatus("unactivated");
+    }
   }, []);
 
-  const handleActivate = async () => {
-    if (!code.trim()) {
-      setResult({ success: false, message: "请输入激活码" });
-      return;
+  useEffect(() => {
+    verify();
+  }, [verify]);
+
+  const formatInput = (value: string) => {
+    const clean = value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 16);
+    const parts = [];
+    for (let i = 0; i < clean.length; i += 4) {
+      parts.push(clean.slice(i, i + 4));
     }
-    setResult({ success: false, message: "验证中..." });
-    const res = await activateCode(code);
-    setResult(res);
-    if (res.success) {
-      const status = checkActivation();
-      setActivation(status);
-      setActivated(true);
-      setBanned(false);
-      setBanMessage("");
-      setBannedMessage("");
-      setCode("");
+    return parts.join("-");
+  };
+
+  const handleActivate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inputCode.trim() || submitting) return;
+    setSubmitting(true);
+    setMessage(null);
+    try {
+      const result = await activateCode(inputCode);
+      if (result.success) {
+        setMessage({ type: "success", text: result.message });
+        setTimeout(() => {
+          verify();
+        }, 800);
+      } else {
+        setMessage({ type: "error", text: result.message });
+      }
+    } catch {
+      setMessage({ type: "error", text: "网络异常，请重试" });
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  // 输入框组件（统一格式）
-  const CodeInput = () => (
-    <input
-      type="text"
-      value={code}
-      onChange={(e) => setCode(formatCodeInput(e.target.value))}
-      onKeyDown={(e) => e.key === "Enter" && handleActivate()}
-      placeholder="请输入激活码"
-      maxLength={19}
-      className="w-full rounded-2xl px-4 py-3.5 text-center text-lg font-mono tracking-widest text-white outline-none transition"
-      style={{
-        background: "rgba(255,255,255,0.04)",
-        border: "1px solid rgba(255,255,255,0.1)",
-      }}
-      onFocus={(e) => {
-        e.target.style.borderColor = "rgba(255,55,95,0.5)";
-        e.target.style.boxShadow = "0 0 0 3px rgba(255,55,95,0.1)";
-      }}
-      onBlur={(e) => {
-        e.target.style.borderColor = "rgba(255,255,255,0.1)";
-        e.target.style.boxShadow = "none";
-      }}
-    />
-  );
-
-  if (checking || cloudVerifying) {
+  if (status === "checking") {
     return (
-      <>
-        <div className="bg-aurora" />
-        <div className="relative z-10 flex min-h-screen items-center justify-center">
-          <div className="text-white/60">{cloudVerifying ? "云端验证中..." : "加载中..."}</div>
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#000" }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ width: "40px", height: "40px", border: "3px solid rgba(236,72,153,0.2)", borderTopColor: "#ec4899", borderRadius: "50%", animation: "spin 0.8s linear infinite", margin: "0 auto 16px" }} />
+          <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "14px" }}>验证中...</p>
         </div>
-      </>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
     );
   }
 
-  // 被封禁
-  if (banned) {
+  if (status === "unactivated") {
     return (
-      <>
-        <div className="bg-aurora" />
-        <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-4 py-8">
-          <div className="game-container">
-            <div className="text-center mb-6">
-              <div className="text-5xl mb-4">🚫</div>
-              <h1 className="text-2xl font-bold text-white mb-2">访问被拒绝</h1>
-              <p className="text-sm text-red-300">{banMessage || "激活码被封禁，请联系客服"}</p>
-            </div>
-            <a
-              href="https://weidian.com/?userid=1388425837"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex w-full items-center justify-center rounded-full bg-gradient-to-r from-pink-500 to-purple-600 py-3 text-base font-bold text-white shadow-lg shadow-pink-500/50 hover:from-pink-400 hover:to-purple-50 transition"
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", background: "radial-gradient(ellipse at top, #1a0a1a 0%, #000 60%)" }}>
+        <div style={{ width: "100%", maxWidth: "380px", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "20px", padding: "32px 24px", backdropFilter: "blur(20px)" }}>
+          <div style={{ textAlign: "center", marginBottom: "24px" }}>
+            <div style={{ fontSize: "48px", marginBottom: "12px" }}>{gameIcon || "🔒"}</div>
+            <h1 style={{ color: "#fff", fontSize: "20px", fontWeight: 700, margin: "0 0 6px" }}>{gameName}</h1>
+            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "13px", margin: 0 }}>请输入激活码解锁全部玩法</p>
+          </div>
+          <form onSubmit={handleActivate}>
+            <input
+              type="text"
+              value={inputCode}
+              onChange={(e) => setInputCode(formatInput(e.target.value))}
+              placeholder="请输入激活码"
+              maxLength={19}
+              style={{
+                width: "100%",
+                padding: "14px 16px",
+                borderRadius: "12px",
+                border: "1px solid rgba(255,255,255,0.12)",
+                background: "rgba(255,255,255,0.04)",
+                color: "#fff",
+                fontSize: "16px",
+                letterSpacing: "1px",
+                textAlign: "center",
+                outline: "none",
+                marginBottom: "12px",
+                fontFamily: "'SF Mono', Menlo, monospace",
+              }}
+            />
+            {message && (
+              <div style={{
+                padding: "10px 14px",
+                borderRadius: "8px",
+                fontSize: "13px",
+                marginBottom: "12px",
+                background: message.type === "success" ? "rgba(34,197,94,0.12)" : "rgba(239,68,68,0.12)",
+                border: `1px solid ${message.type === "success" ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,
+                color: message.type === "success" ? "#86efac" : "#fca5a5",
+              }}>
+                {message.text}
+              </div>
+            )}
+            <button
+              type="submit"
+              disabled={!inputCode.trim() || submitting}
+              style={{
+                width: "100%",
+                padding: "14px",
+                borderRadius: "12px",
+                border: "none",
+                background: inputCode.trim() && !submitting ? "#007AFF" : "rgba(255,255,255,0.08)",
+                color: "#fff",
+                fontSize: "16px",
+                fontWeight: 600,
+                cursor: inputCode.trim() && !submitting ? "pointer" : "not-allowed",
+                opacity: submitting ? 0.7 : 1,
+              }}
             >
-              🛒 联系客服
+              {submitting ? "激活中..." : "立即激活"}
+            </button>
+          </form>
+          <div style={{ marginTop: "20px", textAlign: "center" }}>
+            <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" style={{ color: "#007AFF", fontSize: "13px", textDecoration: "none" }}>
+              没有激活码？点此购买 →
             </a>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 
-  if (!activated) {
-    return (
-      <>
-        <div className="bg-aurora" />
-        <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-4 py-8">
-          <div
-            className="w-full p-8 text-center"
-            style={{
-              background: "rgba(20,20,30,0.85)",
-              borderRadius: "24px",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
-            }}
-          >
-            <div className="text-center mb-6">
-              <div className="text-5xl mb-4">🔒</div>
-              <h1
-                className="text-2xl font-extrabold mb-2"
-                style={{
-                  background: "linear-gradient(135deg, #FF375F 0%, #FF2D55 100%)",
-                  WebkitBackgroundClip: "text",
-                  backgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                {gameName}
-              </h1>
-              <p className="text-sm mb-1" style={{ color: "rgba(255,255,255,0.85)", fontWeight: 500 }}>
-                ✨ 一码通用 · 解锁全部游戏
-              </p>
-              <p className="text-xs" style={{ color: "#FF6B8A" }}>
-                激活后所有游戏畅玩无阻
-              </p>
-            </div>
-            <div className="space-y-4">
-              {bannedMessage && (
-                <div className="rounded-xl border border-red-400/30 bg-red-500/10 p-3 text-center text-sm text-red-200">
-                  ⚠️ {bannedMessage}
-                </div>
-              )}
-              <CodeInput />
-              <button
-                onClick={handleActivate}
-                className="w-full rounded-full py-3.5 text-base font-bold text-white transition"
-                style={{
-                  background: "linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%)",
-                  boxShadow: "0 4px 20px rgba(255,55,95,0.4)",
-                }}
-              >
-                立即激活
-              </button>
-              <a
-                href="https://weidian.com/?userid=1388425837"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex w-full items-center justify-center rounded-full py-3 text-sm font-bold transition"
-                style={{
-                  color: "#FF6B8A",
-                  background: "rgba(255,55,95,0.08)",
-                  border: "1px solid rgba(255,55,95,0.25)",
-                }}
-              >
-                购买激活码
-              </a>
-              {result && (
-                <div
-                  className="text-sm text-center"
-                  style={{
-                    color: result.success ? "#6BCB77" : "#FF6B6B",
-                    minHeight: "20px",
-                  }}
-                >
-                  {result.message}
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="mt-6 text-center">
-            <Link href="/" className="text-sm transition hover:text-white/80" style={{ color: "rgba(255,255,255,0.5)" }}>
-              ← 返回首页
-            </Link>
-          </div>
-        </div>
-      </>
-    );
-  }
-
-  // bannedMessage 状态（已激活但有封禁提示）
-  if (bannedMessage) {
-    return (
-      <>
-        <div className="bg-aurora" />
-        <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-4 py-8">
-          <div
-            className="w-full p-8 text-center"
-            style={{
-              background: "rgba(20,20,30,0.85)",
-              borderRadius: "24px",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
-            }}
-          >
-            <div className="text-center mb-6">
-              <div className="text-5xl mb-4">🚫</div>
-              <h1
-                className="text-2xl font-extrabold mb-2"
-                style={{
-                  background: "linear-gradient(135deg, #FF375F 0%, #FF2D55 100%)",
-                  WebkitBackgroundClip: "text",
-                  backgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                {gameName}
-              </h1>
-              <div className="rounded-xl border border-red-400/30 bg-red-500/10 p-4 text-center text-sm text-red-200">
-                ⚠️ {bannedMessage}
-              </div>
-            </div>
-            <div className="space-y-4">
-              <CodeInput />
-              <button
-                onClick={handleActivate}
-                className="w-full rounded-full py-3.5 text-base font-bold text-white transition"
-                style={{
-                  background: "linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%)",
-                  boxShadow: "0 4px 20px rgba(255,55,95,0.4)",
-                }}
-              >
-                立即激活
-              </button>
-              <a
-                href="https://weidian.com/?userid=1388425837"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex w-full items-center justify-center rounded-full py-3 text-sm font-bold transition"
-                style={{
-                  color: "#FF6B8A",
-                  background: "rgba(255,55,95,0.08)",
-                  border: "1px solid rgba(255,55,95,0.25)",
-                }}
-              >
-                购买激活码
-              </a>
-              {result && (
-                <div
-                  className="text-sm text-center"
-                  style={{
-                    color: result.success ? "#6BCB77" : "#FF6B6B",
-                    minHeight: "20px",
-                  }}
-                >
-                  {result.message}
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="mt-6 text-center">
-            <Link href="/" className="text-sm transition hover:text-white/80" style={{ color: "rgba(255,255,255,0.5)" }}>
-              ← 返回首页
-            </Link>
-          </div>
-        </div>
-      </>
-    );
-  }
-
-  // 已激活，显示游戏内容
   return (
     <>
-      <div style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        height: "50px",
-        background: "linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 70%, rgba(0,0,0,0) 100%)",
-        zIndex: 9998,
-        pointerEvents: "none",
-      }} />
-      <div style={{ paddingTop: "60px" }}>
-        {children}
-      </div>
-      <GameFeedbackButton gameName={gameName} />
-      <Link href="/" style={{
-        position: "fixed",
-        top: "max(12px, env(safe-area-inset-top))",
-        left: "max(12px, env(safe-area-inset-left))",
-        zIndex: 9999,
-        padding: "4px 10px",
-        borderRadius: "9999px",
-        border: "1px solid rgba(255,255,255,0.2)",
-        background: "rgba(0,0,0,0.6)",
-        color: "rgba(255,255,255,0.8)",
-        fontSize: "12px",
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
-        whiteSpace: "nowrap",
-        textDecoration: "none",
-        lineHeight: "1.5",
-      }}>
-        ← 返回游戏列表
-      </Link>
-
-      {/* 激活状态指示器 */}
-      {activated && activation && activation.active && (
-        <div style={{
-          position: "fixed",
-          top: "max(12px, env(safe-area-inset-top))",
-          right: "100px",
-          zIndex: 9999,
-          padding: "4px 10px",
-          borderRadius: "9999px",
-          border: "1px solid rgba(74,222,128,0.3)",
-          background: "rgba(0,0,0,0.6)",
-          color: "#86efac",
-          fontSize: "12px",
-          backdropFilter: "blur(10px)",
-          WebkitBackdropFilter: "blur(10px)",
-          whiteSpace: "nowrap",
-          maxWidth: "150px",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          lineHeight: "1.5",
-        }}>
-          {activation.type ? TYPE_NAMES[activation.type] || "已激活" : "已激活"}
-          {activation.timeLeftText ? "·" + activation.timeLeftText : ""}
+      {children}
+      {activationInfo && (
+        <div style={{ position: "fixed", top: "max(12px, env(safe-area-inset-top))", left: "12px", zIndex: 9998, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(10px)", padding: "6px 12px", borderRadius: "9999px", fontSize: "11px", color: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center", gap: "6px" }}>
+          <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#22c55e" }} />
+          {activationInfo.type === "week" ? "周卡" : "永久卡"} · {activationInfo.timeLeftText || "有效"}
         </div>
       )}
     </>
