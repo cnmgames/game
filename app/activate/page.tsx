@@ -14,7 +14,7 @@ export default function ActivatePage() {
       return;
     }
     setResult({ success: false, message: "验证中..." });
-    const res = await activateCode(code);
+    const res = await activateCode(code.replace(/-/g, ""));
     setResult(res);
     if (res.success) {
       setActivation(checkActivation());
@@ -87,10 +87,14 @@ export default function ActivatePage() {
           <input
             type="text"
             value={code}
-            onChange={(e) => setCode(e.target.value.toUpperCase())}
+            onChange={(e) => {
+              const raw = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 16);
+              const formatted = raw.match(/.{1,4}/g)?.join("-") || "";
+              setCode(formatted);
+            }}
             onKeyDown={(e) => e.key === "Enter" && handleActivate()}
-            placeholder="输入7位激活码"
-            maxLength={7}
+            placeholder="请输入激活码"
+            maxLength={19}
             className="w-full mb-3 rounded-2xl px-4 py-3.5 text-center text-lg font-mono tracking-widest text-white outline-none transition"
             style={{
               background: 'rgba(255,255,255,0.04)',
