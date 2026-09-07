@@ -1,6 +1,6 @@
 // 激活码工具函数
-// 新格式：LOVE-RTXD-JDE5-GHHJ（16位字母数字 + 3个横杠，共19字符）
-// 类型由服务端返回：week=周卡, forever=永久卡
+// 格式：16位字母数字 + 3个横杠（如 LOVE-RTXD-JDE5-GHHJ 或 ABCD-EFGH-IJKL-MNOP）
+// 不强制LOVE开头，类型由服务端返回
 // ============================================
 // API 地址（域名混淆拼接，不在代码中出现完整域名）
 // ============================================
@@ -51,34 +51,7 @@ export function getDeviceId(): string {
   return "dev_" + hashStr(raw).toString(36);
 }
 
-export function getDeviceFingerprint(): string {
-  if (typeof window === "undefined") return "unknown";
-  const nav = navigator as any;
-  let canvasFp = "";
-  try {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    if (ctx) {
-      ctx.textBaseline = "top";
-      ctx.font = "14px 'Arial'";
-      ctx.fillText("fp_migrate", 2, 2);
-      canvasFp = canvas.toDataURL();
-    }
-  } catch (e) {}
-  const raw = [
-    navigator.userAgent,
-    navigator.language,
-    navigator.platform,
-    screen.width + "x" + screen.height,
-    screen.colorDepth,
-    new Date().getTimezoneOffset(),
-    nav.hardwareConcurrency || 0,
-    canvasFp.substring(0, 80),
-  ].join("|");
-  return "fp_" + hashStr(raw).toString(36);
-}
-
-// 校验激活码格式（去掉横杠后必须是16位字母数字）
+// 校验激活码格式（去掉横杠后必须是16位字母数字，不强制LOVE开头）
 export function parseCode(code: string): { valid: boolean } | null {
   const clean = code.toUpperCase().trim().replace(/[^A-Z0-9]/g, "");
   if (clean.length !== 16) return null;
@@ -126,7 +99,7 @@ export async function verifyActivation(): Promise<{ valid: boolean; message?: st
     const activation = JSON.parse(data);
     if (!activation.code) return { valid: false };
     const result = await cloudCheck(activation.code);
-    if (result === null) return { valid: true }; // 网络异常时不拦截
+    if (result === null) return { valid: true };
     if (result.status === "disabled") {
       return { valid: false, message: result.message || "该激活码已被禁用，请联系客服" };
     }
@@ -173,7 +146,7 @@ export function activateCode(code: string): Promise<{ success: boolean; message:
     }
     const parsed = parseCode(code);
     if (parsed === null) {
-      return { success: false, message: "激活码格式不正确，请输入 LOVE-XXXX-XXXX-XXXX 格式" };
+      return { success: false, message: "激活码格式不正确，请输入16位激活码（如 ABCD-EFGH-IJKL-MNOP）" };
     }
     const clean = code.toUpperCase().trim().replace(/[^A-Z0-9]/g, "");
 
@@ -189,14 +162,14 @@ export function activateCode(code: string): Promise<{ success: boolean; message:
     // 保存激活信息到本地
     const now = Date.now();
     const type = cloudResult.type || "forever";
-    const expireAt = dateToTs(cloudResult.expiry_at); // 永久卡为0
+    const expireAt = dateToTs(cloudResult.expiry_at);
     const typeText = cloudResult.type_text || TYPE_NAMES[type] || "永久卡";
 
     const activation = {
       code: clean,
       type,
       activatedAt: now,
-      expireAt, // 0=永久有效
+      expireAt,
     };
     localStorage.setItem("lg_activation", JSON.stringify(activation));
 
@@ -224,7 +197,6 @@ export function checkActivation(): { active: boolean; type?: string; expireAt?: 
     const activation = JSON.parse(data);
     const now = Date.now();
     const expireAt = activation.expireAt || activation.expiresAt || 0;
-    // expireAt=0 表示永久有效
     if (expireAt > 0 && now > expireAt) {
       return { active: false };
     }
