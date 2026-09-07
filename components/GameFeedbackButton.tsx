@@ -1,8 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 
-const API_BASE = "https://api.ttla.top";
-import { validateContent } from "../lib/contentFilter";
+// API 地址（域名混淆拼接，不在代码中出现完整域名）
+const _API_HOST = ["k", "ttla", "top"];
+const API_BASE = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
 
 export default function GameFeedbackButton({ gameName }: { gameName: string }) {
   const [open, setOpen] = useState(false);
@@ -26,20 +27,12 @@ export default function GameFeedbackButton({ gameName }: { gameName: string }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim() || status === "submitting") return;
-    // 内容验证：字数和脏字
-    const validation = validateContent(content);
-    if (!validation.valid) {
-      setStatus("error");
-      setErrorMsg(validation.message || "内容不符合要求");
-      return;
-    }
     // 联系方式验证（选填，填了就验证格式）
     const contactTrimmed = contact.trim();
     if (contactTrimmed) {
-      // 判断联系方式类型
-      const isQQ = /^[1-9]\d{5,}$/.test(contactTrimmed); // QQ：纯数字，至少6位
-      const isWechat = /^[a-zA-Z][a-zA-Z0-9_-]{5,}$/.test(contactTrimmed); // 微信：字母开头，至少6位
-      const isEmail = /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(contactTrimmed); // 邮箱格式
+      const isQQ = /^[1-9]\d{5,}$/.test(contactTrimmed);
+      const isWechat = /^[a-zA-Z][a-zA-Z0-9_-]{5,}$/.test(contactTrimmed);
+      const isEmail = /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(contactTrimmed);
       if (!isQQ && !isWechat && !isEmail) {
         setStatus("error");
         setErrorMsg("联系方式格式不正确：QQ至少6位数字、微信号至少6位(字母开头)、或正确邮箱格式");
@@ -57,7 +50,7 @@ export default function GameFeedbackButton({ gameName }: { gameName: string }) {
         screen: `${window.screen.width}x${window.screen.height}`,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       };
-      const res = await fetch(`${API_BASE}/ticket/create`, {
+      const res = await fetch(API_BASE + "ticket/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -92,7 +85,6 @@ export default function GameFeedbackButton({ gameName }: { gameName: string }) {
 
   return (
     <>
-      {/* 游戏内反馈按钮 - 放在顶部合适位置 */}
       <button
         onClick={() => setOpen(true)}
         style={{
@@ -118,7 +110,6 @@ export default function GameFeedbackButton({ gameName }: { gameName: string }) {
         建议反馈
       </button>
 
-      {/* 弹窗 */}
       {open && (
         <div
           onClick={() => status !== "submitting" && setOpen(false)}
@@ -172,15 +163,14 @@ export default function GameFeedbackButton({ gameName }: { gameName: string }) {
                 </div>
                 <div style={{ marginBottom: "14px" }}>
                   <label style={{ display: "block", color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", marginBottom: "8px", fontWeight: "600" }}>详细描述 <span style={{ color: "#ef4444" }}>*</span></label>
-                  <textarea value={content} onChange={(e) => setContent(e.target.value)} onFocus={(e) => { e.target.style.fontSize = "16px"; }} onBlur={(e) => { e.target.style.fontSize = "0.9rem"; }} placeholder="请描述您的建议或遇到的问题（至少10字）..." rows={4} maxLength={1000} required style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "#fff", fontSize: "16px", resize: "vertical", outline: "none", fontFamily: "inherit", lineHeight: "1.5", WebkitTextSizeAdjust: "none" }} />
-                  <div style={{ textAlign: "right", marginTop: "4px", fontSize: "0.75rem", color: "rgba(255,255,255,0.35)" }}>有效{content.replace(/[^\u4e00-\u9fa5a-zA-Z]/g, "").length}/10字起</div>
+                  <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="请描述您的建议或遇到的问题..." rows={4} maxLength={1000} required style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "#fff", fontSize: "16px", resize: "vertical", outline: "none", fontFamily: "inherit", lineHeight: "1.5" }} />
                 </div>
                 <div style={{ marginBottom: "16px" }}>
                   <label style={{ display: "block", color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", marginBottom: "8px", fontWeight: "600" }}>联系方式 <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.75rem" }}>(选填)</span></label>
-                  <input type="text" value={contact} onChange={(e) => setContact(e.target.value)} placeholder="微信/QQ/邮箱（选填，QQ至少6位数字）" maxLength={50} style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "#fff", fontSize: "16px", outline: "none", WebkitTextSizeAdjust: "none" }} />
+                  <input type="text" value={contact} onChange={(e) => setContact(e.target.value)} placeholder="微信/QQ/邮箱（选填）" maxLength={50} style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "#fff", fontSize: "16px", outline: "none" }} />
                 </div>
                 {status === "error" && <div style={{ padding: "10px 12px", borderRadius: "6px", background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.3)", color: "#fca5a5", fontSize: "0.85rem", marginBottom: "12px" }}>⚠️ {errorMsg}</div>}
-                <button type="submit" disabled={!content.trim() || status === "submitting"} style={{ width: "100%", padding: "12px", borderRadius: "10px", border: "none", background: content.trim() && status !== "submitting" ? "linear-gradient(135deg, #ec4899, #a855f7)" : "rgba(255,255,255,0.08)", color: "#fff", fontSize: "1rem", fontWeight: "600", cursor: content.trim() && status !== "submitting" ? "pointer" : "not-allowed", boxShadow: content.trim() && status !== "submitting" ? "0 4px 12px rgba(236,72,153,0.35)" : "none", opacity: status === "submitting" ? 0.7 : 1, WebkitTapHighlightColor: "transparent" }}>{status === "submitting" ? "提交中..." : "提交反馈"}</button>
+                <button type="submit" disabled={!content.trim() || status === "submitting"} style={{ width: "100%", padding: "12px", borderRadius: "10px", border: "none", background: content.trim() && status !== "submitting" ? "linear-gradient(135deg, #ec4899, #a855f7)" : "rgba(255,255,255,0.08)", color: "#fff", fontSize: "1rem", fontWeight: "600", cursor: content.trim() && status !== "submitting" ? "pointer" : "not-allowed", boxShadow: content.trim() && status !== "submitting" ? "0 4px 12px rgba(236,72,153,0.35)" : "none", opacity: status === "submitting" ? 0.7 : 1 }}>{status === "submitting" ? "提交中..." : "提交反馈"}</button>
               </form>
             )}
           </div>

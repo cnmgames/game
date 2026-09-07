@@ -16,7 +16,6 @@ export const metadata: Metadata = {
     statusBarStyle: 'black-translucent',
     title: '情侣游戏',
   },
-  // 移动端性能优化
   other: {
     'format-detection': 'telephone=no',
     'mobile-web-app-capable': 'yes',
@@ -42,11 +41,11 @@ export default function RootLayout({
           WebkitTouchCallout: 'none',
           touchAction: 'manipulation'
         }}>
-        {/* 微信拦截：微信内打开提示跳转浏览器 */}
+        {/* 微信拦截 */}
         <WechatBlocker />
-        {/* 预连接API，加速移动端请求 */}
-        <link rel="preconnect" href="https://api.ttla.top" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://api.ttla.top" />
+        {/* 预连接API服务器（国内宝塔），加速接口请求 */}
+        <link rel="preconnect" href="https://k.ttla.top" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://k.ttla.top" />
         {/* Google AdSense */}
         <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7156604582462189" crossOrigin="anonymous" strategy="afterInteractive" />
         <AntiDebugProvider>
@@ -76,83 +75,16 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               // 禁止双指缩放
-              document.addEventListener('gesturestart', function(e) {
-                e.preventDefault();
-              });
-              document.addEventListener('gesturechange', function(e) {
-                e.preventDefault();
-              });
-              document.addEventListener('gestureend', function(e) {
-                e.preventDefault();
-              });
+              document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
+              document.addEventListener('gesturechange', function(e) { e.preventDefault(); });
+              document.addEventListener('gestureend', function(e) { e.preventDefault(); });
               // 禁止双击缩放
               var lastTouchEnd = 0;
               document.addEventListener('touchend', function(e) {
                 var now = (new Date()).getTime();
-                if (now - lastTouchEnd <= 300) {
-                  e.preventDefault();
-                }
+                if (now - lastTouchEnd <= 300) { e.preventDefault(); }
                 lastTouchEnd = now;
               }, false);
-              // 移动端滑动误触检测
-              (function() {
-                let touchStartX = 0, touchStartY = 0, touchMoved = false, touchStartTime = 0;
-                document.addEventListener('touchstart', function(e) {
-                  touchStartX = e.touches[0].clientX;
-                  touchStartY = e.touches[0].clientY;
-                  touchMoved = false;
-                  touchStartTime = Date.now();
-                }, { passive: true });
-                document.addEventListener('touchmove', function(e) {
-                  var dx = Math.abs(e.touches[0].clientX - touchStartX);
-                  var dy = Math.abs(e.touches[0].clientY - touchStartY);
-                  if (dx > 8 || dy > 8) touchMoved = true;
-                }, { passive: true });
-                document.addEventListener('touchend', function(e) {
-                  if (touchMoved && Date.now() - touchStartTime < 500) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }
-                  touchMoved = false;
-                }, { passive: false, capture: true });
-                document.addEventListener('click', function(e) {
-                  if (touchMoved) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    touchMoved = false;
-                  }
-                }, true);
-              })();
-              // 全局免费模式检测：开启时自动激活所有游戏
-              (function() {
-                function checkFreeMode() {
-                  fetch('https://api.ttla.top/config/free-mode', { cache: 'no-store' })
-                    .then(function(r) { return r.json(); })
-                    .then(function(data) {
-                      if (data.freeMode) {
-                        var act = localStorage.getItem('lg_activation');
-                        if (!act) {
-                          localStorage.setItem('lg_activation', JSON.stringify({
-                            code: 'FREE_MODE',
-                            type: 99,
-                            activatedAt: Date.now(),
-                            expireAt: Date.now() + 86400000
-                          }));
-                        }
-                      } else {
-                        try {
-                          var act2 = JSON.parse(localStorage.getItem('lg_activation') || '{}');
-                          if (act2.code === 'FREE_MODE') {
-                            localStorage.removeItem('lg_activation');
-                          }
-                        } catch(e) {}
-                      }
-                    })
-                    .catch(function() {});
-                }
-                checkFreeMode();
-                setInterval(checkFreeMode, 30000);
-              })();
             `,
           }}
         />
