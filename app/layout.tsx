@@ -51,7 +51,7 @@ export default function RootLayout({
         <AntiDebugProvider>
           {children}
                   </AntiDebugProvider>
-        {/* 访问记录上报 */}
+        {/* 访问记录 + 在线心跳上报 */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -69,29 +69,46 @@ export default function RootLayout({
                     return "dev_" + Math.abs(h).toString(36);
                   } catch(e) { return "dev_unknown"; }
                 }
+                function getCode() {
+                  try {
+                    var a = JSON.parse(localStorage.getItem("lg_activation") || "{}");
+                    return a.code || "";
+                  } catch(e) { return ""; }
+                }
                 function logVisit() {
                   try {
-                    var code = "";
-                    try {
-                      var a = JSON.parse(localStorage.getItem("lg_activation") || "{}");
-                      code = a.code || "";
-                    } catch(e) {}
                     fetch(_api + "visit/log", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({
                         page: window.location.pathname,
                         device_id: getDev(),
-                        code: code
+                        code: getCode()
                       })
                     }).catch(function(){});
                   } catch(e) {}
                 }
+                function heartbeat() {
+                  try {
+                    fetch(_api + "online/visit", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        code: getCode(),
+                        device_id: getDev()
+                      })
+                    }).catch(function(){});
+                  } catch(e) {}
+                }
+                // 页面加载时上报访问记录+在线心跳
                 if (document.readyState === "loading") {
-                  document.addEventListener("DOMContentLoaded", logVisit);
+                  document.addEventListener("DOMContentLoaded", function() { logVisit(); heartbeat(); });
                 } else {
                   logVisit();
+                  heartbeat();
                 }
+                // 每30秒上报一次在线心跳
+                setInterval(heartbeat, 30000);
               })();
             `,
           }}
