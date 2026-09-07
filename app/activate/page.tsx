@@ -1,12 +1,29 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { activateCode, checkActivation, TYPE_NAMES } from "../../lib/license";
 
 export default function ActivatePage() {
   const [code, setCode] = useState("");
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
-  const [activation, setActivation] = useState(checkActivation());
+  const [activation, setActivation] = useState<{ active: boolean; type?: string; expireAt?: number; timeLeftText?: string; code?: string }>({ active: false });
+  const [checking, setChecking] = useState(true);
+
+  const doCheck = useCallback(async () => {
+    setChecking(true);
+    try {
+      const res = await checkActivation();
+      setActivation(res);
+    } catch {
+      setActivation({ active: false });
+    } finally {
+      setChecking(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    doCheck();
+  }, [doCheck]);
 
   const handleActivate = async () => {
     if (!code.trim()) {
@@ -17,8 +34,8 @@ export default function ActivatePage() {
     const res = await activateCode(code.replace(/-/g, ""));
     setResult(res);
     if (res.success) {
-      setActivation(checkActivation());
       setCode("");
+      setTimeout(() => doCheck(), 500);
     }
   };
 
@@ -72,13 +89,11 @@ export default function ActivatePage() {
               <div className="text-base font-bold mb-2" style={{ color: '#6BCB77' }}>✅ 已激活</div>
               <div className="text-sm space-y-1" style={{ color: 'rgba(255,255,255,0.7)' }}>
                 <div className="font-mono text-base tracking-wider" style={{ color: '#FF6B8A' }}>
-                  {typeof window !== 'undefined' && localStorage.getItem("lg_activation")
-                    ? JSON.parse(localStorage.getItem("lg_activation") || "{}").code
-                    : ""}
+                  {activation.code || ""}
                 </div>
-                <div>类型：{TYPE_NAMES[activation.type!]}</div>
-                <div>剩余：{activation.timeLeftText}</div>
-                <div>过期：{formatDate(activation.expireAt!)}</div>
+                <div>类型：{TYPE_NAMES[activation.type!] || "永久卡"}</div>
+                <div>剩余：{activation.timeLeftText || "永久有效"}</div>
+                {activation.expireAt ? <div>过期：{formatDate(activation.expireAt)}</div> : null}
               </div>
             </div>
           )}
@@ -113,8 +128,8 @@ export default function ActivatePage() {
             onClick={handleActivate}
             className="w-full mb-3 rounded-full py-3.5 text-base font-bold text-white transition"
             style={{
-              background: 'linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%)',
-              boxShadow: '0 4px 20px rgba(255,55,95,0.4)',
+              background: '#007AFF',
+              boxShadow: '0 4px 20px rgba(0,122,255,0.4)',
             }}
           >
             立即激活
@@ -143,6 +158,9 @@ export default function ActivatePage() {
             >
               {result.message}
             </div>
+          )}
+          {checking && (
+            <div className="mt-2 text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>验证中...</div>
           )}
         </div>
 
