@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Icon from "../components/Icon";
 
 const _API_HOST = ["k", "ttla", "top"];
 const API_BASE = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
@@ -67,12 +68,12 @@ export default function HomePage() {
   }, []);
 
   const games = [
-    { id: 1, name: "情趣飞行棋", desc: "情侣互动经典游戏", icon: "🎲", color: "#FF6B6B" },
-    { id: 2, name: "真心话大冒险", desc: "深入了解彼此", icon: "💬", color: "#4ECDC4" },
-    { id: 3, name: "夫妻骰子", desc: "随机趣味挑战", icon: "🎯", color: "#45B7D1" },
-    { id: 4, name: "卡牌游戏", desc: "多种玩法合集", icon: "🃏", color: "#96CEB4" },
-    { id: 5, name: "转盘游戏", desc: "幸运大转盘", icon: "🎡", color: "#FFEAA7" },
-    { id: 6, name: "更多游戏", desc: "持续更新中", icon: "✨", color: "#DDA0DD" },
+    { id: 1, name: "情趣飞行棋", desc: "情侣互动经典游戏", icon: "dice", color: "#FF6B6B" },
+    { id: 2, name: "真心话大冒险", desc: "深入了解彼此", icon: "message", color: "#4ECDC4" },
+    { id: 3, name: "夫妻骰子", desc: "随机趣味挑战", icon: "target", color: "#45B7D1" },
+    { id: 4, name: "卡牌游戏", desc: "多种玩法合集", icon: "cards", color: "#96CEB4" },
+    { id: 5, name: "转盘游戏", desc: "幸运大转盘", icon: "gamepad", color: "#FFEAA7" },
+    { id: 6, name: "更多游戏", desc: "持续更新中", icon: "sparkles", color: "#DDA0DD" },
   ];
 
   const handleGameClick = (game: any) => {
@@ -96,28 +97,32 @@ export default function HomePage() {
           情侣游戏
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)" }}>
-            👥 {onlineCount} 人在线
+          <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)", display: "flex", alignItems: "center", gap: "4px" }}>
+            <Icon name="users" size={14} color="rgba(255,255,255,0.6)" />
+            {onlineCount} 人在线
           </div>
           {isLoggedIn ? (
             <button
               onClick={() => router.push("/user")}
-              style={{ padding: "8px 16px", background: "#007AFF", color: "#fff", border: "none", borderRadius: "20px", fontSize: "14px", fontWeight: 600, cursor: "pointer" }}
+              style={{ padding: "8px 16px", background: "#007AFF", color: "#fff", border: "none", borderRadius: "20px", fontSize: "14px", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}
             >
+              <Icon name="user" size={14} />
               {userEmail ? userEmail.split("@")[0] : "用户中心"}
             </button>
           ) : (
             <>
               <button
                 onClick={() => router.push("/login")}
-                style={{ padding: "8px 16px", background: "rgba(255,255,255,0.1)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "20px", fontSize: "14px", fontWeight: 600, cursor: "pointer" }}
+                style={{ padding: "8px 16px", background: "rgba(255,255,255,0.1)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "20px", fontSize: "14px", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}
               >
+                <Icon name="lock" size={14} />
                 登录
               </button>
               <button
                 onClick={() => router.push("/register")}
-                style={{ padding: "8px 16px", background: "#007AFF", color: "#fff", border: "none", borderRadius: "20px", fontSize: "14px", fontWeight: 600, cursor: "pointer" }}
+                style={{ padding: "8px 16px", background: "#007AFF", color: "#fff", border: "none", borderRadius: "20px", fontSize: "14px", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}
               >
+                <Icon name="user" size={14} />
                 注册
               </button>
             </>
@@ -135,8 +140,9 @@ export default function HomePage() {
         </p>
         <button
           onClick={() => (isLoggedIn ? router.push("/user") : router.push("/login"))}
-          style={{ padding: "16px 48px", background: "linear-gradient(135deg, #667eea, #764ba2)", color: "#fff", border: "none", borderRadius: "30px", fontSize: "18px", fontWeight: 700, cursor: "pointer", boxShadow: "0 10px 30px rgba(102,126,234,0.4)" }}
+          style={{ padding: "16px 48px", background: "linear-gradient(135deg, #667eea, #764ba2)", color: "#fff", border: "none", borderRadius: "30px", fontSize: "18px", fontWeight: 700, cursor: "pointer", boxShadow: "0 10px 30px rgba(102,126,234,0.4)", display: "inline-flex", alignItems: "center", gap: "8px" }}
         >
+          <Icon name="gamepad" size={20} />
           {isLoggedIn ? "进入用户中心" : "立即开始"}
         </button>
       </div>
@@ -153,8 +159,8 @@ export default function HomePage() {
               onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.background = "rgba(255,255,255,0.05)"; }}
             >
-              <div style={{ width: "56px", height: "56px", borderRadius: "16px", background: game.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "28px", marginBottom: "16px" }}>
-                {game.icon}
+              <div style={{ width: "56px", height: "56px", borderRadius: "16px", background: game.color, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" }}>
+                <Icon name={game.icon} size={28} color="#fff" />
               </div>
               <h3 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "8px" }}>{game.name}</h3>
               <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.6)" }}>{game.desc}</p>
@@ -164,8 +170,9 @@ export default function HomePage() {
       </div>
 
       {/* 底部 */}
-      <div style={{ textAlign: "center", padding: "40px 20px", color: "rgba(255,255,255,0.4)", fontSize: "13px", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-        ⚠️ 18+成年情侣娱乐 | 双方自愿安全 | 不适即停
+      <div style={{ textAlign: "center", padding: "40px 20px", color: "rgba(255,255,255,0.4)", fontSize: "13px", borderTop: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}>
+        <Icon name="alert" size={14} color="rgba(255,255,255,0.4)" />
+        18+成年情侣娱乐 | 双方自愿安全 | 不适即停
       </div>
     </div>
   );
