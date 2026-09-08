@@ -260,19 +260,18 @@ export default function Home() {
           </div>
 
           {/* 分类标签 */}
-          <div className="flex gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible scrollbar-hide">
+          <div className="flex gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible scrollbar-hide" style={{ WebkitOverflowScrolling: "touch" }}>
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-all duration-300 sm:text-sm ${
+                className={`flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all duration-200 sm:text-sm ${
                   activeCategory === cat.id
-                    ? "text-white scale-105"
+                    ? "text-white"
                     : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80"
                 }`}
                 style={activeCategory === cat.id ? {
                   background: "linear-gradient(135deg, #FF375F 0%, #BF5AF2 100%)",
-                  boxShadow: "0 4px 16px rgba(255,55,95,0.3)",
                 } : {}}
               >
                 <Icon name={cat.icon} size={14} />
