@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import UserStatusMonitor from "../components/UserStatusMonitor";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "情侣游戏 - 情侣互动小游戏合集",
@@ -13,7 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-CN">
-      <body style={{ margin: 0, padding: 0 }}>
+      <body>
         <UserStatusMonitor />
         {children}
       </body>
