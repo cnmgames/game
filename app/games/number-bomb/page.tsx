@@ -1,8 +1,7 @@
-// v29 fixed import paths
+// v32 remove external Icon import
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import GameLayout from "../GameLayout";
-import Icon from "../../components/Icon";
 
 export default function NumberBombGame() {
   const [bomb, setBomb] = useState(0);
@@ -93,7 +92,7 @@ export default function NumberBombGame() {
                 ? "bg-pink-500/20 text-pink-200 border border-pink-400/40" 
                 : "bg-purple-500/20 text-purple-200 border border-purple-400/40"
             }`}>
-              <Icon name="user" size={16} />
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               玩家 {currentPlayer} 回合
             </div>
           </div>

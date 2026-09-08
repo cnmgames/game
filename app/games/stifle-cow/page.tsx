@@ -1,8 +1,7 @@
-// v29 fixed import paths
+// v32 remove unused Icon import
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import GameLayout from "../GameLayout";
-import Icon from "../../components/Icon";
 
 const DICE_FACES = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
 

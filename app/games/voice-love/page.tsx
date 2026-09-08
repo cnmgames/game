@@ -1,8 +1,7 @@
-// v29 fixed import paths
+// v32 remove external Icon import
 "use client";
 import { useState, useRef, useEffect } from "react";
 import GameLayout from "../GameLayout";
-import Icon from "../../components/Icon";
 
 const loveWords = [
   "遇见你，是我这辈子最幸运的事。",
@@ -86,7 +85,7 @@ export default function VoiceLoveGame() {
         {/* 情话播放 */}
         <div className="rounded-2xl border border-pink-400/30 bg-gradient-to-br from-pink-500/10 to-purple-500/10 p-5">
           <div className="flex items-center gap-2 mb-3">
-            <Icon name="heart" size={18} className="text-pink-400" />
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF375F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
             <h3 className="text-sm font-bold text-white">甜蜜情话</h3>
           </div>
           {currentWord && (
@@ -117,7 +116,7 @@ export default function VoiceLoveGame() {
         {/* 录音区 */}
         <div className="rounded-2xl border border-purple-400/30 bg-gradient-to-br from-purple-500/10 to-pink-500/10 p-5">
           <div className="flex items-center gap-2 mb-3">
-            <Icon name="mic" size={18} className="text-purple-400" />
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BF5AF2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
             <h3 className="text-sm font-bold text-white">录音告白</h3>
           </div>
           <div className="text-center py-4">
@@ -129,7 +128,11 @@ export default function VoiceLoveGame() {
                   : "bg-gradient-to-br from-purple-500 to-pink-500 hover:scale-105"
               }`}
             >
-              <Icon name={recording ? "square" : "mic"} size={32} className="text-white" />
+              {recording ? (
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+              ) : (
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+              )}
             </button>
             <p className="mt-3 text-sm text-white/60">
               {recording ? "录音中... 点击停止" : "点击开始录音"}
