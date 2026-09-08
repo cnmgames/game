@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Icon from "../../components/Icon";
+import Link from "next/link";
 
 const _API_HOST = ["k", "ttla", "top"];
 const API_BASE = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
@@ -21,10 +21,7 @@ export default function UserPage() {
 
   useEffect(() => {
     const token = localStorage.getItem("user_token");
-    if (!token) {
-      router.push("/login");
-      return;
-    }
+    if (!token) { router.push("/login"); return; }
     fetch(API_BASE + "user/info", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -47,10 +44,7 @@ export default function UserPage() {
   const handleActivate = () => {
     const token = localStorage.getItem("user_token");
     if (!token) return;
-    if (!code.trim()) {
-      setMessage("请输入激活码");
-      return;
-    }
+    if (!code.trim()) { setMessage("请输入激活码"); return; }
     setActivating(true);
     setMessage("");
     fetch(API_BASE + "user/bind", {
@@ -87,74 +81,93 @@ export default function UserPage() {
   };
 
   if (loading) {
-    return <div style={{ minHeight: "100vh", background: "#1a1a2e", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>加载中...</div>;
+    return (
+      <>
+        <div className="bg-aurora" />
+        <div className="relative z-10 flex min-h-screen items-center justify-center text-white/60">加载中...</div>
+      </>
+    );
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "linear-gradient(180deg, #1a1a2e 0%, #16213e 100%)", color: "#fff", paddingBottom: "70px" }}>
-      <div style={{ background: "linear-gradient(135deg, rgba(102,126,234,0.4), rgba(118,75,162,0.4))", padding: "40px 20px 30px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "linear-gradient(135deg, #667eea, #764ba2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Icon name="user" size={32} color="#fff" />
-          </div>
-          <div>
-            <h2 style={{ fontSize: "20px", fontWeight: 700, margin: "0 0 4px" }}>{user?.email?.split("@")[0]}</h2>
-            <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)", margin: 0 }}>{user?.email}</p>
-          </div>
-        </div>
-        {!user?.email_verified && (
-          <div style={{ marginTop: "16px", background: "rgba(255,149,0,0.15)", border: "1px solid rgba(255,149,0,0.3)", padding: "10px 14px", borderRadius: "12px", fontSize: "13px", color: "#FF9500", display: "flex", alignItems: "center", gap: "8px" }}>
-            <Icon name="alert" size={16} />
-            邮箱未验证，请查收邮件完成验证
-          </div>
-        )}
-      </div>
+    <>
+      <div className="bg-aurora" />
+      <div className="relative z-10 mx-auto min-h-screen w-full max-w-2xl px-4 py-6 sm:py-10">
+        {/* 返回 */}
+        <Link href="/" className="back-btn mb-6 inline-flex">
+          ← 返回首页
+        </Link>
 
-      <div style={{ padding: "16px" }}>
-        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "16px", padding: "20px", marginBottom: "16px" }}>
-          <h3 style={{ fontSize: "16px", fontWeight: 600, margin: "0 0 16px", display: "flex", alignItems: "center", gap: "8px" }}>
-            <Icon name="ticket" size={18} color="#007AFF" />
-            激活状态
+        {/* 用户信息卡片 */}
+        <div className="game-container mb-6 fade-in-up">
+          <div className="flex items-center gap-4">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl text-3xl" style={{ background: "linear-gradient(135deg, #FF375F 0%, #BF5AF2 100%)", boxShadow: "0 4px 20px rgba(255,55,95,0.3)" }}>
+              👤
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="truncate text-xl font-bold text-white">{user?.email?.split("@")[0]}</h2>
+              <p className="truncate text-sm text-white/50">{user?.email}</p>
+            </div>
+            {user?.email_verified ? (
+              <span className="rounded-full bg-green-500/20 px-3 py-1 text-xs font-semibold text-green-300">已验证</span>
+            ) : (
+              <span className="rounded-full bg-amber-500/20 px-3 py-1 text-xs font-semibold text-amber-300">未验证</span>
+            )}
+          </div>
+          {!user?.email_verified && (
+            <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
+              ⚠️ 邮箱未验证，请查收注册邮件完成验证，否则无法激活游戏
+            </div>
+          )}
+        </div>
+
+        {/* 激活状态卡片 */}
+        <div className="game-container mb-6 fade-in-up" style={{ animationDelay: "0.1s" }}>
+          <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-pink-200">
+            🎫 激活状态
           </h3>
           {codeInfo ? (
-            <div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px", fontSize: "14px" }}>
-                <span style={{ color: "rgba(255,255,255,0.5)" }}>激活码</span>
-                <span style={{ fontFamily: "monospace" }}>{codeInfo.code?.match(/.{1,4}/g)?.join("-")}</span>
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-white/50">激活码</span>
+                <span className="font-mono text-white">{codeInfo.code?.match(/.{1,4}/g)?.join("-")}</span>
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px", fontSize: "14px" }}>
-                <span style={{ color: "rgba(255,255,255,0.5)" }}>类型</span>
-                <span>{codeInfo.type === "forever" ? "永久卡" : "周卡"}</span>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/50">类型</span>
+                <span className="text-white">{codeInfo.type === "forever" ? "永久卡" : "周卡"}</span>
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px", fontSize: "14px" }}>
-                <span style={{ color: "rgba(255,255,255,0.5)" }}>激活时间</span>
-                <span>{codeInfo.used_at?.replace("T", " ").substring(0, 16)}</span>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/50">激活时间</span>
+                <span className="text-white">{codeInfo.used_at?.replace("T", " ").substring(0, 16)}</span>
               </div>
               {codeInfo.expiry_at && (
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}>
-                  <span style={{ color: "rgba(255,255,255,0.5)" }}>到期时间</span>
-                  <span>{codeInfo.expiry_at?.replace("T", " ").substring(0, 16)}</span>
+                <div className="flex justify-between text-sm">
+                  <span className="text-white/50">到期时间</span>
+                  <span className="text-white">{codeInfo.expiry_at?.replace("T", " ").substring(0, 16)}</span>
                 </div>
               )}
-              <div style={{ marginTop: "16px", padding: "10px", background: "rgba(52,199,89,0.1)", borderRadius: "10px", textAlign: "center", color: "#34C759", fontSize: "14px", fontWeight: 600 }}>
-                已激活 · 可正常使用
+              <div className="mt-4 rounded-xl bg-green-500/10 py-3 text-center text-sm font-semibold text-green-300">
+                ✅ 已激活 · 可正常使用
               </div>
             </div>
           ) : (
             <div>
-              <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.6)", margin: "0 0 12px" }}>尚未激活，输入激活码开始游戏</p>
+              <p className="mb-4 text-sm text-white/60">尚未激活，输入激活码开始游戏</p>
               <input
                 type="text"
                 value={code}
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
                 placeholder="LOVE-XXXX-XXXX-XXXX"
-                style={{ width: "100%", padding: "14px 16px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px", color: "#fff", fontSize: "15px", fontFamily: "monospace", marginBottom: "12px", boxSizing: "border-box" }}
+                className="mb-3 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 font-mono text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10 focus:ring-2 focus:ring-pink-500/20"
               />
-              {message && <p style={{ fontSize: "13px", color: message.includes("成功") ? "#34C759" : "#FF3B30", margin: "0 0 12px" }}>{message}</p>}
+              {message && (
+                <p className={`mb-3 text-sm ${message.includes("成功") ? "text-green-300" : "text-red-300"}`}>{message}</p>
+              )}
               <button
                 onClick={handleActivate}
                 disabled={activating}
-                style={{ width: "100%", padding: "14px", background: "#007AFF", color: "#fff", border: "none", borderRadius: "12px", fontSize: "15px", fontWeight: 600, cursor: activating ? "not-allowed" : "pointer" }}
+                className="w-full rounded-full py-3.5 text-sm font-bold text-white transition hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
+                style={{ background: "linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%)", boxShadow: "0 4px 24px rgba(255,55,95,0.4)" }}
               >
                 {activating ? "激活中..." : "立即激活"}
               </button>
@@ -162,23 +175,35 @@ export default function UserPage() {
           )}
         </div>
 
-        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "16px", overflow: "hidden" }}>
-          <div onClick={() => router.push("/")} style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: "12px", borderBottom: "1px solid rgba(255,255,255,0.05)", cursor: "pointer" }}>
-            <Icon name="gamepad" size={18} color="#007AFF" />
-            <span style={{ flex: 1, fontSize: "15px" }}>开始游戏</span>
-            <span style={{ color: "rgba(255,255,255,0.3)" }}>›</span>
-          </div>
-          <div onClick={() => alert("工单功能开发中")} style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: "12px", borderBottom: "1px solid rgba(255,255,255,0.05)", cursor: "pointer" }}>
-            <Icon name="message" size={18} color="#FF9500" />
-            <span style={{ flex: 1, fontSize: "15px" }}>联系客服</span>
-            <span style={{ color: "rgba(255,255,255,0.3)" }}>›</span>
-          </div>
-          <div onClick={handleLogout} style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}>
-            <Icon name="logout" size={18} color="#FF3B30" />
-            <span style={{ flex: 1, fontSize: "15px", color: "#FF3B30" }}>退出登录</span>
+        {/* 功能菜单 */}
+        <div className="game-container mb-6 fade-in-up" style={{ animationDelay: "0.2s" }}>
+          <div className="divide-y divide-white/5">
+            <Link href="/" className="flex items-center gap-3 py-4 transition hover:bg-white/5">
+              <span className="text-xl">🎮</span>
+              <span className="flex-1 text-sm text-white">开始游戏</span>
+              <span className="text-white/30">›</span>
+            </Link>
+            <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 py-4 transition hover:bg-white/5">
+              <span className="text-xl">🛒</span>
+              <span className="flex-1 text-sm text-white">购买激活码</span>
+              <span className="text-white/30">›</span>
+            </a>
+            <div onClick={() => alert("工单功能开发中")} className="flex items-center gap-3 py-4 transition hover:bg-white/5 cursor-pointer">
+              <span className="text-xl">💬</span>
+              <span className="flex-1 text-sm text-white">联系客服</span>
+              <span className="text-white/30">›</span>
+            </div>
+            <div onClick={handleLogout} className="flex items-center gap-3 py-4 transition hover:bg-white/5 cursor-pointer">
+              <span className="text-xl">🚪</span>
+              <span className="flex-1 text-sm text-red-300">退出登录</span>
+            </div>
           </div>
         </div>
+
+        <p className="text-center text-xs text-white/30">
+          🔞 仅供18岁以上成年情侣在双方自愿前提下使用
+        </p>
       </div>
-    </div>
+    </>
   );
 }

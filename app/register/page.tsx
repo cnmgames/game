@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Icon from "../../components/Icon";
+import Link from "next/link";
 
 const _API_HOST = ["k", "ttla", "top"];
 const API_BASE = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
@@ -18,14 +18,8 @@ export default function RegisterPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    if (password !== confirmPassword) {
-      setError("两次密码不一致");
-      return;
-    }
-    if (password.length < 6) {
-      setError("密码至少6位");
-      return;
-    }
+    if (password !== confirmPassword) { setError("两次密码不一致"); return; }
+    if (password.length < 6) { setError("密码至少6位"); return; }
     setLoading(true);
     try {
       const res = await fetch(API_BASE + "user/register", {
@@ -48,83 +42,120 @@ export default function RegisterPage() {
 
   if (success) {
     return (
-      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)", padding: "20px" }}>
-        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "20px", padding: "40px 32px", width: "100%", maxWidth: "400px", textAlign: "center" }}>
-          <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "rgba(52,199,89,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
-            <Icon name="mail" size={32} color="#34C759" />
+      <>
+        <div className="bg-aurora" />
+        <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
+          <div className="w-full max-w-md">
+            <div className="game-container text-center fade-in-up">
+              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full text-4xl" style={{ background: "linear-gradient(135deg, rgba(52,199,89,0.2), rgba(16,185,129,0.2))", boxShadow: "0 0 40px rgba(52,199,89,0.3)" }}>
+                📧
+              </div>
+              <h2 className="mb-3 text-2xl font-bold text-white">注册成功</h2>
+              <p className="mb-2 text-sm text-white/60">验证邮件已发送至</p>
+              <p className="mb-6 text-lg font-semibold text-pink-300">{email}</p>
+              <p className="mb-8 text-sm leading-relaxed text-white/50">
+                请查收邮件并点击验证链接完成验证<br />验证后即可登录使用
+              </p>
+              <div className="space-y-3">
+                <button
+                  onClick={() => router.push("/login")}
+                  className="w-full rounded-full py-3.5 text-sm font-bold text-white transition hover:scale-[1.02] active:scale-[0.98]"
+                  style={{ background: "linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%)", boxShadow: "0 4px 24px rgba(255,55,95,0.4)" }}
+                >
+                  去登录
+                </button>
+                <button
+                  onClick={() => setSuccess(false)}
+                  className="w-full rounded-full border border-white/15 bg-white/5 py-3 text-sm font-semibold text-white/60 transition hover:bg-white/10 hover:text-white/80"
+                >
+                  返回注册
+                </button>
+              </div>
+            </div>
           </div>
-          <h1 style={{ fontSize: "22px", fontWeight: 700, color: "#fff", margin: "0 0 12px" }}>注册成功</h1>
-          <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "14px", lineHeight: 1.6, margin: "0 0 8px" }}>验证邮件已发送至</p>
-          <p style={{ color: "#007AFF", fontSize: "16px", fontWeight: 600, margin: "0 0 20px" }}>{email}</p>
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "13px", lineHeight: 1.6, margin: "0 0 24px" }}>请查收邮件并点击验证链接完成验证，验证后即可登录</p>
-          <button onClick={() => router.push("/login")} style={{ width: "100%", padding: "14px", background: "#007AFF", color: "#fff", border: "none", borderRadius: "12px", fontSize: "15px", fontWeight: 600, cursor: "pointer", marginBottom: "12px" }}>
-            去登录
-          </button>
-          <button onClick={() => setSuccess(false)} style={{ width: "100%", padding: "12px", background: "none", color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px", fontSize: "14px", cursor: "pointer" }}>
-            返回注册
-          </button>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)", padding: "20px" }}>
-      <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "20px", padding: "40px 32px", width: "100%", maxWidth: "400px", backdropFilter: "blur(20px)" }}>
-        <div style={{ textAlign: "center", marginBottom: "32px" }}>
-          <div style={{ width: "56px", height: "56px", borderRadius: "16px", background: "linear-gradient(135deg, #667eea, #764ba2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
-            <Icon name="heart" size={28} color="#fff" />
+    <>
+      <div className="bg-aurora" />
+      <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
+        <div className="w-full max-w-md">
+          {/* Logo */}
+          <div className="mb-8 text-center fade-in-up">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl text-3xl shadow-2xl" style={{ background: "linear-gradient(135deg, #FF375F 0%, #BF5AF2 100%)", boxShadow: "0 8px 32px rgba(255,55,95,0.4)" }}>
+              ✨
+            </div>
+            <h1 className="text-3xl font-bold text-white sm:text-4xl" style={{ textShadow: "0 0 30px rgba(255,55,95,0.3)" }}>创建账号</h1>
+            <p className="mt-2 text-sm text-white/60">注册后需验证邮箱即可畅玩</p>
           </div>
-          <h1 style={{ fontSize: "24px", fontWeight: 700, margin: "0 0 8px", color: "#fff" }}>创建账号</h1>
-          <p style={{ color: "rgba(255,255,255,0.5)", margin: 0, fontSize: "14px" }}>注册后需验证邮箱</p>
-        </div>
-        <form onSubmit={handleRegister}>
-          <div style={{ marginBottom: "16px" }}>
-            <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "rgba(255,255,255,0.7)", marginBottom: "8px" }}>邮箱</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="请输入邮箱"
-              style={{ width: "100%", padding: "14px 16px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px", fontSize: "15px", outline: "none", boxSizing: "border-box", color: "#fff" }}
-              required
-            />
+
+          {/* 注册卡片 */}
+          <div className="game-container fade-in-up" style={{ animationDelay: "0.1s" }}>
+            <form onSubmit={handleRegister} className="space-y-5">
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">邮箱</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10 focus:ring-2 focus:ring-pink-500/20"
+                  required
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">密码</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="至少6位"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10 focus:ring-2 focus:ring-pink-500/20"
+                  required
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">确认密码</label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="再次输入密码"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10 focus:ring-2 focus:ring-pink-500/20"
+                  required
+                />
+              </div>
+
+              {error && (
+                <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300 fade-in-up">
+                  {error}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-full py-3.5 text-sm font-bold text-white transition hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:hover:scale-100"
+                style={{ background: "linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%)", boxShadow: "0 4px 24px rgba(255,55,95,0.4)" }}
+              >
+                {loading ? "注册中..." : "注 册"}
+              </button>
+            </form>
+
+            <div className="mt-6 text-center text-sm text-white/50">
+              已有账号？
+              <Link href="/login" className="ml-1 font-semibold text-pink-300 hover:text-pink-200 transition">立即登录</Link>
+            </div>
           </div>
-          <div style={{ marginBottom: "16px" }}>
-            <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "rgba(255,255,255,0.7)", marginBottom: "8px" }}>密码</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="至少6位"
-              style={{ width: "100%", padding: "14px 16px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px", fontSize: "15px", outline: "none", boxSizing: "border-box", color: "#fff" }}
-              required
-            />
-          </div>
-          <div style={{ marginBottom: "20px" }}>
-            <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "rgba(255,255,255,0.7)", marginBottom: "8px" }}>确认密码</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="再次输入密码"
-              style={{ width: "100%", padding: "14px 16px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px", fontSize: "15px", outline: "none", boxSizing: "border-box", color: "#fff" }}
-              required
-            />
-          </div>
-          {error && <div style={{ background: "rgba(255,59,48,0.1)", border: "1px solid rgba(255,59,48,0.2)", color: "#FF3B30", padding: "12px", borderRadius: "10px", marginBottom: "16px", fontSize: "13px", textAlign: "center" }}>{error}</div>}
-          <button
-            type="submit"
-            disabled={loading}
-            style={{ width: "100%", padding: "14px", background: "#007AFF", color: "#fff", border: "none", borderRadius: "12px", fontSize: "15px", fontWeight: 600, cursor: "pointer", opacity: loading ? 0.6 : 1 }}
-          >
-            {loading ? "注册中..." : "注册"}
-          </button>
-        </form>
-        <div style={{ textAlign: "center", marginTop: "20px", fontSize: "14px", color: "rgba(255,255,255,0.5)" }}>
-          已有账号？<a href="/login" style={{ color: "#007AFF", textDecoration: "none", fontWeight: 600 }}>立即登录</a>
+
+          <p className="mt-6 text-center text-xs text-white/30">
+            🔞 仅供18岁以上成年情侣在双方自愿前提下使用
+          </p>
         </div>
       </div>
-    </div>
+    </>
   );
 }

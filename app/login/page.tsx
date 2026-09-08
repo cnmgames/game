@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Icon from "../../components/Icon";
+import Link from "next/link";
 
 const _API_HOST = ["k", "ttla", "top"];
 const API_BASE = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
@@ -37,9 +37,7 @@ export default function LoginPage() {
         router.push("/user");
       } else {
         setError(data.message || "登录失败");
-        if (data.need_verify) {
-          setNeedVerify(true);
-        }
+        if (data.need_verify) setNeedVerify(true);
       }
     } catch (err) {
       setError("网络错误，请重试");
@@ -49,10 +47,7 @@ export default function LoginPage() {
   };
 
   const handleResend = async () => {
-    if (!email) {
-      setResendMsg("请先输入邮箱");
-      return;
-    }
+    if (!email) { setResendMsg("请先输入邮箱"); return; }
     setResending(true);
     setResendMsg("");
     try {
@@ -63,71 +58,95 @@ export default function LoginPage() {
       });
       const data = await res.json();
       setResendMsg(data.message || (data.success ? "验证邮件已发送" : "发送失败"));
-    } catch {
-      setResendMsg("网络错误");
-    } finally {
-      setResending(false);
-    }
+    } catch { setResendMsg("网络错误"); }
+    finally { setResending(false); }
   };
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)", padding: "20px" }}>
-      <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "20px", padding: "40px 32px", width: "100%", maxWidth: "400px", backdropFilter: "blur(20px)" }}>
-        <div style={{ textAlign: "center", marginBottom: "32px" }}>
-          <div style={{ width: "56px", height: "56px", borderRadius: "16px", background: "linear-gradient(135deg, #667eea, #764ba2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
-            <Icon name="heart" size={28} color="#fff" />
-          </div>
-          <h1 style={{ fontSize: "24px", fontWeight: 700, margin: "0 0 8px", color: "#fff" }}>欢迎回来</h1>
-          <p style={{ color: "rgba(255,255,255,0.5)", margin: 0, fontSize: "14px" }}>登录后激活游戏</p>
-        </div>
-        <form onSubmit={handleLogin}>
-          <div style={{ marginBottom: "16px" }}>
-            <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "rgba(255,255,255,0.7)", marginBottom: "8px" }}>邮箱</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="请输入邮箱"
-              style={{ width: "100%", padding: "14px 16px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px", fontSize: "15px", outline: "none", boxSizing: "border-box", color: "#fff" }}
-              required
-            />
-          </div>
-          <div style={{ marginBottom: "20px" }}>
-            <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "rgba(255,255,255,0.7)", marginBottom: "8px" }}>密码</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="请输入密码"
-              style={{ width: "100%", padding: "14px 16px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px", fontSize: "15px", outline: "none", boxSizing: "border-box", color: "#fff" }}
-              required
-            />
-          </div>
-          {error && <div style={{ background: "rgba(255,59,48,0.1)", border: "1px solid rgba(255,59,48,0.2)", color: "#FF3B30", padding: "12px", borderRadius: "10px", marginBottom: "16px", fontSize: "13px", textAlign: "center" }}>{error}</div>}
-          {needVerify && (
-            <div style={{ background: "rgba(255,149,0,0.1)", border: "1px solid rgba(255,149,0,0.2)", color: "#FF9500", padding: "14px", borderRadius: "10px", marginBottom: "16px", fontSize: "13px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
-                <Icon name="mail" size={16} />
-                <span>请先验证邮箱后登录</span>
-              </div>
-              <button type="button" onClick={handleResend} disabled={resending} style={{ width: "100%", padding: "10px", background: "rgba(255,149,0,0.2)", color: "#FF9500", border: "none", borderRadius: "8px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>
-                {resending ? "发送中..." : "重新发送验证邮件"}
-              </button>
-              {resendMsg && <div style={{ marginTop: "8px", fontSize: "12px", textAlign: "center" }}>{resendMsg}</div>}
+    <>
+      <div className="bg-aurora" />
+      <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
+        <div className="w-full max-w-md">
+          {/* Logo */}
+          <div className="mb-8 text-center fade-in-up">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl text-3xl shadow-2xl" style={{ background: "linear-gradient(135deg, #FF375F 0%, #BF5AF2 100%)", boxShadow: "0 8px 32px rgba(255,55,95,0.4)" }}>
+              💕
             </div>
-          )}
-          <button
-            type="submit"
-            disabled={loading}
-            style={{ width: "100%", padding: "14px", background: "#007AFF", color: "#fff", border: "none", borderRadius: "12px", fontSize: "15px", fontWeight: 600, cursor: "pointer", opacity: loading ? 0.6 : 1 }}
-          >
-            {loading ? "登录中..." : "登录"}
-          </button>
-        </form>
-        <div style={{ textAlign: "center", marginTop: "20px", fontSize: "14px", color: "rgba(255,255,255,0.5)" }}>
-          还没有账号？<a href="/register" style={{ color: "#007AFF", textDecoration: "none", fontWeight: 600 }}>立即注册</a>
+            <h1 className="text-3xl font-bold text-white sm:text-4xl" style={{ textShadow: "0 0 30px rgba(255,55,95,0.3)" }}>欢迎回来</h1>
+            <p className="mt-2 text-sm text-white/60">登录后开启你的私密游戏时光</p>
+          </div>
+
+          {/* 登录卡片 */}
+          <div className="game-container fade-in-up" style={{ animationDelay: "0.1s" }}>
+            <form onSubmit={handleLogin} className="space-y-5">
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">邮箱</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10 focus:ring-2 focus:ring-pink-500/20"
+                  required
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">密码</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10 focus:ring-2 focus:ring-pink-500/20"
+                  required
+                />
+              </div>
+
+              {error && (
+                <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300 fade-in-up">
+                  {error}
+                </div>
+              )}
+
+              {needVerify && (
+                <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 fade-in-up">
+                  <div className="mb-3 flex items-center gap-2 text-sm text-amber-200">
+                    <span>📧</span>
+                    <span>请先验证邮箱后登录</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleResend}
+                    disabled={resending}
+                    className="w-full rounded-lg border border-amber-400/40 bg-amber-500/20 py-2.5 text-sm font-semibold text-amber-200 transition hover:bg-amber-500/30 disabled:opacity-50"
+                  >
+                    {resending ? "发送中..." : "重新发送验证邮件"}
+                  </button>
+                  {resendMsg && <p className="mt-2 text-center text-xs text-amber-300/70">{resendMsg}</p>}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-full py-3.5 text-sm font-bold text-white transition hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:hover:scale-100"
+                style={{ background: "linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%)", boxShadow: "0 4px 24px rgba(255,55,95,0.4)" }}
+              >
+                {loading ? "登录中..." : "登 录"}
+              </button>
+            </form>
+
+            <div className="mt-6 text-center text-sm text-white/50">
+              还没有账号？
+              <Link href="/register" className="ml-1 font-semibold text-pink-300 hover:text-pink-200 transition">立即注册</Link>
+            </div>
+          </div>
+
+          <p className="mt-6 text-center text-xs text-white/30">
+            🔞 仅供18岁以上成年情侣在双方自愿前提下使用
+          </p>
         </div>
       </div>
-    </div>
+    </>
   );
 }
