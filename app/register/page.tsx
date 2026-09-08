@@ -18,6 +18,7 @@ export default function RegisterPage() {
   const [emailError, setEmailError] = useState("");
   const [countdown, setCountdown] = useState(0);
   const [sending, setSending] = useState(false);
+  const [checkTimer, setCheckTimer] = useState<NodeJS.Timeout | null>(null);
 
   const checkEmail = async (emailVal: string) => {
     if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) return;
@@ -34,6 +35,16 @@ export default function RegisterPage() {
         setEmailError("");
       }
     } catch {}
+  };
+
+  const handleEmailChange = (val: string) => {
+    setEmail(val);
+    setEmailError("");
+    if (checkTimer) clearTimeout(checkTimer);
+    if (val && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+      const timer = setTimeout(() => checkEmail(val), 500);
+      setCheckTimer(timer);
+    }
   };
 
   useEffect(() => {
@@ -115,7 +126,7 @@ export default function RegisterPage() {
                 <input
                   type="email"
                   value={email}
-                  onChange={(e) => { setEmail(e.target.value); setEmailError(""); }}
+                  onChange={(e) => handleEmailChange(e.target.value)}
                   onBlur={() => checkEmail(email)}
                   placeholder="your@email.com"
                   className={`w-full rounded-xl border bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:bg-white/10 focus:ring-2 ${emailError ? "border-red-500/50 focus:border-red-400/50 focus:ring-red-500/20" : "border-white/10 focus:border-pink-400/50 focus:ring-pink-500/20"}`}
