@@ -78,9 +78,33 @@ export default function UserStatusMonitor() {
         <h2 style={{ color: "#fff", fontSize: "1.25rem", fontWeight: "700", marginBottom: "12px" }}>
           账号已被禁用
         </h2>
-        <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.95rem", lineHeight: "1.6", marginBottom: "24px" }}>
+        <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.95rem", lineHeight: "1.6", marginBottom: "16px" }}>
           {banMessage}
         </p>
+        <div
+          onClick={() => {
+            navigator.clipboard?.writeText("nbioss");
+          }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
+            padding: "10px 16px",
+            borderRadius: "10px",
+            background: "rgba(255,255,255,0.06)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            marginBottom: "20px",
+            cursor: "pointer",
+          }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+          </svg>
+          <span style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.9rem" }}>联系客服微信：</span>
+          <span style={{ color: "#4CAF50", fontSize: "0.95rem", fontWeight: "600" }}>nbioss</span>
+          <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.75rem" }}>点击复制</span>
+        </div>
         <button
           onClick={() => {
             window.location.href = "/";
