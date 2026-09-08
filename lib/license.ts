@@ -173,7 +173,46 @@ export function checkActivation(): Promise<{ active: boolean; type?: string; exp
       return { active: false };
     }
 
-    // 优先检查新用户系统的 game_token
+    // 方案1：优先用 user_token 调用 user/info 检查用户绑定的激活码（最可靠）
+    const userToken = localStorage.getItem("user_token");
+    if (userToken) {
+      try {
+        const res = await fetch(API_BASE_URL + "user/info", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: userToken }),
+          signal: AbortSignal.timeout(5000),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.code_info && data.code_info.status === "used") {
+            const codeInfo = data.code_info;
+            let timeLeftText = "永久有效";
+            let expireAt = 0;
+            if (codeInfo.expiry_at) {
+              expireAt = dateToTs(codeInfo.expiry_at);
+              const msLeft = expireAt - Date.now();
+              if (msLeft <= 0) {
+                return { active: false, message: "激活码已过期，请重新激活" };
+              }
+              const daysLeft = Math.ceil(msLeft / (24 * 60 * 60 * 1000));
+              if (msLeft < 60 * 60 * 1000) {
+                const minutesLeft = Math.max(1, Math.ceil(msLeft / (60 * 1000)));
+                timeLeftText = `${minutesLeft}分钟`;
+              } else if (msLeft < 24 * 60 * 60 * 1000) {
+                const hoursLeft = Math.ceil(msLeft / (60 * 60 * 1000));
+                timeLeftText = `${hoursLeft}小时`;
+              } else {
+                timeLeftText = `${daysLeft}天`;
+              }
+            }
+            return { active: true, type: codeInfo.type, expireAt, timeLeftText, code: codeInfo.code };
+          }
+        }
+      } catch {}
+    }
+
+    // 方案2：检查新用户系统的 game_token
     const gameToken = localStorage.getItem("game_token");
     if (gameToken) {
       try {
