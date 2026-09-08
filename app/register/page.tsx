@@ -46,6 +46,7 @@ export default function RegisterPage() {
   const handleSendCode = async () => {
     if (!email) { setError("请先输入邮箱"); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError("邮箱格式不正确"); return; }
+    if (emailError === "registered") { setError("该邮箱已注册，请直接登录"); return; }
     setSending(true);
     setError("");
     try {
@@ -146,10 +147,10 @@ export default function RegisterPage() {
                   <button
                     type="button"
                     onClick={handleSendCode}
-                    disabled={countdown > 0 || sending}
-                    className="shrink-0 rounded-xl border border-pink-400/40 bg-pink-500/20 px-4 text-sm font-semibold text-pink-200 transition hover:bg-pink-500/30 disabled:opacity-50"
+                    disabled={countdown > 0 || sending || emailError === "registered"}
+                    className="shrink-0 rounded-xl border border-pink-400/40 bg-pink-500/20 px-4 text-sm font-semibold text-pink-200 transition hover:bg-pink-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {countdown > 0 ? `${countdown}s` : sending ? "发送中" : "获取验证码"}
+                    {emailError === "registered" ? "已注册" : countdown > 0 ? `${countdown}s` : sending ? "发送中" : "获取验证码"}
                   </button>
                 </div>
               </div>
