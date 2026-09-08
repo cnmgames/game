@@ -88,8 +88,34 @@ export default function UserPage() {
     router.push("/");
   };
 
+  // 违禁词列表（骂人、敏感、无意义内容）
+  const forbiddenWords = [
+    "傻逼", "sb", "SB", "煞笔", "草泥马", "操你妈", "操", "艹", "尼玛", "你妈",
+    "去死", "垃圾", "废物", "脑残", "智障", "白痴", "弱智", "混蛋", "王八蛋",
+    "狗东西", "贱人", "婊子", "鸡巴", "屌", "逼", "他妈的", "tmd", "TMD",
+    "nmsl", "NMSL", "fuck", "shit", "bitch", "asshole",
+    "111", "222", "333", "444", "555", "666", "777", "888", "999", "000",
+    "aaa", "bbb", "ccc", "ddd", "eee", "fff", "ggg", "hhh", "iii", "jjj",
+    "测试", "test", "TEST", "Test", "asdf", "asdfgh", "qwer", "qwerty",
+  ];
+
   const handleFeedback = async () => {
-    if (!feedbackText.trim()) { setFeedbackMsg("请输入反馈内容"); return; }
+    const text = feedbackText.trim();
+    if (!text) { setFeedbackMsg("请输入反馈内容"); return; }
+    if (text.length < 10) { setFeedbackMsg("请至少输入10个字，详细描述你的建议或问题"); return; }
+    // 违禁词检测
+    const lowerText = text.toLowerCase();
+    for (const word of forbiddenWords) {
+      if (lowerText.includes(word.toLowerCase())) {
+        setFeedbackMsg("内容包含不当用语，请文明发言");
+        return;
+      }
+    }
+    // 检测是否全是重复字符或无意义内容
+    if (/^(.)\1+$/.test(text.replace(/[\s，。！？、]/g, ""))) {
+      setFeedbackMsg("请输入有意义的内容，不要重复填写");
+      return;
+    }
     setFeedbackSending(true);
     setFeedbackMsg("");
     const typeMap: Record<string, string> = {
@@ -103,8 +129,8 @@ export default function UserPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: `[${typeMap[feedbackType] || "建议反馈"}] ${feedbackText.slice(0, 30)}`,
-          content: feedbackText,
+          title: `[${typeMap[feedbackType] || "建议反馈"}] ${text.slice(0, 30)}`,
+          content: text,
           contact: user?.email || "",
           type: feedbackType,
         }),
@@ -309,10 +335,12 @@ export default function UserPage() {
             </div>
 
             {/* 提示卡片 */}
-            <div className="mb-4 rounded-xl border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-3">
+            <div className="mb-4 rounded-xl border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-4 space-y-2">
               <p className="text-xs leading-relaxed text-purple-200/80">
                 说说哪里不好用、想加什么玩法，或者哪些内容需要调整。
-                <span className="text-pink-300 font-semibold">采纳意见将在一周内上线，采纳可获得永久付费会员权益。</span>
+              </p>
+              <p className="text-xs leading-relaxed text-pink-300 font-semibold">
+                采纳意见将在一周内上线，采纳可获得永久付费会员权益。
               </p>
             </div>
 
