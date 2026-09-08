@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
-import GameLayout from "./GameLayout";
+import GameLayout from "../GameLayout";
 
 const CANVAS_W = 360;
 const CANVAS_H = 500;

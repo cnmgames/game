@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback, useRef } from "react";
-import GameLayout from "./GameLayout";
+import GameLayout from "../GameLayout";
 
 const generateQuestion = () => {
   const ops = ["+", "-", "×"];

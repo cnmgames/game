@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { ReactNode } from "react";
-import Icon from "../components/Icon";
+import Icon from "../../components/Icon";
 
 export default function GameLayout({ title, children }: { title: string; children: ReactNode }) {
   return (

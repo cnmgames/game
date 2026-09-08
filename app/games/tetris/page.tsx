@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
-import GameLayout from "./GameLayout";
+import GameLayout from "../GameLayout";
 
 const COLS = 10;
 const ROWS = 20;

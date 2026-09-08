@@ -1,6 +1,6 @@
 "use client";
 import { useState, useCallback } from "react";
-import GameLayout from "./GameLayout";
+import GameLayout from "../GameLayout";
 
 const SIZE = 15;
 
