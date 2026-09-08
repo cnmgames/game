@@ -346,7 +346,6 @@ const GAME_BODY = `
     <div class="top-nav-bar" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:10px;flex-wrap:wrap;">
       <a href="/" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:9999px;border:1px solid rgba(255,255,255,0.2);background:rgba(0,0,0,0.5);color:rgba(255,255,255,0.85);font-size:13px;text-decoration:none;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-weight:500;">← 返回游戏列表</a>
       <div style="display:flex;align-items:center;gap:10px;">
-        <span id="topLicenseStatus" style="padding:6px 14px;border-radius:9999px;border:1px solid rgba(34,197,94,0.4);background:rgba(34,197,94,0.1);color:#4ade80;font-size:13px;font-weight:600;">加载中...</span>
         <a href="https://docs.qq.com/form/page/DRVp4a25wZ3l4eHdQ" target="_blank" rel="noopener noreferrer" style="padding:6px 14px;border-radius:9999px;border:1px solid rgba(255,55,95,0.4);background:rgba(255,55,95,0.1);color:#ff6b8a;font-size:13px;font-weight:600;text-decoration:none;">建议反馈</a>
       </div>
     </div>

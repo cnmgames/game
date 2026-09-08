@@ -105,13 +105,33 @@ export default function LicenseGate({
 
   return (
     <>
+      {/* 统一顶部返回按钮 */}
+      <a
+        href="/"
+        style={{
+          position: "fixed",
+          top: "max(12px, env(safe-area-inset-top))",
+          left: "max(12px, env(safe-area-inset-left))",
+          zIndex: 9999,
+          padding: "6px 14px",
+          borderRadius: "9999px",
+          border: "1px solid rgba(255,255,255,0.2)",
+          background: "rgba(0,0,0,0.6)",
+          color: "rgba(255,255,255,0.85)",
+          fontSize: "13px",
+          textDecoration: "none",
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+          fontWeight: 500,
+          whiteSpace: "nowrap",
+          lineHeight: 1.5,
+        }}
+      >
+        ← 返回游戏列表
+      </a>
+      {/* 顶部占位，避免内容贴死边缘 */}
+      <div style={{ height: "max(56px, calc(env(safe-area-inset-top) + 44px))" }} />
       {children}
-      {activationInfo && (
-        <div style={{ position: "fixed", top: "max(12px, env(safe-area-inset-top))", left: "12px", zIndex: 9998, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(10px)", padding: "6px 12px", borderRadius: "9999px", fontSize: "11px", color: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center", gap: "6px" }}>
-          <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#22c55e" }} />
-          {activationInfo.type === "week" ? "周卡" : "永久卡"} · {activationInfo.timeLeftText || "有效"}
-        </div>
-      )}
     </>
   );
 }
