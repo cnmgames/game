@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import Icon from "../components/Icon";
 
 const _API_HOST = ["k", "ttla", "top"];
 const API_BASE = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
@@ -90,20 +91,20 @@ export default function Home() {
   }, []);
 
   const games = [
-    { emoji: "✈️", title: "情侣飞行棋", desc: "掷骰子前进，每格都有惊喜任务，让感情迅速升温。", path: "/flight", type: "free" },
-    { emoji: "🎡", title: "真心话大冒险转盘", desc: "旋转转盘抽题，真心话或大冒险，揭开彼此秘密。", path: "/truth", type: "paid" },
-    { emoji: "🎲", title: "情趣骰子", desc: "摇骰子比大小，输了喝酒或接受惩罚，越玩越刺激。", path: "/dice", type: "paid" },
-    { emoji: "🦁", title: "火辣暗兽棋", desc: "翻牌博弈策略对决，每翻一张牌都可能让对方卸下防备。", path: "/beast", type: "paid" },
-    { emoji: "🎰", title: "桃色老虎机", desc: "地点动作部位随机组合，摇出你的下一个亲密时刻。", path: "/slot", type: "paid" },
-    { emoji: "💎", title: "午夜大富翁", desc: "绕棋盘冒险，每站都有欲望事件，一步步点燃激情。", path: "/monopoly", type: "paid" },
-    { emoji: "🚀", title: "情侣飞行棋Pro", desc: "自定义任务主题、AI导入、3D骰子，打造专属游戏。", path: "/flight-pro", type: "paid" },
-    { emoji: "💕", title: "姿势大全", desc: "12种经典姿势图文教程，难度分级，探索更多亲密可能。", path: "/posture", type: "paid" },
-    { emoji: "🔮", title: "心有灵犀", desc: "情侣默契考验，同时答题，一致得分，不一致甜蜜惩罚。", path: "/telepathy", type: "paid" },
-    { emoji: "🎭", title: "角色扮演剧场", desc: "多种场景剧本，老师学生、医生病人、上司下属，分角色演绎剧情任务，释放想象。", path: "/roleplay", type: "paid" },
-    { emoji: "🃏", title: "情侣脱衣卡牌", desc: "扑克牌对战，输了脱衣或执行亲密惩罚，功能牌触发特殊挑战，越玩越火辣。", path: "/strip-cards", type: "paid" },
-    { emoji: "🌙", title: "感官探索", desc: "蒙眼感官游戏，触觉嗅觉味觉探索对方，各种感官挑战，放大每一次触碰的快感。", path: "/senses", type: "paid" },
-    { emoji: "👨‍❤️‍👨", title: "他与他", desc: "专为男同情侣设计，真心话、大冒险、亲密任务三种模式，属于两个男生的深夜专属游戏。", path: "/gay", type: "paid" },
-    { emoji: "🌡️", title: "无界升温", desc: "温度无上限的情侣升温卡牌游戏，投骰子定先后，轮流抽卡完成任务，安全词是唯一刹车。", path: "/infinite-celsius/", type: "paid" },
+    { icon: "plane", title: "情侣飞行棋", desc: "掷骰子前进，每格都有惊喜任务，让感情迅速升温。", path: "/flight", type: "free" },
+    { icon: "target", title: "真心话大冒险转盘", desc: "旋转转盘抽题，真心话或大冒险，揭开彼此秘密。", path: "/truth", type: "paid" },
+    { icon: "dice", title: "情趣骰子", desc: "摇骰子比大小，输了喝酒或接受惩罚，越玩越刺激。", path: "/dice", type: "paid" },
+    { icon: "paw", title: "火辣暗兽棋", desc: "翻牌博弈策略对决，每翻一张牌都可能让对方卸下防备。", path: "/beast", type: "paid" },
+    { icon: "gamepad", title: "桃色老虎机", desc: "地点动作部位随机组合，摇出你的下一个亲密时刻。", path: "/slot", type: "paid" },
+    { icon: "gem", title: "午夜大富翁", desc: "绕棋盘冒险，每站都有欲望事件，一步步点燃激情。", path: "/monopoly", type: "paid" },
+    { icon: "rocket", title: "情侣飞行棋Pro", desc: "自定义任务主题、AI导入、3D骰子，打造专属游戏。", path: "/flight-pro", type: "paid" },
+    { icon: "heart", title: "姿势大全", desc: "12种经典姿势图文教程，难度分级，探索更多亲密可能。", path: "/posture", type: "paid" },
+    { icon: "eye", title: "心有灵犀", desc: "情侣默契考验，同时答题，一致得分，不一致甜蜜惩罚。", path: "/telepathy", type: "paid" },
+    { icon: "users", title: "角色扮演剧场", desc: "多种场景剧本，老师学生、医生病人、上司下属，分角色演绎剧情任务，释放想象。", path: "/roleplay", type: "paid" },
+    { icon: "cards", title: "情侣脱衣卡牌", desc: "扑克牌对战，输了脱衣或执行亲密惩罚，功能牌触发特殊挑战，越玩越火辣。", path: "/strip-cards", type: "paid" },
+    { icon: "moon", title: "感官探索", desc: "蒙眼感官游戏，触觉嗅觉味觉探索对方，各种感官挑战，放大每一次触碰的快感。", path: "/senses", type: "paid" },
+    { icon: "users", title: "他与他", desc: "专为男同情侣设计，真心话、大冒险、亲密任务三种模式，属于两个男生的深夜专属游戏。", path: "/gay", type: "paid" },
+    { icon: "flame", title: "无界升温", desc: "温度无上限的情侣升温卡牌游戏，投骰子定先后，轮流抽卡完成任务，安全词是唯一刹车。", path: "/infinite-celsius/", type: "paid" },
   ];
 
   const handleGameClick = (e: React.MouseEvent, game: any) => {
@@ -160,7 +161,9 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-3 md:grid-cols-2 md:gap-6 xl:grid-cols-3">
             {games.map((game, i) => (
               <Link key={game.path} href={game.path} className="game-card group fade-in-up" style={{ animationDelay: `${i * 0.08}s` }} onClick={(e) => handleGameClick(e, game)}>
-                <span className="game-card-emoji">{game.emoji}</span>
+                <span className="game-card-emoji flex items-center justify-center">
+                  <Icon name={game.icon} size={40} color="#FF375F" />
+                </span>
                 <div className="space-y-2 sm:space-y-4">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="game-card-tag" style={{
@@ -231,8 +234,9 @@ export default function Home() {
         </div>
 
         <div className="text-center">
-          <p className="text-xs text-white/30 leading-relaxed">
-            🔞 本网站所有游戏仅供18岁以上成年情侣在双方自愿前提下娱乐使用
+          <p className="text-xs text-white/30 leading-relaxed flex items-center justify-center gap-1.5">
+            <Icon name="shield" size={14} color="rgba(255,255,255,0.3)" />
+            本网站所有游戏仅供18岁以上成年情侣在双方自愿前提下娱乐使用
           </p>
           <p className="text-xs text-white/20 mt-1">
             请在安全、健康、互敬的原则下进行，如有不适请立即停止

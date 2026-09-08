@@ -250,8 +250,9 @@ export default function UserPage() {
           </div>
         </div>
 
-        <p className="text-center text-xs text-white/30">
-          🔞 仅供18岁以上成年情侣在双方自愿前提下使用
+        <p className="text-center text-xs text-white/30 flex items-center justify-center gap-1.5">
+          <Icon name="shield" size={14} color="rgba(255,255,255,0.3)" />
+          仅供18岁以上成年情侣在双方自愿前提下使用
         </p>
       </div>
 

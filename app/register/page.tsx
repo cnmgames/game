@@ -52,7 +52,7 @@ export default function RegisterPage() {
       const res = await fetch(API_BASE + "user/send_code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, type: "register" }),
       });
       const data = await res.json();
       if (data.success) {
@@ -198,8 +198,9 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <p className="mt-6 text-center text-xs text-white/30">
-            🔞 仅供18岁以上成年情侣在双方自愿前提下使用
+          <p className="mt-6 text-center text-xs text-white/30 flex items-center justify-center gap-1.5">
+            <Icon name="shield" size={14} color="rgba(255,255,255,0.3)" />
+            仅供18岁以上成年情侣在双方自愿前提下使用
           </p>
         </div>
       </div>
