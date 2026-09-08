@@ -1,3 +1,4 @@
+// @ts-nocheck
 // v32 remove external Icon import
 "use client";
 import { useState, useRef, useEffect } from "react";

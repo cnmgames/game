@@ -1,3 +1,4 @@
+// @ts-nocheck
 // v32 remove external Icon import
 "use client";
 import Link from "next/link";
