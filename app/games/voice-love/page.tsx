@@ -25,32 +25,113 @@ export default function VoiceLoveGame() {
   const [currentWord, setCurrentWord] = useState("");
   const [playing, setPlaying] = useState(false);
   const [recordings, setRecordings] = useState<{ url: string; time: string }[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
+  const streamRef = useRef<MediaStream | null>(null);
+
+  // 检测浏览器支持的录音格式
+  const getSupportedMimeType = (): string => {
+    const types = [
+      "audio/webm;codecs=opus",
+      "audio/webm",
+      "audio/mp4",
+      "audio/ogg;codecs=opus",
+      "audio/wav",
+    ];
+    for (const type of types) {
+      if (typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported(type)) {
+        return type;
+      }
+    }
+    return "";
+  };
 
   const startRecording = async () => {
+    setError(null);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mr = new MediaRecorder(stream);
+      // 检查浏览器支持
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setError("当前浏览器不支持录音功能，请使用最新版 Chrome、Safari 或 Firefox");
+        return;
+      }
+      if (typeof MediaRecorder === "undefined") {
+        setError("当前浏览器不支持 MediaRecorder，请升级浏览器");
+        return;
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          sampleRate: 44100,
+        },
+      });
+      streamRef.current = stream;
+
+      const mimeType = getSupportedMimeType();
+      const mr = mimeType
+        ? new MediaRecorder(stream, { mimeType })
+        : new MediaRecorder(stream);
       mediaRecorderRef.current = mr;
       chunksRef.current = [];
-      mr.ondataavailable = (e) => chunksRef.current.push(e.data);
-      mr.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
-        const url = URL.createObjectURL(blob);
-        setAudioUrl(url);
-        setRecordings(prev => [...prev, { url, time: new Date().toLocaleTimeString() }]);
-        stream.getTracks().forEach(t => t.stop());
+
+      mr.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) {
+          chunksRef.current.push(e.data);
+        }
       };
-      mr.start();
+
+      mr.onstop = () => {
+        try {
+          const blob = new Blob(chunksRef.current, { type: mimeType || "audio/webm" });
+          const url = URL.createObjectURL(blob);
+          setAudioUrl(url);
+          setRecordings((prev) => [...prev, { url, time: new Date().toLocaleTimeString() }]);
+        } catch (e) {
+          setError("录音保存失败，请重试");
+        } finally {
+          // 停止所有音轨
+          if (streamRef.current) {
+            streamRef.current.getTracks().forEach((t) => t.stop());
+            streamRef.current = null;
+          }
+        }
+      };
+
+      mr.onerror = (e) => {
+        setError("录音过程中出错，请重试");
+        setRecording(false);
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach((t) => t.stop());
+          streamRef.current = null;
+        }
+      };
+
+      mr.start(100); // 每100ms收集一次数据
       setRecording(true);
-    } catch (e) {
-      alert("无法访问麦克风，请检查权限设置");
+    } catch (e: any) {
+      if (e.name === "NotAllowedError" || e.name === "PermissionDeniedError") {
+        setError("麦克风权限被拒绝，请在浏览器设置中允许访问麦克风");
+      } else if (e.name === "NotFoundError" || e.name === "DevicesNotFoundError") {
+        setError("未检测到麦克风设备，请检查设备连接");
+      } else if (e.name === "NotReadableError") {
+        setError("麦克风被其他应用占用，请关闭其他使用麦克风的应用");
+      } else {
+        setError("无法访问麦克风：" + (e.message || "未知错误"));
+      }
+      setRecording(false);
     }
   };
 
   const stopRecording = () => {
-    mediaRecorderRef.current?.stop();
+    try {
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+        mediaRecorderRef.current.stop();
+      }
+    } catch (e) {
+      setError("停止录音时出错");
+    }
     setRecording(false);
   };
 
@@ -76,7 +157,10 @@ export default function VoiceLoveGame() {
   useEffect(() => {
     return () => {
       window.speechSynthesis?.cancel();
-      recordings.forEach(r => URL.revokeObjectURL(r.url));
+      recordings.forEach((r) => URL.revokeObjectURL(r.url));
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((t) => t.stop());
+      }
     };
   }, []);
 
@@ -138,6 +222,11 @@ export default function VoiceLoveGame() {
             <p className="mt-3 text-sm text-white/60">
               {recording ? "录音中... 点击停止" : "点击开始录音"}
             </p>
+            {error && (
+              <div className="mt-3 rounded-lg bg-red-500/20 border border-red-500/40 p-3 text-xs text-red-300">
+                {error}
+              </div>
+            )}
           </div>
 
           {/* 最新录音 */}
