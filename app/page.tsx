@@ -55,6 +55,16 @@ export default function Home() {
     { icon: "moon", title: "感官探索", desc: "蒙眼感官游戏，触觉嗅觉味觉探索对方，各种感官挑战，放大每一次触碰的快感。", path: "/senses", type: "paid", category: "advanced" },
     { icon: "users", title: "他与他", desc: "专为男同情侣设计，真心话、大冒险、亲密任务三种模式，属于两个男生的深夜专属游戏。", path: "/gay", type: "paid", category: "exclusive" },
     { icon: "flame", title: "无界升温", desc: "温度无上限的情侣升温卡牌游戏，投骰子定先后，轮流抽卡完成任务，安全词是唯一刹车。", path: "/infinite-celsius/", type: "paid", category: "card" },
+    { icon: "zap", title: "数字炸弹", desc: "两人轮流猜数字，范围不断缩小，猜到炸弹的人接受甜蜜惩罚。", path: "/games/number-bomb", type: "paid", category: "interactive" },
+    { icon: "dice", title: "憋牛吹牛", desc: "经典骰子吹牛游戏，叫价开牌斗智斗勇，1点万能，输的人接受惩罚。", path: "/games/stifle-cow", type: "paid", category: "interactive" },
+    { icon: "eye", title: "默契翻牌", desc: "翻牌配对大挑战，两人轮流翻牌，考验默契和记忆力，配对多者获胜。", path: "/games/memory-match", type: "paid", category: "interactive" },
+    { icon: "shield", title: "情侣扫雷", desc: "双人合作扫雷，轮流点击排除地雷，数字提示周围雷数，一起通关。", path: "/games/minesweeper", type: "paid", category: "advanced" },
+    { icon: "grid", title: "五子棋对战", desc: "经典五子棋同屏对战，黑白轮流落子，横纵斜连成5子获胜，支持悔棋。", path: "/games/gomoku", type: "paid", category: "advanced" },
+    { icon: "target", title: "打砖块对战", desc: "上下分屏打砖块，各自清理区域砖块，先清完或对方生命耗尽即获胜。", path: "/games/breakout", type: "paid", category: "advanced" },
+    { icon: "gamepad", title: "俄罗斯方块", desc: "左右分屏俄罗斯方块对战，WASD和方向键控制，先堆到顶的人输。", path: "/games/tetris", type: "paid", category: "advanced" },
+    { icon: "zap", title: "数学竞赛", desc: "60秒倒计时数学题对战，两人同时抢答，答对得分，时间结束分高者胜。", path: "/games/math-race", type: "paid", category: "interactive" },
+    { icon: "dice", title: "爱情大富翁", desc: "掷骰子前进，停在任务格完成亲密挑战，特殊格前进后退，先到终点获胜。", path: "/games/love-monopoly", type: "paid", category: "card" },
+    { icon: "mic", title: "语音恋爱", desc: "随机情话语音播放+录音告白，录下想说的话互相播放，用声音传递爱意。", path: "/games/voice-love", type: "paid", category: "exclusive" },
   ];
 
   const filteredGames = activeCategory === "all" ? games : games.filter(g => g.category === activeCategory);

@@ -36,6 +36,9 @@ const icons: Record<string, string> = {
   x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
   arrowRight: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
   arrowLeft: '<path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>',
+  grid: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>',
+  mic: '<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>',
+  square: '<rect x="3" y="3" width="18" height="18" rx="2"/>',
 };
 
 export default function Icon({ name, size = 20, color = "currentColor" }: { name: string; size?: number; color?: string }) {
