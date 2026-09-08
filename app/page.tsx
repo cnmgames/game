@@ -73,10 +73,10 @@ export default function Home() {
           }
         });
     };
-    setTimeout(fetchOnline, 1000);
+    setTimeout(fetchOnline, 500);
     const timer = setInterval(() => {
       if (!document.hidden) fetchOnline();
-    }, 5000);
+    }, 2000);
     return () => clearInterval(timer);
   }, []);
 
