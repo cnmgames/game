@@ -27,3 +27,24 @@ export function setUserToken(token: string) {
 export function clearUserToken() {
   try { localStorage.removeItem("user_token"); } catch (e) {}
 }
+
+// 检查用户状态（是否被禁用），返回 { banned, message }
+export async function checkUserStatus(): Promise<{ banned: boolean; message: string }> {
+  const token = getUserToken();
+  if (!token) return { banned: false, message: "" };
+  try {
+    const res = await fetch(API_BASE + "user/info", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    });
+    const data = await res.json();
+    if (data.banned) {
+      clearUserToken();
+      return { banned: true, message: data.message || "账号已被禁用，请联系客服" };
+    }
+    return { banned: false, message: "" };
+  } catch (e) {
+    return { banned: false, message: "" };
+  }
+}
