@@ -60,9 +60,9 @@ export default function Home() {
     { icon: "eye", title: "默契翻牌", desc: "翻牌配对大挑战，两人轮流翻牌，考验默契和记忆力，配对多者获胜。", path: "/games/memory-match", type: "paid", category: "interactive" },
     { icon: "shield", title: "情侣扫雷", desc: "双人合作扫雷，轮流点击排除地雷，数字提示周围雷数，一起通关。", path: "/games/minesweeper", type: "paid", category: "advanced" },
     { icon: "grid", title: "五子棋对战", desc: "经典五子棋同屏对战，黑白轮流落子，横纵斜连成5子获胜，支持悔棋。", path: "/games/gomoku", type: "paid", category: "advanced" },
-    { icon: "target", title: "打砖块对战", desc: "上下分屏打砖块，各自清理区域砖块，先清完或对方生命耗尽即获胜。", path: "/games/breakout", type: "paid", category: "advanced" },
-    { icon: "gamepad", title: "俄罗斯方块", desc: "左右分屏俄罗斯方块对战，WASD和方向键控制，先堆到顶的人输。", path: "/games/tetris", type: "paid", category: "advanced" },
-    { icon: "zap", title: "数学竞赛", desc: "60秒倒计时数学题对战，两人同时抢答，答对得分，时间结束分高者胜。", path: "/games/math-race", type: "paid", category: "interactive" },
+    { icon: "target", title: "情侣消消乐", desc: "两人轮流点击消除相连图案，消除越多得分越高，20回合后分高者获胜。", path: "/games/breakout", type: "paid", category: "interactive" },
+    { icon: "gamepad", title: "情侣叠叠乐", desc: "轮流放置方块建高塔，必须和下方对齐，谁把塔弄倒谁输，输的接受惩罚。", path: "/games/tetris", type: "paid", category: "interactive" },
+    { icon: "zap", title: "情侣快问快答", desc: "轮流回答关于对方的问题，答对得分，看谁更懂彼此，输的接受惩罚。", path: "/games/math-race", type: "paid", category: "interactive" },
     { icon: "dice", title: "爱情大富翁", desc: "掷骰子前进，停在任务格完成亲密挑战，特殊格前进后退，先到终点获胜。", path: "/games/love-monopoly", type: "paid", category: "card" },
     { icon: "mic", title: "语音恋爱", desc: "随机情话语音播放+录音告白，录下想说的话互相播放，用声音传递爱意。", path: "/games/voice-love", type: "paid", category: "exclusive" },
   ];
