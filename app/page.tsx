@@ -27,7 +27,6 @@ export default function HomePage() {
   const [onlineCount, setOnlineCount] = useState(0);
 
   useEffect(() => {
-    // 检查登录状态
     const token = localStorage.getItem("user_token");
     if (token) {
       fetch(API_BASE + "user/info", {
@@ -47,7 +46,6 @@ export default function HomePage() {
         .catch(() => {});
     }
 
-    // 上报在线心跳
     const heartbeat = () => {
       fetch(API_BASE + "online/visit", {
         method: "POST",
@@ -58,7 +56,6 @@ export default function HomePage() {
     heartbeat();
     setInterval(heartbeat, 30000);
 
-    // 获取在线人数
     const fetchOnline = () => {
       fetch(API_BASE + "online/count")
         .then((r) => r.json())
@@ -152,7 +149,7 @@ export default function HomePage() {
             <div
               key={game.id}
               onClick={() => handleGameClick(game)}
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "20px", padding: "24px", cursor: "pointer", transition: "all 0.3s", hover: { transform: "translateY(-4px)" } }}
+              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "20px", padding: "24px", cursor: "pointer", transition: "all 0.3s" }}
               onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.background = "rgba(255,255,255,0.05)"; }}
             >
