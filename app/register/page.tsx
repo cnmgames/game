@@ -29,7 +29,7 @@ export default function RegisterPage() {
       });
       const data = await res.json();
       if (data.exists) {
-        setEmailError("该邮箱已注册，请直接登录");
+        setEmailError("registered");
       } else {
         setEmailError("");
       }
@@ -120,7 +120,15 @@ export default function RegisterPage() {
                   className={`w-full rounded-xl border bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:bg-white/10 focus:ring-2 ${emailError ? "border-red-500/50 focus:border-red-400/50 focus:ring-red-500/20" : "border-white/10 focus:border-pink-400/50 focus:ring-pink-500/20"}`}
                   required
                 />
-                {emailError && (
+                {emailError === "registered" && (
+                  <div className="mt-2 flex items-center justify-between gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2.5 fade-in-up">
+                    <span className="text-xs text-amber-200">这个邮箱已经有账号啦</span>
+                    <Link href="/login" className="shrink-0 rounded-full bg-amber-500/20 px-3 py-1 text-xs font-semibold text-amber-200 hover:bg-amber-500/30 transition">
+                      去登录
+                    </Link>
+                  </div>
+                )}
+                {emailError && emailError !== "registered" && (
                   <p className="mt-1.5 text-xs text-red-300 fade-in-up">{emailError}</p>
                 )}
               </div>
