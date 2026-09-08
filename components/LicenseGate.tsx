@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { activateCode, checkActivation, getDeviceId, clearActivation } from "../lib/license";
+import GameFeedbackButton from "./GameFeedbackButton";
 
 export default function LicenseGate({
   children,
@@ -129,6 +130,8 @@ export default function LicenseGate({
       >
         返回
       </a>
+      {/* 统一建议反馈按钮 */}
+      <GameFeedbackButton gameName={gameName} />
       {/* 顶部占位，避免内容贴死边缘 */}
       <div style={{ height: "max(56px, calc(env(safe-area-inset-top) + 44px))" }} />
       {children}

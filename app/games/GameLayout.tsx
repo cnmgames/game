@@ -3,6 +3,7 @@
 "use client";
 import Link from "next/link";
 import { ReactNode } from "react";
+import GameFeedbackButton from "../../components/GameFeedbackButton";
 
 export default function GameLayout({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -38,6 +39,8 @@ export default function GameLayout({ title, children }: { title: string; childre
       >
         返回
       </a>
+      {/* 统一建议反馈按钮 */}
+      <GameFeedbackButton gameName={title} />
       <div className="bg-aurora" />
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute -top-20 -left-20 h-64 w-64 rounded-full opacity-20 blur-3xl animate-float" style={{ background: "radial-gradient(circle, #FF375F, transparent)" }} />
