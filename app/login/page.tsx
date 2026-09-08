@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Icon from "../../components/Icon";
 
 const _API_HOST = ["k", "ttla", "top"];
 const API_BASE = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
@@ -67,16 +68,14 @@ export default function LoginPage() {
       <div className="bg-aurora" />
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
         <div className="w-full max-w-md">
-          {/* Logo */}
           <div className="mb-8 text-center fade-in-up">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl text-3xl shadow-2xl" style={{ background: "linear-gradient(135deg, #FF375F 0%, #BF5AF2 100%)", boxShadow: "0 8px 32px rgba(255,55,95,0.4)" }}>
-              💕
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl shadow-2xl" style={{ background: "linear-gradient(135deg, #FF375F 0%, #BF5AF2 100%)", boxShadow: "0 8px 32px rgba(255,55,95,0.4)" }}>
+              <Icon name="heart" size={32} color="#fff" />
             </div>
             <h1 className="text-3xl font-bold text-white sm:text-4xl" style={{ textShadow: "0 0 30px rgba(255,55,95,0.3)" }}>欢迎回来</h1>
             <p className="mt-2 text-sm text-white/60">登录后开启你的私密游戏时光</p>
           </div>
 
-          {/* 登录卡片 */}
           <div className="game-container fade-in-up" style={{ animationDelay: "0.1s" }}>
             <form onSubmit={handleLogin} className="space-y-5">
               <div>
@@ -111,7 +110,7 @@ export default function LoginPage() {
               {needVerify && (
                 <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 fade-in-up">
                   <div className="mb-3 flex items-center gap-2 text-sm text-amber-200">
-                    <span>📧</span>
+                    <Icon name="mail" size={16} />
                     <span>请先验证邮箱后登录</span>
                   </div>
                   <button

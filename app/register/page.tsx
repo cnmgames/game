@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Icon from "../../components/Icon";
 
 const _API_HOST = ["k", "ttla", "top"];
 const API_BASE = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
@@ -9,27 +10,62 @@ const API_BASE = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOS
 export default function RegisterPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
+  const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+  const [sending, setSending] = useState(false);
+
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [countdown]);
+
+  const handleSendCode = async () => {
+    if (!email) { setError("请先输入邮箱"); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError("邮箱格式不正确"); return; }
+    setSending(true);
+    setError("");
+    try {
+      const res = await fetch(API_BASE + "user/send_code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setCountdown(60);
+        setError("");
+      } else {
+        setError(data.message || "发送失败");
+      }
+    } catch {
+      setError("网络错误，请重试");
+    } finally {
+      setSending(false);
+    }
+  };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     if (password !== confirmPassword) { setError("两次密码不一致"); return; }
     if (password.length < 6) { setError("密码至少6位"); return; }
+    if (!code) { setError("请输入验证码"); return; }
     setLoading(true);
     try {
       const res = await fetch(API_BASE + "user/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, code, password }),
       });
       const data = await res.json();
       if (data.success) {
-        setSuccess(true);
+        router.push("/login");
       } else {
         setError(data.message || "注册失败");
       }
@@ -40,61 +76,21 @@ export default function RegisterPage() {
     }
   };
 
-  if (success) {
-    return (
-      <>
-        <div className="bg-aurora" />
-        <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
-          <div className="w-full max-w-md">
-            <div className="game-container text-center fade-in-up">
-              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full text-4xl" style={{ background: "linear-gradient(135deg, rgba(52,199,89,0.2), rgba(16,185,129,0.2))", boxShadow: "0 0 40px rgba(52,199,89,0.3)" }}>
-                📧
-              </div>
-              <h2 className="mb-3 text-2xl font-bold text-white">注册成功</h2>
-              <p className="mb-2 text-sm text-white/60">验证邮件已发送至</p>
-              <p className="mb-6 text-lg font-semibold text-pink-300">{email}</p>
-              <p className="mb-8 text-sm leading-relaxed text-white/50">
-                请查收邮件并点击验证链接完成验证<br />验证后即可登录使用
-              </p>
-              <div className="space-y-3">
-                <button
-                  onClick={() => router.push("/login")}
-                  className="w-full rounded-full py-3.5 text-sm font-bold text-white transition hover:scale-[1.02] active:scale-[0.98]"
-                  style={{ background: "linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%)", boxShadow: "0 4px 24px rgba(255,55,95,0.4)" }}
-                >
-                  去登录
-                </button>
-                <button
-                  onClick={() => setSuccess(false)}
-                  className="w-full rounded-full border border-white/15 bg-white/5 py-3 text-sm font-semibold text-white/60 transition hover:bg-white/10 hover:text-white/80"
-                >
-                  返回注册
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  }
-
   return (
     <>
       <div className="bg-aurora" />
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
         <div className="w-full max-w-md">
-          {/* Logo */}
           <div className="mb-8 text-center fade-in-up">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl text-3xl shadow-2xl" style={{ background: "linear-gradient(135deg, #FF375F 0%, #BF5AF2 100%)", boxShadow: "0 8px 32px rgba(255,55,95,0.4)" }}>
-              ✨
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl shadow-2xl" style={{ background: "linear-gradient(135deg, #FF375F 0%, #BF5AF2 100%)", boxShadow: "0 8px 32px rgba(255,55,95,0.4)" }}>
+              <Icon name="sparkles" size={32} color="#fff" />
             </div>
             <h1 className="text-3xl font-bold text-white sm:text-4xl" style={{ textShadow: "0 0 30px rgba(255,55,95,0.3)" }}>创建账号</h1>
-            <p className="mt-2 text-sm text-white/60">注册后需验证邮箱即可畅玩</p>
+            <p className="mt-2 text-sm text-white/60">邮箱验证码注册，即注册即验证</p>
           </div>
 
-          {/* 注册卡片 */}
           <div className="game-container fade-in-up" style={{ animationDelay: "0.1s" }}>
-            <form onSubmit={handleRegister} className="space-y-5">
+            <form onSubmit={handleRegister} className="space-y-4">
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">邮箱</label>
                 <input
@@ -105,6 +101,27 @@ export default function RegisterPage() {
                   className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10 focus:ring-2 focus:ring-pink-500/20"
                   required
                 />
+              </div>
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">验证码</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                    placeholder="6位验证码"
+                    className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10 focus:ring-2 focus:ring-pink-500/20"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSendCode}
+                    disabled={countdown > 0 || sending}
+                    className="shrink-0 rounded-xl border border-pink-400/40 bg-pink-500/20 px-4 text-sm font-semibold text-pink-200 transition hover:bg-pink-500/30 disabled:opacity-50"
+                  >
+                    {countdown > 0 ? `${countdown}s` : sending ? "发送中" : "获取验证码"}
+                  </button>
+                </div>
               </div>
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">密码</label>
