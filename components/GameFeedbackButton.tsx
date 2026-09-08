@@ -163,12 +163,8 @@ export default function GameFeedbackButton({ gameName }: { gameName: string }) {
           touchAction: "manipulation",
           whiteSpace: "nowrap",
           lineHeight: "1.5",
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "5px",
         }}
       >
-        <MessageIcon size={14} color="#f9a8d4" />
         建议反馈
       </button>
 
