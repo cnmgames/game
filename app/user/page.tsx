@@ -148,8 +148,8 @@ export default function UserPage() {
     <>
       <div className="bg-aurora" />
       <div className="relative z-10 mx-auto min-h-screen w-full max-w-2xl px-4 py-6 sm:py-10">
-        <Link href="/" className="back-btn mb-6 inline-flex">
-          ← 返回首页
+        <Link href="/" style={{display:"inline-flex",alignItems:"center",padding:"6px 14px",borderRadius:"9999px",border:"1px solid rgba(255,255,255,0.2)",background:"rgba(0,0,0,0.6)",color:"rgba(255,255,255,0.85)",fontSize:"13px",textDecoration:"none",backdropFilter:"blur(10px)",WebkitBackdropFilter:"blur(10px)",fontWeight:500,whiteSpace:"nowrap",lineHeight:1.5,marginBottom:"24px"}}>
+          返回首页
         </Link>
 
         {/* 用户信息卡片 */}
