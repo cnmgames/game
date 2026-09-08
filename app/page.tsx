@@ -29,6 +29,7 @@ export default function Home() {
   const [freeMode, setFreeMode] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+  const [isActivated, setIsActivated] = useState(false);
   const [activeCategory, setActiveCategory] = useState("all");
 
   const categories = [
@@ -72,6 +73,7 @@ export default function Home() {
           if (data.success) {
             setIsLoggedIn(true);
             setUserEmail(data.user?.email || "");
+            setIsActivated(!!data.code_info);
           } else {
             localStorage.removeItem("user_token");
           }
@@ -122,6 +124,12 @@ export default function Home() {
     if (!isLoggedIn) {
       e.preventDefault();
       router.push("/login");
+      return;
+    }
+    // 付费游戏需要激活
+    if (game.type === "paid" && !isActivated) {
+      e.preventDefault();
+      router.push("/user");
     }
   };
 
@@ -201,13 +209,10 @@ export default function Home() {
             <p className="text-sm leading-relaxed text-white/80 sm:text-lg fade-in-up" style={{ animationDelay: "0.2s" }}>
               多款氛围火辣的私房游戏，专为敢玩敢爱的亲密情侣而设。
             </p>
-            <div className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-4 fade-in-up" style={{ animationDelay: "0.4s" }}>
+            <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-4 fade-in-up" style={{ animationDelay: "0.4s" }}>
               <a href="#games" className="hero-btn inline-flex items-center justify-center rounded-full px-2 py-2 text-xs font-bold text-white transition-all duration-300 sm:px-6 sm:py-3 sm:text-sm" style={{ background: "linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%)", boxShadow: "0 4px 20px rgba(255,55,95,0.4)" }}>
                 开始探索
               </a>
-              <Link href="/activate" className="hero-btn inline-flex items-center justify-center rounded-full px-2 py-2 text-xs font-bold text-white transition-all duration-300 sm:px-6 sm:py-3 sm:text-sm" style={{ background: "linear-gradient(135deg, #BF5AF2 0%, #5E5CE6 100%)", boxShadow: "0 4px 20px rgba(191,90,242,0.4)" }}>
-                激活游戏
-              </Link>
               <a href="https://weidian.com/?userid=1388425837" target="_blank" rel="noopener noreferrer" className="hero-btn inline-flex items-center justify-center rounded-full px-2 py-2 text-xs font-bold text-white transition-all duration-300 sm:px-6 sm:py-3 sm:text-sm" style={{ background: "linear-gradient(135deg, #FF9500 0%, #FF2D55 100%)", boxShadow: "0 4px 20px rgba(255,149,0,0.4)" }}>
                 购买激活码
               </a>
