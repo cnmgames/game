@@ -1,3 +1,4 @@
+// v29 fixed import paths
 "use client";
 import { useState, useEffect, useCallback, useRef } from "react";
 import GameLayout from "../GameLayout";
