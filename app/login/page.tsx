@@ -90,7 +90,10 @@ export default function LoginPage() {
                 />
               </div>
               <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">密码</label>
+                <div className="mb-2 flex items-center justify-between">
+                  <label className="block text-xs font-semibold uppercase tracking-widest text-pink-200">密码</label>
+                  <Link href="/forgot" className="text-xs font-medium text-pink-300 hover:text-pink-200 transition">忘记密码？</Link>
+                </div>
                 <input
                   type="password"
                   value={password}

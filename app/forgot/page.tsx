@@ -7,34 +7,17 @@ import Icon from "../../components/Icon";
 const _API_HOST = ["k", "ttla", "top"];
 const API_BASE = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
 
-export default function RegisterPage() {
+export default function ForgotPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
-  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [emailError, setEmailError] = useState("");
+  const [success, setSuccess] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [sending, setSending] = useState(false);
-
-  const checkEmail = async (emailVal: string) => {
-    if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) return;
-    try {
-      const res = await fetch(API_BASE + "user/check_email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: emailVal }),
-      });
-      const data = await res.json();
-      if (data.exists) {
-        setEmailError("该邮箱已注册，请直接登录");
-      } else {
-        setEmailError("");
-      }
-    } catch {}
-  };
 
   useEffect(() => {
     if (countdown > 0) {
@@ -68,31 +51,54 @@ export default function RegisterPage() {
     }
   };
 
-  const handleRegister = async (e: React.FormEvent) => {
+  const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    if (password !== confirmPassword) { setError("两次密码不一致"); return; }
-    if (password.length < 6) { setError("密码至少6位"); return; }
+    if (newPassword !== confirmPassword) { setError("两次密码不一致"); return; }
+    if (newPassword.length < 6) { setError("新密码至少6位"); return; }
     if (!code) { setError("请输入验证码"); return; }
     setLoading(true);
     try {
-      const res = await fetch(API_BASE + "user/register", {
+      const res = await fetch(API_BASE + "user/reset_password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, code, password }),
+        body: JSON.stringify({ email, code, new_password: newPassword }),
       });
       const data = await res.json();
       if (data.success) {
-        router.push("/login");
+        setSuccess(true);
+        setTimeout(() => router.push("/login"), 2000);
       } else {
-        setError(data.message || "注册失败");
+        setError(data.message || "重置失败");
       }
-    } catch (err) {
+    } catch {
       setError("网络错误，请重试");
     } finally {
       setLoading(false);
     }
   };
+
+  if (success) {
+    return (
+      <>
+        <div className="bg-aurora" />
+        <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
+          <div className="w-full max-w-md">
+            <div className="game-container text-center fade-in-up">
+              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full" style={{ background: "linear-gradient(135deg, rgba(52,199,89,0.2), rgba(16,185,129,0.2))", boxShadow: "0 0 40px rgba(52,199,89,0.3)" }}>
+                <Icon name="check" size={40} color="#34C759" />
+              </div>
+              <h2 className="mb-3 text-2xl font-bold text-white">密码重置成功</h2>
+              <p className="mb-6 text-sm text-white/60">正在跳转到登录页...</p>
+              <Link href="/login" className="inline-block rounded-full px-8 py-3 text-sm font-bold text-white transition hover:scale-105" style={{ background: "linear-gradient(135deg, #FF375F 0%, #D70040 100%)", boxShadow: "0 4px 24px rgba(255,55,95,0.4)" }}>
+                立即登录
+              </Link>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -100,29 +106,25 @@ export default function RegisterPage() {
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
         <div className="w-full max-w-md">
           <div className="mb-8 text-center fade-in-up">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl shadow-2xl" style={{ background: "linear-gradient(135deg, #FF375F 0%, #BF5AF2 100%)", boxShadow: "0 8px 32px rgba(255,55,95,0.4)" }}>
-              <Icon name="sparkles" size={32} color="#fff" />
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl shadow-2xl" style={{ background: "linear-gradient(135deg, #FF9500 0%, #FF3B30 100%)", boxShadow: "0 8px 32px rgba(255,149,0,0.4)" }}>
+              <Icon name="lock" size={32} color="#fff" />
             </div>
-            <h1 className="text-3xl font-bold text-white sm:text-4xl" style={{ textShadow: "0 0 30px rgba(255,55,95,0.3)" }}>创建账号</h1>
-            <p className="mt-2 text-sm text-white/60">邮箱验证码注册，即注册即验证</p>
+            <h1 className="text-3xl font-bold text-white sm:text-4xl" style={{ textShadow: "0 0 30px rgba(255,149,0,0.3)" }}>重置密码</h1>
+            <p className="mt-2 text-sm text-white/60">通过邮箱验证码重置你的密码</p>
           </div>
 
           <div className="game-container fade-in-up" style={{ animationDelay: "0.1s" }}>
-            <form onSubmit={handleRegister} className="space-y-4">
+            <form onSubmit={handleReset} className="space-y-4">
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">邮箱</label>
                 <input
                   type="email"
                   value={email}
-                  onChange={(e) => { setEmail(e.target.value); setEmailError(""); }}
-                  onBlur={() => checkEmail(email)}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
-                  className={`w-full rounded-xl border bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:bg-white/10 focus:ring-2 ${emailError ? "border-red-500/50 focus:border-red-400/50 focus:ring-red-500/20" : "border-white/10 focus:border-pink-400/50 focus:ring-pink-500/20"}`}
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10 focus:ring-2 focus:ring-pink-500/20"
                   required
                 />
-                {emailError && (
-                  <p className="mt-1.5 text-xs text-red-300 fade-in-up">{emailError}</p>
-                )}
               </div>
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">验证码</label>
@@ -146,23 +148,23 @@ export default function RegisterPage() {
                 </div>
               </div>
               <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">密码</label>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">新密码</label>
                 <input
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="至少6位"
                   className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10 focus:ring-2 focus:ring-pink-500/20"
                   required
                 />
               </div>
               <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">确认密码</label>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">确认新密码</label>
                 <input
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="再次输入密码"
+                  placeholder="再次输入新密码"
                   className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10 focus:ring-2 focus:ring-pink-500/20"
                   required
                 />
@@ -178,15 +180,15 @@ export default function RegisterPage() {
                 type="submit"
                 disabled={loading}
                 className="w-full rounded-full py-3.5 text-sm font-bold text-white transition hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:hover:scale-100"
-                style={{ background: "linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%)", boxShadow: "0 4px 24px rgba(255,55,95,0.4)" }}
+                style={{ background: "linear-gradient(135deg, #FF9500 0%, #FF3B30 100%)", boxShadow: "0 4px 24px rgba(255,149,0,0.4)" }}
               >
-                {loading ? "注册中..." : "注 册"}
+                {loading ? "重置中..." : "重置密码"}
               </button>
             </form>
 
             <div className="mt-6 text-center text-sm text-white/50">
-              已有账号？
-              <Link href="/login" className="ml-1 font-semibold text-pink-300 hover:text-pink-200 transition">立即登录</Link>
+              想起来了？
+              <Link href="/login" className="ml-1 font-semibold text-pink-300 hover:text-pink-200 transition">返回登录</Link>
             </div>
           </div>
 
