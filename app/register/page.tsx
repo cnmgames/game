@@ -99,8 +99,9 @@ export default function RegisterPage() {
       } else {
         setError(data.message || "注册失败");
       }
-    } catch (err) {
-      setError("网络错误，请重试");
+    } catch (err: any) {
+      const errMsg = err?.message ? `网络错误：${err.message}` : "网络错误，请检查网络后重试";
+      setError(errMsg);
     } finally {
       setLoading(false);
     }

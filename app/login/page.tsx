@@ -64,8 +64,9 @@ export default function LoginPage() {
         setError(data.message || "登录失败");
         if (data.need_verify) setNeedVerify(true);
       }
-    } catch (err) {
-      setError("网络错误，请重试");
+    } catch (err: any) {
+      const errMsg = err?.message ? `网络错误：${err.message}` : "网络错误，请检查网络后重试";
+      setError(errMsg);
     } finally {
       setLoading(false);
     }
