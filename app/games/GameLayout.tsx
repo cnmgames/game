@@ -22,7 +22,6 @@ export default function GameLayout({ title, children }: { title: string; childre
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-4xl flex-col px-3.5 py-4 sm:px-6 sm:py-8">
         <div className="mb-4 flex items-center justify-between">
           <Link href="/" className="nav-pill hover:!bg-white/10 transition-all duration-300 inline-flex items-center gap-1.5">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
             <span>返回</span>
           </Link>
           <h1 className="text-lg font-bold text-white sm:text-xl bg-gradient-to-r from-pink-200 to-purple-300 bg-clip-text text-transparent">

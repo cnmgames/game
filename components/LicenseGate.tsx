@@ -127,7 +127,7 @@ export default function LicenseGate({
           lineHeight: 1.5,
         }}
       >
-        ← 返回游戏列表
+        返回
       </a>
       {/* 顶部占位，避免内容贴死边缘 */}
       <div style={{ height: "max(56px, calc(env(safe-area-inset-top) + 44px))" }} />
