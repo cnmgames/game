@@ -166,11 +166,46 @@ export function activateCode(code: string): Promise<{ success: boolean; message:
 }
 
 // 检查是否已激活（每次调用都去服务端验证 Token）
+// 同时支持新用户系统(game_token)和旧激活系统(lg_activation)
 export function checkActivation(): Promise<{ active: boolean; type?: string; expireAt?: number; timeLeftText?: string; code?: string; message?: string }> {
   return (async () => {
     if (typeof window === "undefined") {
       return { active: false };
     }
+
+    // 优先检查新用户系统的 game_token
+    const gameToken = localStorage.getItem("game_token");
+    if (gameToken) {
+      try {
+        const result = await cloudVerify(gameToken);
+        if (result !== null && result.valid) {
+          const expireAt = dateToTs(result.expiry_at);
+          let timeLeftText: string;
+          if (expireAt === 0) {
+            timeLeftText = "永久有效";
+          } else {
+            const msLeft = expireAt - Date.now();
+            const daysLeft = Math.ceil(msLeft / (24 * 60 * 60 * 1000));
+            if (msLeft < 60 * 60 * 1000) {
+              const minutesLeft = Math.max(1, Math.ceil(msLeft / (60 * 1000)));
+              timeLeftText = `${minutesLeft}分钟`;
+            } else if (msLeft < 24 * 60 * 60 * 1000) {
+              const hoursLeft = Math.ceil(msLeft / (60 * 60 * 1000));
+              timeLeftText = `${hoursLeft}小时`;
+            } else {
+              timeLeftText = `${daysLeft}天`;
+            }
+          }
+          return { active: true, type: result.type, expireAt, timeLeftText };
+        }
+        if (result !== null && !result.valid) {
+          localStorage.removeItem("game_token");
+          return { active: false, message: result.message };
+        }
+      } catch {}
+    }
+
+    // 再检查旧激活系统的 lg_activation
     const data = localStorage.getItem("lg_activation");
     if (!data) return { active: false };
     try {
