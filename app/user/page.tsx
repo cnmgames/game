@@ -179,21 +179,6 @@ export default function UserPage() {
           </div>
         </div>
       </div>
-
-      <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 100, background: "rgba(20,20,35,0.95)", backdropFilter: "blur(20px)", borderTop: "1px solid rgba(255,255,255,0.08)", display: "flex", padding: "8px 0 calc(8px + env(safe-area-inset-bottom))" }}>
-        <button onClick={() => router.push("/")} style={{ flex: 1, background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "4px", padding: "6px 0" }}>
-          <Icon name="home" size={22} />
-          <span style={{ fontSize: "10px", fontWeight: 500 }}>首页</span>
-        </button>
-        <button onClick={() => router.push("/")} style={{ flex: 1, background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "4px", padding: "6px 0" }}>
-          <Icon name="gamepad" size={22} />
-          <span style={{ fontSize: "10px", fontWeight: 500 }}>游戏</span>
-        </button>
-        <button style={{ flex: 1, background: "none", border: "none", color: "#007AFF", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "4px", padding: "6px 0" }}>
-          <Icon name="user" size={22} />
-          <span style={{ fontSize: "10px", fontWeight: 500 }}>我的</span>
-        </button>
-      </nav>
     </div>
   );
 }
