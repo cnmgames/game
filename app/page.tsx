@@ -130,15 +130,38 @@ export default function Home() {
     setVisitCount(newCount);
   }, []);
 
-  const handleGameClick = (e: React.MouseEvent, game: any) => {
+  const handleGameClick = async (e: React.MouseEvent, game: any) => {
     if (!isLoggedIn) {
       e.preventDefault();
       router.push("/login");
       return;
     }
-    // 付费游戏需要激活
-    if (game.type === "paid" && !isActivated) {
+    // 付费游戏需要激活 - 实时检查，不依赖页面加载时的状态
+    if (game.type === "paid") {
       e.preventDefault();
+      const token = localStorage.getItem("user_token");
+      // 先快速检查本地 game_token
+      if (localStorage.getItem("game_token")) {
+        router.push(game.path);
+        return;
+      }
+      // 实时查询用户信息确认激活状态
+      if (token) {
+        try {
+          const res = await fetch(API_BASE + "user/info", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token }),
+          });
+          const data = await res.json();
+          if (data.success && data.code_info) {
+            setIsActivated(true);
+            router.push(game.path);
+            return;
+          }
+        } catch (err) {}
+      }
+      setIsActivated(false);
       router.push("/user");
     }
   };
