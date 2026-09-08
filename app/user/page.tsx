@@ -21,6 +21,7 @@ export default function UserPage() {
   const [activating, setActivating] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedbackText, setFeedbackText] = useState("");
+  const [feedbackType, setFeedbackType] = useState("suggestion");
   const [feedbackSending, setFeedbackSending] = useState(false);
   const [feedbackMsg, setFeedbackMsg] = useState("");
   const [showPartner, setShowPartner] = useState(false);
@@ -91,21 +92,28 @@ export default function UserPage() {
     if (!feedbackText.trim()) { setFeedbackMsg("请输入反馈内容"); return; }
     setFeedbackSending(true);
     setFeedbackMsg("");
+    const typeMap: Record<string, string> = {
+      suggestion: "玩法建议",
+      bug: "问题反馈",
+      content: "内容调整",
+      other: "其他建议",
+    };
     try {
       const res = await fetch(API_BASE + "ticket/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: "用户意见反馈",
+          title: `[${typeMap[feedbackType] || "建议反馈"}] ${feedbackText.slice(0, 30)}`,
           content: feedbackText,
           contact: user?.email || "",
-          type: "feedback",
+          type: feedbackType,
         }),
       });
       const data = await res.json();
       if (data.success) {
-        setFeedbackMsg("提交成功，感谢你的反馈！");
+        setFeedbackMsg("提交成功，感谢你的建议！");
         setFeedbackText("");
+        setFeedbackType("suggestion");
         setTimeout(() => setShowFeedback(false), 1500);
       } else {
         setFeedbackMsg(data.message || "提交失败");
@@ -235,7 +243,7 @@ export default function UserPage() {
             </a>
             <div onClick={() => setShowFeedback(true)} className="flex items-center gap-3 py-4 cursor-pointer transition active:bg-white/5">
               <Icon name="message" size={20} color="#BF5AF2" />
-              <span className="flex-1 text-sm text-white">意见反馈</span>
+              <span className="flex-1 text-sm text-white">建议反馈</span>
               <span className="text-white/30">›</span>
             </div>
             <div onClick={() => setShowPartner(true)} className="flex items-center gap-3 py-4 cursor-pointer transition active:bg-white/5">
@@ -263,34 +271,71 @@ export default function UserPage() {
         </p>
       </div>
 
-      {/* 意见反馈弹窗 */}
+      {/* 建议反馈弹窗 */}
       {showFeedback && (
         <div className="modal-overlay" onClick={() => setShowFeedback(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-5 flex items-center justify-between">
               <h3 className="flex items-center gap-2 text-lg font-bold text-white">
-                <Icon name="message" size={20} color="#BF5AF2" /> 意见反馈
+                <Icon name="message" size={20} color="#BF5AF2" /> 建议反馈
               </h3>
-              <button onClick={() => setShowFeedback(false)} className="text-white/50 hover:text-white text-xl">×</button>
+              <button onClick={() => setShowFeedback(false)} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 text-white/50 hover:bg-white/10 hover:text-white text-lg">×</button>
             </div>
-            <p className="mb-4 text-sm leading-relaxed text-white/60">
-              说说哪里不好用、想加什么玩法，或者哪些内容需要调整。采纳意见将在一周内上线，采纳意见可获得永久付费会员权益。
-            </p>
+
+            {/* 反馈类型选择 */}
+            <div className="mb-4">
+              <p className="mb-2 text-xs font-semibold text-white/50">反馈类型</p>
+              <div className="grid grid-cols-4 gap-2">
+                {[
+                  { value: "suggestion", label: "玩法建议", color: "#BF5AF2" },
+                  { value: "bug", label: "问题反馈", color: "#FF453A" },
+                  { value: "content", label: "内容调整", color: "#FF9F0A" },
+                  { value: "other", label: "其他", color: "#64D2FF" },
+                ].map((item) => (
+                  <button
+                    key={item.value}
+                    onClick={() => setFeedbackType(item.value)}
+                    className="rounded-xl border py-2.5 text-xs font-semibold transition-all"
+                    style={{
+                      borderColor: feedbackType === item.value ? item.color : "rgba(255,255,255,0.1)",
+                      background: feedbackType === item.value ? `${item.color}20` : "rgba(255,255,255,0.03)",
+                      color: feedbackType === item.value ? item.color : "rgba(255,255,255,0.6)",
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 提示卡片 */}
+            <div className="mb-4 rounded-xl border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-3">
+              <p className="text-xs leading-relaxed text-purple-200/80">
+                说说哪里不好用、想加什么玩法，或者哪些内容需要调整。
+                <span className="text-pink-300 font-semibold">采纳意见将在一周内上线，采纳可获得永久付费会员权益。</span>
+              </p>
+            </div>
+
             <textarea
               value={feedbackText}
               onChange={(e) => setFeedbackText(e.target.value)}
-              placeholder="输入你的建议或反馈..."
+              placeholder="详细描述你的建议或遇到的问题..."
               rows={5}
-              className="mb-3 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10"
+              maxLength={500}
+              className="mb-2 w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition focus:border-purple-400/50 focus:bg-white/10"
             />
+            <div className="mb-4 flex justify-end">
+              <span className="text-xs text-white/30">{feedbackText.length}/500</span>
+            </div>
+
             {feedbackMsg && <p className="mb-3 text-sm text-center text-pink-300">{feedbackMsg}</p>}
             <button
               onClick={handleFeedback}
-              disabled={feedbackSending}
-              className="w-full rounded-full py-3 text-sm font-bold text-white transition hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
-              style={{ background: "linear-gradient(135deg, #FF375F 0%, #BF5AF2 100%)", boxShadow: "0 4px 20px rgba(255,55,95,0.3)" }}
+              disabled={feedbackSending || !feedbackText.trim()}
+              className="w-full rounded-full py-3 text-sm font-bold text-white transition hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
+              style={{ background: "linear-gradient(135deg, #BF5AF2 0%, #FF375F 100%)", boxShadow: "0 4px 20px rgba(191,90,242,0.3)" }}
             >
-              {feedbackSending ? "提交中..." : "提交反馈"}
+              {feedbackSending ? "提交中..." : "提交建议"}
             </button>
           </div>
         </div>
