@@ -1,191 +1,199 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { API_BASE, getDeviceId, getUserToken, clearUserToken } from "../../lib/api";
+import Icon from "../../components/Icon";
+
+const _API_HOST = ["k", "ttla", "top"];
+const API_BASE = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
+
+function getDeviceId(): string {
+  try { return localStorage.getItem("device_id") || "dev_unknown"; } catch (e) { return "dev_unknown"; }
+}
 
 export default function UserPage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [codeInfo, setCodeInfo] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [activateCode, setActivateCode] = useState("");
-  const [activating, setActivating] = useState(false);
+  const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState<"success" | "error">("success");
+  const [loading, setLoading] = useState(true);
+  const [activating, setActivating] = useState(false);
 
   useEffect(() => {
-    const token = getUserToken();
+    const token = localStorage.getItem("user_token");
     if (!token) {
       router.push("/login");
       return;
     }
-    fetchUserInfo(token);
-  }, [router]);
-
-  const fetchUserInfo = async (token: string) => {
-    try {
-      const res = await fetch(API_BASE + "user/info", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setUser(data.user);
-        setCodeInfo(data.code_info);
-      } else {
-        clearUserToken();
-        router.push("/login");
-      }
-    } catch (err) {
-      setMessage("网络错误");
-      setMessageType("error");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleActivate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!activateCode.trim()) return;
-    setActivating(true);
-    setMessage("");
-    try {
-      const token = getUserToken();
-      const res = await fetch(API_BASE + "user/bind", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, code: activateCode, device_id: getDeviceId() }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setMessage("激活成功！");
-        setMessageType("success");
-        // 保存游戏token
-        try { localStorage.setItem("game_token", data.token); } catch (e) {}
-        setTimeout(() => {
-          fetchUserInfo(token);
-          router.push("/");
-        }, 1500);
-      } else {
-        setMessage(data.message || "激活失败");
-        setMessageType("error");
-      }
-    } catch (err) {
-      setMessage("网络错误，请重试");
-      setMessageType("error");
-    } finally {
-      setActivating(false);
-    }
-  };
-
-  const handleLogout = () => {
-    const token = getUserToken();
-    fetch(API_BASE + "user/logout", {
+    fetch(API_BASE + "user/info", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token }),
-    }).catch(() => {});
-    clearUserToken();
-    try { localStorage.removeItem("game_token"); } catch (e) {}
-    router.push("/login");
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success) {
+          setUser(data.user);
+          setCodeInfo(data.code_info);
+        } else {
+          localStorage.removeItem("user_token");
+          router.push("/login");
+        }
+      })
+      .catch(() => setMessage("网络错误"))
+      .finally(() => setLoading(false));
+  }, [router]);
+
+  const handleActivate = () => {
+    const token = localStorage.getItem("user_token");
+    if (!token) return;
+    if (!code.trim()) {
+      setMessage("请输入激活码");
+      return;
+    }
+    setActivating(true);
+    setMessage("");
+    fetch(API_BASE + "user/bind", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, code: code.trim(), device_id: getDeviceId() }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success) {
+          localStorage.setItem("game_token", data.token);
+          setMessage("激活成功！");
+          setTimeout(() => window.location.reload(), 1000);
+        } else {
+          setMessage(data.message || "激活失败");
+        }
+      })
+      .catch(() => setMessage("网络错误"))
+      .finally(() => setActivating(false));
+  };
+
+  const handleLogout = () => {
+    const token = localStorage.getItem("user_token");
+    if (token) {
+      fetch(API_BASE + "user/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      }).catch(() => {});
+    }
+    localStorage.removeItem("user_token");
+    localStorage.removeItem("game_token");
+    router.push("/");
   };
 
   if (loading) {
-    return <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#f5f5f7" }}><div style={{ fontSize: "16px", color: "#888" }}>加载中...</div></div>;
+    return <div style={{ minHeight: "100vh", background: "#1a1a2e", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>加载中...</div>;
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f5f5f7", padding: "20px" }}>
-      <div style={{ maxWidth: "500px", margin: "0 auto" }}>
-        {/* 顶部导航 */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
-          <h1 style={{ fontSize: "24px", fontWeight: 700, color: "#1a1a1a" }}>用户中心</h1>
-          <button onClick={handleLogout} style={{ padding: "8px 16px", background: "rgba(255,59,48,0.1)", color: "#d70015", border: "none", borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: "pointer" }}>退出登录</button>
-        </div>
-
-        {/* 用户信息卡片 */}
-        <div style={{ background: "#fff", borderRadius: "16px", padding: "24px", marginBottom: "20px", boxShadow: "0 2px 10px rgba(0,0,0,0.05)" }}>
-          <div style={{ display: "flex", alignItems: "center", marginBottom: "16px" }}>
-            <div style={{ width: "56px", height: "56px", borderRadius: "50%", background: "linear-gradient(135deg, #667eea, #764ba2)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: "24px", fontWeight: 700, marginRight: "16px" }}>
-              {user?.email?.charAt(0).toUpperCase()}
-            </div>
-            <div>
-              <div style={{ fontSize: "18px", fontWeight: 600, color: "#1a1a1a" }}>{user?.email}</div>
-              <div style={{ fontSize: "13px", color: "#888", marginTop: "4px" }}>注册于 {user?.created_at?.substring(0, 10)}</div>
-            </div>
+    <div style={{ minHeight: "100vh", background: "linear-gradient(180deg, #1a1a2e 0%, #16213e 100%)", color: "#fff", paddingBottom: "70px" }}>
+      <div style={{ background: "linear-gradient(135deg, rgba(102,126,234,0.4), rgba(118,75,162,0.4))", padding: "40px 20px 30px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "linear-gradient(135deg, #667eea, #764ba2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Icon name="user" size={32} color="#fff" />
+          </div>
+          <div>
+            <h2 style={{ fontSize: "20px", fontWeight: 700, margin: "0 0 4px" }}>{user?.email?.split("@")[0]}</h2>
+            <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)", margin: 0 }}>{user?.email}</p>
           </div>
         </div>
-
-        {/* 激活状态 */}
-        {codeInfo ? (
-          <div style={{ background: "#fff", borderRadius: "16px", padding: "24px", marginBottom: "20px", boxShadow: "0 2px 10px rgba(0,0,0,0.05)" }}>
-            <h2 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "16px", color: "#1a1a1a" }}>激活状态</h2>
-            <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", borderBottom: "1px solid #f0f0f0" }}>
-              <span style={{ color: "#888" }}>激活码</span>
-              <span style={{ fontFamily: "monospace", fontWeight: 600, color: "#1a1a1a" }}>{codeInfo.code}</span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", borderBottom: "1px solid #f0f0f0" }}>
-              <span style={{ color: "#888" }}>卡类型</span>
-              <span style={{ fontWeight: 600, color: codeInfo.type === "forever" ? "#8e34b8" : "#c26d00" }}>
-                {codeInfo.type === "forever" ? "永久卡" : "周卡"}
-              </span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", padding: "12px 0" }}>
-              <span style={{ color: "#888" }}>到期时间</span>
-              <span style={{ fontWeight: 600, color: codeInfo.expiry_at ? "#d70015" : "#248a3d" }}>
-                {codeInfo.expiry_at || "永久有效"}
-              </span>
-            </div>
-            <button
-              onClick={() => router.push("/")}
-              style={{ width: "100%", marginTop: "20px", padding: "14px", background: "#007AFF", color: "#fff", border: "none", borderRadius: "12px", fontSize: "16px", fontWeight: 600, cursor: "pointer" }}
-            >
-              开始游戏
-            </button>
-          </div>
-        ) : (
-          <div style={{ background: "#fff", borderRadius: "16px", padding: "24px", marginBottom: "20px", boxShadow: "0 2px 10px rgba(0,0,0,0.05)" }}>
-            <h2 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "16px", color: "#1a1a1a" }}>激活游戏</h2>
-            <form onSubmit={handleActivate}>
-              <input
-                type="text"
-                value={activateCode}
-                onChange={(e) => setActivateCode(e.target.value.toUpperCase())}
-                placeholder="请输入激活码，如 XXXX-XXXX-XXXX-XXXX"
-                style={{ width: "100%", padding: "14px 16px", border: "1px solid #e0e0e0", borderRadius: "12px", fontSize: "16px", outline: "none", boxSizing: "border-box", fontFamily: "monospace", marginBottom: "16px" }}
-              />
-              {message && (
-                <div style={{ background: messageType === "success" ? "rgba(52,199,89,0.1)" : "rgba(255,59,48,0.1)", color: messageType === "success" ? "#248a3d" : "#d70015", padding: "12px", borderRadius: "10px", marginBottom: "16px", fontSize: "14px", textAlign: "center" }}>
-                  {message}
-                </div>
-              )}
-              <button
-                type="submit"
-                disabled={activating}
-                style={{ width: "100%", padding: "14px", background: "#007AFF", color: "#fff", border: "none", borderRadius: "12px", fontSize: "16px", fontWeight: 600, cursor: "pointer", opacity: activating ? 0.6 : 1 }}
-              >
-                {activating ? "激活中..." : "立即激活"}
-              </button>
-            </form>
-          </div>
-        )}
-
-        {/* 购买链接 */}
-        {!codeInfo && (
-          <div style={{ background: "linear-gradient(135deg, #667eea, #764ba2)", borderRadius: "16px", padding: "24px", textAlign: "center" }}>
-            <div style={{ color: "#fff", fontSize: "16px", fontWeight: 600, marginBottom: "12px" }}>还没有激活码？</div>
-            <a
-              href="https://weidian.com/?userid=1388425837"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ display: "inline-block", padding: "12px 32px", background: "#fff", color: "#667eea", borderRadius: "12px", fontSize: "16px", fontWeight: 600, textDecoration: "none" }}
-            >
-              立即购买
-            </a>
+        {!user?.email_verified && (
+          <div style={{ marginTop: "16px", background: "rgba(255,149,0,0.15)", border: "1px solid rgba(255,149,0,0.3)", padding: "10px 14px", borderRadius: "12px", fontSize: "13px", color: "#FF9500", display: "flex", alignItems: "center", gap: "8px" }}>
+            <Icon name="alert" size={16} />
+            邮箱未验证，请查收邮件完成验证
           </div>
         )}
       </div>
+
+      <div style={{ padding: "16px" }}>
+        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "16px", padding: "20px", marginBottom: "16px" }}>
+          <h3 style={{ fontSize: "16px", fontWeight: 600, margin: "0 0 16px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <Icon name="ticket" size={18} color="#007AFF" />
+            激活状态
+          </h3>
+          {codeInfo ? (
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px", fontSize: "14px" }}>
+                <span style={{ color: "rgba(255,255,255,0.5)" }}>激活码</span>
+                <span style={{ fontFamily: "monospace" }}>{codeInfo.code?.match(/.{1,4}/g)?.join("-")}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px", fontSize: "14px" }}>
+                <span style={{ color: "rgba(255,255,255,0.5)" }}>类型</span>
+                <span>{codeInfo.type === "forever" ? "永久卡" : "周卡"}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px", fontSize: "14px" }}>
+                <span style={{ color: "rgba(255,255,255,0.5)" }}>激活时间</span>
+                <span>{codeInfo.used_at?.replace("T", " ").substring(0, 16)}</span>
+              </div>
+              {codeInfo.expiry_at && (
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}>
+                  <span style={{ color: "rgba(255,255,255,0.5)" }}>到期时间</span>
+                  <span>{codeInfo.expiry_at?.replace("T", " ").substring(0, 16)}</span>
+                </div>
+              )}
+              <div style={{ marginTop: "16px", padding: "10px", background: "rgba(52,199,89,0.1)", borderRadius: "10px", textAlign: "center", color: "#34C759", fontSize: "14px", fontWeight: 600 }}>
+                已激活 · 可正常使用
+              </div>
+            </div>
+          ) : (
+            <div>
+              <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.6)", margin: "0 0 12px" }}>尚未激活，输入激活码开始游戏</p>
+              <input
+                type="text"
+                value={code}
+                onChange={(e) => setCode(e.target.value.toUpperCase())}
+                placeholder="LOVE-XXXX-XXXX-XXXX"
+                style={{ width: "100%", padding: "14px 16px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px", color: "#fff", fontSize: "15px", fontFamily: "monospace", marginBottom: "12px", boxSizing: "border-box" }}
+              />
+              {message && <p style={{ fontSize: "13px", color: message.includes("成功") ? "#34C759" : "#FF3B30", margin: "0 0 12px" }}>{message}</p>}
+              <button
+                onClick={handleActivate}
+                disabled={activating}
+                style={{ width: "100%", padding: "14px", background: "#007AFF", color: "#fff", border: "none", borderRadius: "12px", fontSize: "15px", fontWeight: 600, cursor: activating ? "not-allowed" : "pointer" }}
+              >
+                {activating ? "激活中..." : "立即激活"}
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "16px", overflow: "hidden" }}>
+          <div onClick={() => router.push("/")} style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: "12px", borderBottom: "1px solid rgba(255,255,255,0.05)", cursor: "pointer" }}>
+            <Icon name="gamepad" size={18} color="#007AFF" />
+            <span style={{ flex: 1, fontSize: "15px" }}>开始游戏</span>
+            <span style={{ color: "rgba(255,255,255,0.3)" }}>›</span>
+          </div>
+          <div onClick={() => alert("工单功能开发中")} style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: "12px", borderBottom: "1px solid rgba(255,255,255,0.05)", cursor: "pointer" }}>
+            <Icon name="message" size={18} color="#FF9500" />
+            <span style={{ flex: 1, fontSize: "15px" }}>联系客服</span>
+            <span style={{ color: "rgba(255,255,255,0.3)" }}>›</span>
+          </div>
+          <div onClick={handleLogout} style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}>
+            <Icon name="logout" size={18} color="#FF3B30" />
+            <span style={{ flex: 1, fontSize: "15px", color: "#FF3B30" }}>退出登录</span>
+          </div>
+        </div>
+      </div>
+
+      <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 100, background: "rgba(20,20,35,0.95)", backdropFilter: "blur(20px)", borderTop: "1px solid rgba(255,255,255,0.08)", display: "flex", padding: "8px 0 calc(8px + env(safe-area-inset-bottom))" }}>
+        <button onClick={() => router.push("/")} style={{ flex: 1, background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "4px", padding: "6px 0" }}>
+          <Icon name="home" size={22} />
+          <span style={{ fontSize: "10px", fontWeight: 500 }}>首页</span>
+        </button>
+        <button onClick={() => router.push("/")} style={{ flex: 1, background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "4px", padding: "6px 0" }}>
+          <Icon name="gamepad" size={22} />
+          <span style={{ fontSize: "10px", fontWeight: 500 }}>游戏</span>
+        </button>
+        <button style={{ flex: 1, background: "none", border: "none", color: "#007AFF", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "4px", padding: "6px 0" }}>
+          <Icon name="user" size={22} />
+          <span style={{ fontSize: "10px", fontWeight: 500 }}>我的</span>
+        </button>
+      </nav>
     </div>
   );
 }
