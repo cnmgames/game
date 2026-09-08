@@ -1,0 +1,272 @@
+{
+    "description": "恋爱大富翁环形地图（单一事实源：前端 love_monopoly_engine 与后端 LoveMonopolyRoom 共用）",
+    "total": 24,
+    "start_money": 1500,
+    "start_bonus": 200,
+    "win_target": 5000,
+    "dice_max": 6,
+    "mini_game_chance": 0.3,
+    "mini_game_reward": 100,
+    "cells": [
+        {
+            "type": "start",
+            "name": "起点",
+            "icon": "flag"
+        },
+        {
+            "type": "building",
+            "id": "sweet_shop",
+            "name": "甜品小屋",
+            "icon": "building",
+            "base_cost": 200,
+            "upgrade_cost": [
+                150,
+                200
+            ],
+            "toll": [
+                50,
+                100,
+                180
+            ]
+        },
+        {
+            "type": "bonus",
+            "name": "资金",
+            "icon": "coins",
+            "amount_min": 50,
+            "amount_max": 150
+        },
+        {
+            "type": "event",
+            "name": "随机事件",
+            "icon": "dice"
+        },
+        {
+            "type": "building",
+            "id": "flower_shop",
+            "name": "花店",
+            "icon": "building",
+            "base_cost": 180,
+            "upgrade_cost": [
+                120,
+                180
+            ],
+            "toll": [
+                40,
+                90,
+                160
+            ]
+        },
+        {
+            "type": "interaction",
+            "name": "互动",
+            "icon": "heart"
+        },
+        {
+            "type": "building",
+            "id": "cinema",
+            "name": "电影院",
+            "icon": "building",
+            "base_cost": 350,
+            "upgrade_cost": [
+                250,
+                300
+            ],
+            "toll": [
+                80,
+                160,
+                280
+            ]
+        },
+        {
+            "type": "forward",
+            "name": "前进",
+            "icon": "arrow-up",
+            "delta": 2
+        },
+        {
+            "type": "building",
+            "id": "cafe",
+            "name": "咖啡厅",
+            "icon": "building",
+            "base_cost": 250,
+            "upgrade_cost": [
+                180,
+                220
+            ],
+            "toll": [
+                60,
+                120,
+                220
+            ]
+        },
+        {
+            "type": "bonus",
+            "name": "资金",
+            "icon": "coins",
+            "amount_min": 50,
+            "amount_max": 150
+        },
+        {
+            "type": "event",
+            "name": "随机事件",
+            "icon": "dice"
+        },
+        {
+            "type": "building",
+            "id": "amusement",
+            "name": "游乐场",
+            "icon": "building",
+            "base_cost": 400,
+            "upgrade_cost": [
+                280,
+                350
+            ],
+            "toll": [
+                90,
+                180,
+                320
+            ]
+        },
+        {
+            "type": "backward",
+            "name": "后退",
+            "icon": "arrow-down",
+            "delta": 2
+        },
+        {
+            "type": "building",
+            "id": "bnb",
+            "name": "情侣民宿",
+            "icon": "building",
+            "base_cost": 300,
+            "upgrade_cost": [
+                220,
+                260
+            ],
+            "toll": [
+                70,
+                140,
+                250
+            ]
+        },
+        {
+            "type": "event",
+            "name": "随机事件",
+            "icon": "dice"
+        },
+        {
+            "type": "bonus",
+            "name": "资金",
+            "icon": "coins",
+            "amount_min": 50,
+            "amount_max": 150
+        },
+        {
+            "type": "interaction",
+            "name": "互动",
+            "icon": "heart"
+        },
+        {
+            "type": "building",
+            "id": "jewelry",
+            "name": "珠宝店",
+            "icon": "building",
+            "base_cost": 500,
+            "upgrade_cost": [
+                350,
+                400
+            ],
+            "toll": [
+                120,
+                240,
+                400
+            ]
+        },
+        {
+            "type": "normal",
+            "name": "休息站",
+            "icon": "coffee"
+        },
+        {
+            "type": "building",
+            "id": "hotpot",
+            "name": "火锅店",
+            "icon": "building",
+            "base_cost": 300,
+            "upgrade_cost": [
+                220,
+                260
+            ],
+            "toll": [
+                70,
+                140,
+                250
+            ]
+        },
+        {
+            "type": "event",
+            "name": "随机事件",
+            "icon": "dice"
+        },
+        {
+            "type": "bonus",
+            "name": "资金",
+            "icon": "coins",
+            "amount_min": 50,
+            "amount_max": 150
+        },
+        {
+            "type": "interaction",
+            "name": "互动",
+            "icon": "heart"
+        },
+        {
+            "type": "forward",
+            "name": "前进",
+            "icon": "arrow-up",
+            "delta": 1
+        }
+    ],
+    "events": [
+        {
+            "text": "意外之财！获得 150 金币",
+            "type": "money",
+            "amount": 150
+        },
+        {
+            "text": "冲动消费！损失 80 金币",
+            "type": "money",
+            "amount": -80
+        },
+        {
+            "text": "时光倒流，后退 2 格",
+            "type": "move",
+            "delta": -2
+        },
+        {
+            "text": "爱的火箭！前进 2 格",
+            "type": "move",
+            "delta": 2
+        },
+        {
+            "text": "直接抽取情侣亲密互动！",
+            "type": "interaction",
+            "level": "level3"
+        },
+        {
+            "text": "默契加成！双方各获得 100 金币",
+            "type": "both_money",
+            "amount": 100
+        },
+        {
+            "text": "原地发呆一分钟~",
+            "type": "none"
+        },
+        {
+            "text": "心有灵犀，双方各前进 1 格",
+            "type": "both_move",
+            "delta": 1
+        }
+    ]
+}

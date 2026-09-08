@@ -1,0 +1,45 @@
+/* ==================== 主题变量 ====================
+ * 对齐 Qt 端 core/themes.py 三套主题（樱花粉/暖蛋黄/浅海蓝）
+ * 通过 body[data-theme="xxx"] 切换 CSS 变量。
+ */
+
+/* 默认主题：樱花粉 */
+:root,
+body[data-theme="pink"] {
+    --primary: #E75480;
+    --primary-light: #F06292;
+    --primary-dark: #C2185B;
+    --primary-bg: #FFF0F5;
+    --primary-soft: rgba(231, 84, 128, 0.1);
+    --bg-gradient: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 30%, #e8eaf6 60%, #e0f7fa 100%);
+}
+
+/* 暖蛋黄 */
+body[data-theme="yellow"] {
+    --primary: #F0A500;
+    --primary-light: #F5B830;
+    --primary-dark: #C77E00;
+    --primary-bg: #FFF8E7;
+    --primary-soft: rgba(240, 165, 0, 0.12);
+    --bg-gradient: linear-gradient(135deg, #fff3e0 0%, #fff8e7 35%, #fffde7 60%, #fff3e0 100%);
+}
+
+/* 浅海蓝 */
+body[data-theme="blue"] {
+    --primary: #5B9BD5;
+    --primary-light: #7AB5E8;
+    --primary-dark: #3A7BBF;
+    --primary-bg: #E8F4FD;
+    --primary-soft: rgba(91, 155, 213, 0.12);
+    --bg-gradient: linear-gradient(135deg, #e8f4fd 0%, #e0f2f7 35%, #dbeef4 60%, #e8f4fd 100%);
+}
+
+body {
+    background: var(--bg-gradient);
+}
+
+/* 游戏卡片分类主题色沿用现有 --primary */
+.card-tag {
+    background: var(--primary-soft);
+    color: var(--primary);
+}

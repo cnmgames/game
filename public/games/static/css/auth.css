@@ -1,0 +1,488 @@
+/* ==================== 登录页 + 房间大厅样式 ==================== */
+
+.auth-box {
+    max-width: 400px;
+    margin: 8vh auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+}
+
+.auth-title {
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: 2px;
+}
+
+.auth-subtitle {
+    font-size: 16px;
+    color: var(--text-muted);
+}
+
+.auth-form {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+}
+
+.auth-input {
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 16px;
+    font-family: inherit;
+    outline: none;
+    background: white;
+    color: var(--text);
+    width: 100%;
+}
+
+.auth-input:focus {
+    border-color: var(--primary);
+}
+
+.auth-error {
+    font-size: 13px;
+    color: var(--danger);
+    min-height: 18px;
+}
+
+.auth-toggle-btn {
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+/* ---- 房间大厅 ---- */
+.room-box {
+    max-width: 560px;
+    margin: 4vh auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.room-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.room-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.room-user {
+    flex: 1;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.room-main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.room-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    padding: 32px 24px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.room-card-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.room-card-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.room-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.room-partner {
+    font-size: 15px;
+    color: var(--text-light);
+    text-align: center;
+    padding: 4px 0;
+}
+
+.room-partner b {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.room-join-row {
+    display: flex;
+    gap: 10px;
+}
+
+.room-join-row .auth-input {
+    flex: 1;
+    letter-spacing: 4px;
+    text-align: center;
+    font-weight: 700;
+}
+
+@media (max-width: 600px) {
+    .auth-title { font-size: 32px; }
+    .room-join-row { flex-direction: column; }
+}
+
+/* ---- 全局模式切换按钮（右上角固定，登录后显示） ---- */
+.mode-switch {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 1000;
+}
+
+.mode-switch .btn-back {
+    background: var(--bg-card);
+    box-shadow: var(--shadow);
+    font-weight: 600;
+}
+
+/* ---- 注册成功 Key 展示 ---- */
+.key-display {
+    padding: 14px 16px;
+    background: rgba(231,84,128,0.08);
+    border: 2px dashed var(--primary);
+    border-radius: var(--radius);
+    font-family: 'Courier New', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary);
+    word-break: break-all;
+    user-select: text;
+}
+
+/* ---- 绑定关系页 ---- */
+.bind-box {
+    max-width: 560px;
+    margin: 4vh auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.bind-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--primary);
+    text-align: center;
+}
+
+.bind-loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+}
+
+.bind-me {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    padding: 20px 24px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bind-me-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.bind-me-row {
+    font-size: 15px;
+    color: var(--text-light);
+}
+
+.bind-code {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 2px;
+    font-style: normal;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.bind-section {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    padding: 16px 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bind-section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.bind-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    background: rgba(0,0,0,0.03);
+    border-radius: var(--radius);
+}
+
+.bind-item-name {
+    font-size: 15px;
+    color: var(--text);
+}
+
+.bind-empty {
+    font-size: 14px;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 12px;
+}
+
+/* ---- 管理员后台 ---- */
+.admin-box {
+    max-width: 680px;
+}
+
+.admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.admin-header-btns {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.admin-stats {
+    display: flex;
+    gap: 12px;
+}
+
+.admin-stat {
+    flex: 1;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 14px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+.admin-stat b {
+    display: block;
+    font-size: 22px;
+    color: var(--primary);
+    margin-bottom: 2px;
+}
+
+.admin-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 14px;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+}
+
+.admin-row-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.admin-row-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.admin-row-id {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.admin-row-meta {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.admin-row-time {
+    margin-left: 8px;
+    font-size: 12px;
+}
+
+.admin-row-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.admin-key-result {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    padding: 14px 16px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+.btn-danger {
+    background: #e5484d;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #c93a3f;
+}
+
+/* ---- 全局顶部栏（登录后显示：绑定状态 + 退出 + 模式切换） ---- */
+.topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    padding-top: calc(8px + env(safe-area-inset-top));
+    background: var(--bg-card);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+}
+
+.topbar-bind {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 14px;
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary);
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: inherit;
+    min-height: 40px;
+}
+
+.topbar-right {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.topbar-btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 18px;
+    background: rgba(0, 0, 0, 0.05);
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+    min-height: 40px;
+}
+
+/* ---- 绑定弹窗（浮层） ---- */
+.bind-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bind-modal-mask {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.bind-modal-card {
+    position: relative;
+    z-index: 1;
+    width: 92%;
+    max-width: 520px;
+    max-height: 85vh;
+    overflow-y: auto;
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+.bind-modal-card .bind-box {
+    max-width: none;
+    margin: 0;
+}
+
+.bind-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bind-close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.06);
+    font-size: 18px;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: inherit;
+    line-height: 1;
+}
