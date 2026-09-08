@@ -8,7 +8,31 @@ const _API_HOST = ["k", "ttla", "top"];
 const API_BASE = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
 
 function getDeviceId(): string {
-  try { return localStorage.getItem("device_id") || "dev_unknown"; } catch (e) { return "dev_unknown"; }
+  if (typeof window === "undefined") return "dev_unknown";
+  let did = localStorage.getItem("device_id");
+  if (!did) {
+    // 生成基于浏览器指纹的设备ID，与license.ts保持一致
+    const nav = navigator as any;
+    let canvasFp = "";
+    try {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.textBaseline = "top";
+        ctx.font = "14px 'Arial'";
+        ctx.fillText("fingerprint_lovegame", 2, 2);
+        canvasFp = canvas.toDataURL();
+      }
+    } catch (e) {}
+    let hash = 0;
+    const raw = [navigator.userAgent, navigator.language, navigator.platform, screen.width + "x" + screen.height, screen.colorDepth, new Date().getTimezoneOffset(), nav.hardwareConcurrency || 0, canvasFp.substring(0, 100)].join("|");
+    for (let i = 0; i < raw.length; i++) {
+      hash = ((hash << 5) - hash + raw.charCodeAt(i)) | 0;
+    }
+    did = "dev_" + Math.abs(hash).toString(36);
+    localStorage.setItem("device_id", did);
+  }
+  return did;
 }
 
 export default function LoginPage() {
@@ -144,10 +168,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <p className="mt-4 text-center text-xs text-white/40 flex items-center justify-center gap-1.5">
-            <Icon name="shield" size={12} color="rgba(255,255,255,0.3)" />
-            每个账号最多绑定3台设备，超过将自动封禁
-          </p>
           <p className="mt-6 text-center text-xs text-white/30 flex items-center justify-center gap-1.5">
             <Icon name="shield" size={14} color="rgba(255,255,255,0.3)" />
             仅供18岁以上成年情侣在双方自愿前提下使用

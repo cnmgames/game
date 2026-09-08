@@ -250,6 +250,13 @@ export default function UserPage() {
           </div>
         </div>
 
+        <div className="mb-4 rounded-xl border border-amber-500/20 bg-amber-500/5 px-4 py-3 text-center">
+          <p className="text-xs text-amber-200/70 flex items-center justify-center gap-1.5">
+            <Icon name="shield" size={12} color="rgba(251,191,36,0.5)" />
+            每个账号最多绑定3台设备，超过将自动封禁
+          </p>
+        </div>
+
         <p className="text-center text-xs text-white/30 flex items-center justify-center gap-1.5">
           <Icon name="shield" size={14} color="rgba(255,255,255,0.3)" />
           仅供18岁以上成年情侣在双方自愿前提下使用
