@@ -209,7 +209,7 @@ export default function FlightGame() {
     <>
       {/* 固定返回按钮 */}
       <div style={{paddingTop: "60px"}}>
-      <a href="/" className="fixed-return-btn" style={{position:"fixed",top:"max(12px,env(safe-area-inset-top))",left:"max(12px,env(safe-area-inset-left))",zIndex:9999,padding:"4px 10px",borderRadius:"9999px",border:"1px solid rgba(255,255,255,0.2)",background:"rgba(0,0,0,0.6)",color:"rgba(255,255,255,0.8)",fontSize:"12px",backdropFilter:"blur(10px)",WebkitBackdropFilter:"blur(10px)",whiteSpace:"nowrap",textDecoration:"none",lineHeight:"1.5"}}>返回</a>
+      <a href="/" className="fixed-return-btn" style={{position:"fixed",top:"max(12px,env(safe-area-inset-top))",left:"max(12px,env(safe-area-inset-left))",zIndex:9999,padding:"6px 14px",borderRadius:"9999px",border:"1px solid rgba(255,255,255,0.2)",background:"rgba(0,0,0,0.6)",color:"rgba(255,255,255,0.85)",fontSize:"13px",backdropFilter:"blur(10px)",WebkitBackdropFilter:"blur(10px)",whiteSpace:"nowrap",textDecoration:"none",fontWeight:500,lineHeight:"1.5"}}>返回</a>
       <div className="bg-aurora" />
       <div className="relative z-10 mx-auto min-h-auto w-full max-w-5xl px-2 py-2 sm:px-4 sm:py-4">
         <div className="game-container !p-3 sm:!p-5">
