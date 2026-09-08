@@ -144,6 +144,10 @@ export default function LoginPage() {
             </div>
           </div>
 
+          <p className="mt-4 text-center text-xs text-white/40 flex items-center justify-center gap-1.5">
+            <Icon name="shield" size={12} color="rgba(255,255,255,0.3)" />
+            每个账号最多绑定3台设备，超过将自动封禁
+          </p>
           <p className="mt-6 text-center text-xs text-white/30 flex items-center justify-center gap-1.5">
             <Icon name="shield" size={14} color="rgba(255,255,255,0.3)" />
             仅供18岁以上成年情侣在双方自愿前提下使用
