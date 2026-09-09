@@ -19,6 +19,7 @@ export default function RegisterPage() {
   const [countdown, setCountdown] = useState(0);
   const [sending, setSending] = useState(false);
   const [checkTimer, setCheckTimer] = useState<NodeJS.Timeout | null>(null);
+  const [agreeTerms, setAgreeTerms] = useState(false);
 
   const checkEmail = async (emailVal: string) => {
     if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) return;
@@ -116,7 +117,7 @@ export default function RegisterPage() {
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl shadow-2xl" style={{ background: "linear-gradient(135deg, #FF375F 0%, #BF5AF2 100%)", boxShadow: "0 8px 32px rgba(255,55,95,0.4)" }}>
               <Icon name="sparkles" size={32} color="#fff" />
             </div>
-            <h1 className="text-3xl font-bold text-white sm:text-4xl" style={{ textShadow: "0 0 30px rgba(255,55,95,0.3)" }}>创建账号</h1>
+            <h1 className="text-3xl font-bold text-white sm:text-4xl" style={{ textShadow: "0 0 30px rgba(255,55,95,0.3)" }}>注册账号</h1>
             <p className="mt-2 text-sm text-white/60">邮箱验证码注册，即注册即验证</p>
           </div>
 
@@ -195,13 +196,30 @@ export default function RegisterPage() {
                 </div>
               )}
 
+              {/* 协议勾选 */}
+              <div className="flex items-start gap-2">
+                <input
+                  type="checkbox"
+                  id="agreeTerms"
+                  checked={agreeTerms}
+                  onChange={(e) => setAgreeTerms(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-pink-500"
+                />
+                <label htmlFor="agreeTerms" className="text-xs leading-relaxed text-white/50 cursor-pointer">
+                  我已阅读并同意
+                  <Link href="/terms/service" className="text-pink-300 hover:text-pink-200 mx-0.5">服务协议</Link>、
+                  <Link href="/terms/privacy" className="text-pink-300 hover:text-pink-200 mx-0.5">隐私声明</Link>和
+                  <Link href="/terms/account" className="text-pink-300 hover:text-pink-200 mx-0.5">账号协议</Link>
+                </label>
+              </div>
+
               <button
                 type="submit"
-                disabled={loading}
-                className="w-full rounded-full py-3.5 text-sm font-bold text-white transition hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:hover:scale-100"
+                disabled={loading || !agreeTerms}
+                className="w-full rounded-full py-3.5 text-sm font-bold text-white transition hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
                 style={{ background: "linear-gradient(135deg, #FF375F 0%, #FF2D55 50%, #D70040 100%)", boxShadow: "0 4px 24px rgba(255,55,95,0.4)" }}
               >
-                {loading ? "注册中..." : "注 册"}
+                {loading ? "注册中..." : agreeTerms ? "注 册" : "请先同意协议"}
               </button>
             </form>
 
