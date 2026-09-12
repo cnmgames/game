@@ -13,19 +13,13 @@ export default function VisitTracker() {
       localStorage.setItem("device_id", deviceId);
     }
 
-    // 上报访问和心跳（合并到一个接口）
+    // 用Image Beacon方式上报（简单可靠，不会被跨域拦截）
     const reportVisit = () => {
-      const page = window.location.pathname;
-      fetch(API_BASE + "visit/log", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          page: page,
-          device_id: deviceId,
-        }),
-      }).then(r => r.json()).catch(e => {
-        // 静默失败
-      });
+      const page = encodeURIComponent(window.location.pathname);
+      const url = API_BASE + "visit/log_beacon&page=" + page + "&device=" + encodeURIComponent(deviceId);
+      // 用Image方式上报，不会有跨域问题
+      const img = new Image();
+      img.src = url;
     };
 
     // 页面加载时立即上报
