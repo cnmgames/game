@@ -46,15 +46,15 @@ export default function GameLayout({ title, children }: { title: string; childre
         <div className="absolute -top-20 -left-20 h-64 w-64 rounded-full opacity-20 blur-3xl animate-float" style={{ background: "radial-gradient(circle, #FF375F, transparent)" }} />
         <div className="absolute top-1/3 -right-20 h-80 w-80 rounded-full opacity-15 blur-3xl animate-float" style={{ background: "radial-gradient(circle, #BF5AF2, transparent)", animationDelay: "2s" }} />
       </div>
-      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-4xl flex-col px-3.5 py-4 sm:px-6 sm:py-8">
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-4xl flex-col px-3.5 sm:px-6">
         {/* 顶部占位，避免内容被固定返回按钮遮挡 */}
-        <div style={{ height: "max(56px, calc(env(safe-area-inset-top) + 44px))" }} />
+        <div className="pt-14" style={{ paddingTop: "max(56px, calc(env(safe-area-inset-top) + 44px))" }} />
         <div className="mb-4 text-center">
           <h1 className="text-lg font-bold text-white sm:text-xl bg-gradient-to-r from-pink-200 to-purple-300 bg-clip-text text-transparent">
             {title}
           </h1>
         </div>
-        <div className="game-container flex-1">
+        <div className="game-container flex-1 flex flex-col justify-center pb-8">
           {children}
         </div>
       </div>
