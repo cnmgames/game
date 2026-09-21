@@ -168,6 +168,16 @@ export default function UserPage() {
     });
   };
 
+  const saveQRCode = () => {
+    const link = document.createElement("a");
+    link.href = "/images/miniprogram-qrcode.jpg";
+    link.download = "小程序码.jpg";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    alert("二维码已保存，请打开微信扫码进入小程序");
+  };
+
   // 看广告领激活码
   const handleWatchAd = () => {
     setShowAdModal(true);
@@ -531,7 +541,14 @@ export default function UserPage() {
                 <div className="mx-auto mb-4 w-48 h-48 rounded-2xl overflow-hidden border border-white/10">
                   <img src="/images/miniprogram-qrcode.jpg" alt="小程序码" className="w-full h-full object-cover" />
                 </div>
-                <p className="text-sm text-white/60">长按识别小程序码，进入小程序领激活码</p>
+                <p className="text-sm text-white/60 mb-3">长按图片保存到相册，打开微信扫码进入小程序</p>
+                <button
+                  onClick={saveQRCode}
+                  className="w-full rounded-full py-2.5 text-sm font-semibold text-white transition hover:scale-[1.02] active:scale-[0.98]"
+                  style={{ background: "linear-gradient(135deg, #07C160 0%, #00B578 100%)" }}
+                >
+                  保存二维码到相册
+                </button>
               </div>
               <button
                 onClick={() => setShowMiniProgramModal(false)}
