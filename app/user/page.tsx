@@ -25,6 +25,7 @@ export default function UserPage() {
   const [feedbackSending, setFeedbackSending] = useState(false);
   const [feedbackMsg, setFeedbackMsg] = useState("");
   const [showPartner, setShowPartner] = useState(false);
+  const [showMiniProgramModal, setShowMiniProgramModal] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showAdModal, setShowAdModal] = useState(false);
   const [adCountdown, setAdCountdown] = useState(0);
@@ -309,31 +310,25 @@ export default function UserPage() {
           )}
         </div>
 
-        {/* 看广告领激活码 */}
-        {!codeInfo && (
-          <div className="game-container mb-6 fade-in-up" style={{ animationDelay: "0.15s" }}>
-            <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ background: "linear-gradient(135deg, #FFD60A 0%, #FF9F0A 100%)", boxShadow: "0 4px 20px rgba(255,214,10,0.3)" }}>
-                <Icon name="star" size={28} color="#fff" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-base font-bold text-white">看广告领激活码</h3>
-                <p className="text-xs text-white/50 mt-0.5">观看30秒广告，免费获得周卡激活码</p>
-              </div>
-              {adTodayClaimed ? (
-                <span className="rounded-full bg-gray-500/20 px-3 py-1.5 text-xs font-semibold text-gray-400">今日已领</span>
-              ) : (
-                <button
-                  onClick={handleWatchAd}
-                  className="rounded-full px-4 py-2 text-xs font-bold text-white transition hover:scale-105 active:scale-95"
-                  style={{ background: "linear-gradient(135deg, #FFD60A 0%, #FF9F0A 100%)", boxShadow: "0 2px 12px rgba(255,214,10,0.4)" }}
-                >
-                  立即领取
-                </button>
-              )}
+        {/* 引导小程序领激活码 */}
+        <div className="game-container mb-6 fade-in-up" style={{ animationDelay: "0.15s" }}>
+          <div className="flex items-center gap-4">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ background: "linear-gradient(135deg, #07C160 0%, #00B578 100%)", boxShadow: "0 4px 20px rgba(7,193,96,0.3)" }}>
+              <Icon name="star" size={28} color="#fff" />
             </div>
+            <div className="flex-1">
+              <h3 className="text-base font-bold text-white">小程序领激活码</h3>
+              <p className="text-xs text-white/50 mt-0.5">看广告免费领周卡，更多福利尽在小程序</p>
+            </div>
+            <button
+              onClick={() => setShowMiniProgramModal(true)}
+              className="rounded-full px-4 py-2 text-xs font-bold text-white transition hover:scale-105 active:scale-95"
+              style={{ background: "linear-gradient(135deg, #07C160 0%, #00B578 100%)", boxShadow: "0 2px 12px rgba(7,193,96,0.4)" }}
+            >
+              去看看
+            </button>
           </div>
-        )}
+        </div>
 
         {/* 功能菜单 */}
         <div className="game-container mb-6 fade-in-up" style={{ animationDelay: "0.2s" }}>
@@ -516,6 +511,36 @@ export default function UserPage() {
             >
               {feedbackSending ? "提交中..." : "提交建议"}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* 小程序引导弹窗 */}
+      {showMiniProgramModal && (
+        <div className="modal-overlay" onClick={() => setShowMiniProgramModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="text-center py-6">
+              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl" style={{ background: "linear-gradient(135deg, #07C160 0%, #00B578 100%)" }}>
+                <Icon name="star" size={40} color="#fff" />
+              </div>
+              <h3 className="mb-2 text-xl font-bold text-white">小程序领激活码</h3>
+              <p className="mb-4 text-sm text-white/60">
+                打开微信，搜索小程序名称，即可看广告免费领激活码，更多福利等你发现！
+              </p>
+              <div className="mb-6">
+                <div className="mx-auto mb-4 w-48 h-48 rounded-2xl overflow-hidden border border-white/10">
+                  <img src="/images/miniprogram-qrcode.jpg" alt="小程序码" className="w-full h-full object-cover" />
+                </div>
+                <p className="text-sm text-white/60">长按识别小程序码，进入小程序领激活码</p>
+              </div>
+              <button
+                onClick={() => setShowMiniProgramModal(false)}
+                className="w-full rounded-full py-3 text-sm font-bold text-white transition hover:scale-[1.02] active:scale-[0.98]"
+                style={{ background: "linear-gradient(135deg, #07C160 0%, #00B578 100%)" }}
+              >
+                我知道了
+              </button>
+            </div>
           </div>
         </div>
       )}
