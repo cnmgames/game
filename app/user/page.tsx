@@ -26,6 +26,11 @@ export default function UserPage() {
   const [feedbackMsg, setFeedbackMsg] = useState("");
   const [showPartner, setShowPartner] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showAdModal, setShowAdModal] = useState(false);
+  const [adCountdown, setAdCountdown] = useState(0);
+  const [adRewardCode, setAdRewardCode] = useState("");
+  const [adLoading, setAdLoading] = useState(false);
+  const [adTodayClaimed, setAdTodayClaimed] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("user_token");
@@ -40,6 +45,7 @@ export default function UserPage() {
         if (data.success) {
           setUser(data.user);
           setCodeInfo(data.code_info);
+          setAdTodayClaimed(data.ad_today_claimed || false);
         } else {
           localStorage.removeItem("user_token");
           router.push("/login");
@@ -161,6 +167,55 @@ export default function UserPage() {
     });
   };
 
+  // 看广告领激活码
+  const handleWatchAd = () => {
+    setShowAdModal(true);
+    setAdCountdown(30);
+    setAdRewardCode("");
+    setAdLoading(false);
+  };
+
+  useEffect(() => {
+    if (!showAdModal || adCountdown <= 0 || adRewardCode) return;
+    const timer = setInterval(() => {
+      setAdCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          // 倒计时结束，领取激活码
+          claimAdReward();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [showAdModal, adCountdown, adRewardCode]);
+
+  const claimAdReward = async () => {
+    setAdLoading(true);
+    const token = localStorage.getItem("user_token");
+    try {
+      const res = await fetch(API_BASE + "user/ad_reward", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setAdRewardCode(data.code);
+        setAdTodayClaimed(true);
+      } else {
+        alert(data.message || "领取失败");
+        setShowAdModal(false);
+      }
+    } catch {
+      alert("网络错误，请重试");
+      setShowAdModal(false);
+    } finally {
+      setAdLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <>
@@ -254,6 +309,32 @@ export default function UserPage() {
           )}
         </div>
 
+        {/* 看广告领激活码 */}
+        {!codeInfo && (
+          <div className="game-container mb-6 fade-in-up" style={{ animationDelay: "0.15s" }}>
+            <div className="flex items-center gap-4">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl" style={{ background: "linear-gradient(135deg, #FFD60A 0%, #FF9F0A 100%)", boxShadow: "0 4px 20px rgba(255,214,10,0.3)" }}>
+                <Icon name="star" size={28} color="#fff" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-base font-bold text-white">看广告领激活码</h3>
+                <p className="text-xs text-white/50 mt-0.5">观看30秒广告，免费获得周卡激活码</p>
+              </div>
+              {adTodayClaimed ? (
+                <span className="rounded-full bg-gray-500/20 px-3 py-1.5 text-xs font-semibold text-gray-400">今日已领</span>
+              ) : (
+                <button
+                  onClick={handleWatchAd}
+                  className="rounded-full px-4 py-2 text-xs font-bold text-white transition hover:scale-105 active:scale-95"
+                  style={{ background: "linear-gradient(135deg, #FFD60A 0%, #FF9F0A 100%)", boxShadow: "0 2px 12px rgba(255,214,10,0.4)" }}
+                >
+                  立即领取
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* 功能菜单 */}
         <div className="game-container mb-6 fade-in-up" style={{ animationDelay: "0.2s" }}>
           <div className="divide-y divide-white/5">
@@ -296,6 +377,76 @@ export default function UserPage() {
           仅供18岁以上成年情侣在双方自愿前提下使用
         </p>
       </div>
+
+      {/* 看广告领激活码弹窗 */}
+      {showAdModal && (
+        <div className="modal-overlay" onClick={() => !adLoading && !adRewardCode && setShowAdModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            {adRewardCode ? (
+              /* 领取成功 */
+              <div className="text-center py-6">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20">
+                  <Icon name="check" size={36} color="#34C759" />
+                </div>
+                <h3 className="mb-2 text-xl font-bold text-white">领取成功！</h3>
+                <p className="mb-4 text-sm text-white/60">你的专属激活码：</p>
+                <div className="mb-6 rounded-xl border border-pink-400/30 bg-pink-500/10 p-4">
+                  <p className="font-mono text-xl font-bold tracking-wider text-pink-300">{adRewardCode}</p>
+                </div>
+                <p className="mb-6 text-xs text-white/40">复制激活码，回到上方输入框激活即可开始游戏</p>
+                <button
+                  onClick={() => setShowAdModal(false)}
+                  className="w-full rounded-full py-3 text-sm font-bold text-white transition hover:scale-[1.02] active:scale-[0.98]"
+                  style={{ background: "linear-gradient(135deg, #FF375F 0%, #BF5AF2 100%)" }}
+                >
+                  我知道了
+                </button>
+              </div>
+            ) : (
+              /* 广告播放中 */
+              <div className="py-6">
+                <div className="mb-4 flex items-center justify-between">
+                  <h3 className="flex items-center gap-2 text-lg font-bold text-white">
+                    <Icon name="play" size={20} color="#FFD60A" /> 广告播放中
+                  </h3>
+                  {!adLoading && (
+                    <button onClick={() => setShowAdModal(false)} className="text-white/50 hover:text-white text-xl">×</button>
+                  )}
+                </div>
+
+                {/* 广告占位区域 */}
+                <div className="mb-4 flex h-48 items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-br from-purple-500/20 to-pink-500/20">
+                  <div className="text-center">
+                    <Icon name="play" size={48} color="rgba(255,255,255,0.3)" />
+                    <p className="mt-2 text-sm text-white/40">广告区域</p>
+                  </div>
+                </div>
+
+                {/* 倒计时 */}
+                <div className="text-center">
+                  <p className="text-sm text-white/60">
+                    {adLoading ? "正在领取激活码..." : (
+                      <>
+                        观看结束后可领取激活码，剩余 <span className="font-bold text-pink-300">{adCountdown}</span> 秒
+                      </>
+                    )}
+                  </p>
+                  {/* 进度条 */}
+                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
+                    <div
+                      className="h-full rounded-full transition-all duration-1000"
+                      style={{
+                        width: `${((30 - adCountdown) / 30) * 100}%`,
+                        background: "linear-gradient(90deg, #FFD60A, #FF9F0A)",
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* 建议反馈弹窗 */}
       {showFeedback && (
