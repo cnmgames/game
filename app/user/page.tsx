@@ -541,7 +541,7 @@ export default function UserPage() {
                 <div className="mx-auto mb-4 w-48 h-48 rounded-2xl overflow-hidden border border-white/10">
                   <img src="/images/miniprogram-qrcode.jpg" alt="小程序码" className="w-full h-full object-cover" />
                 </div>
-                <p className="text-sm text-white/60 mb-3">长按图片保存到相册，打开微信扫码进入小程序</p>
+                <p className="text-sm text-white/60 mb-3">保存二维码到相册，打开微信扫一扫进入小程序</p>
                 <button
                   onClick={saveQRCode}
                   className="w-full rounded-full py-2.5 text-sm font-semibold text-white transition hover:scale-[1.02] active:scale-[0.98]"
