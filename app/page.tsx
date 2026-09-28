@@ -284,7 +284,7 @@ export default function Home() {
             {filteredGames.map((game, i) => (
               <Link key={game.path} href={game.path} className="game-card group fade-in-up" style={{ animationDelay: `${i * 0.06}s` }} onClick={(e) => handleGameClick(e, game)}>
                 <span className="game-card-emoji flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
-                  <Icon name={game.icon} size={40} color="#FF375F" />
+                  <Icon name={game.icon} size={56} color="#FF375F" />
                 </span>
                 <div className="space-y-2 sm:space-y-4">
                   <div className="flex flex-wrap items-center gap-2">

@@ -24,7 +24,7 @@ html, body {
     @apply relative flex min-h-[9.25rem] flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-3.5 text-white shadow-lg shadow-black/30 backdrop-blur-xl transition-all duration-300 hover:border-pink-300/60 hover:bg-black/5 hover:-translate-y-1 sm:min-h-0 sm:rounded-3xl sm:p-6;
   }
   .game-card-emoji {
-    @apply absolute -right-2 -top-2 text-4xl opacity-20 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 group-hover:opacity-60 sm:-right-4 sm:-top-4 sm:text-7xl;
+    @apply absolute -right-1 -top-1 text-5xl opacity-40 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 group-hover:opacity-70 sm:-right-3 sm:-top-3 sm:text-8xl;
   }
   .game-card-tag {
     @apply relative z-10 inline-flex max-w-full items-center gap-2 rounded-full bg-transparent py-0 text-sm font-semibold leading-tight text-pink-100 sm:bg-white/10 sm:px-3 sm:py-1 sm:text-xs sm:uppercase sm:tracking-widest sm:text-pink-200;
