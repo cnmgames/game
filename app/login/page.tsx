@@ -44,6 +44,7 @@ export default function LoginPage() {
   const [needVerify, setNeedVerify] = useState(false);
   const [resendMsg, setResendMsg] = useState("");
   const [resending, setResending] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,7 +60,8 @@ export default function LoginPage() {
       const data = await res.json();
       if (data.success) {
         localStorage.setItem("user_token", data.token);
-        router.push("/user");
+        setSuccessMsg("登录成功，欢迎回来！");
+        setTimeout(() => router.push("/user"), 900);
       } else {
         setError(data.message || "登录失败");
         if (data.need_verify) setNeedVerify(true);
@@ -132,6 +134,13 @@ export default function LoginPage() {
               {error && (
                 <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300 fade-in-up">
                   {error}
+                </div>
+              )}
+
+              {successMsg && (
+                <div className="flex items-center gap-2 rounded-xl border border-green-500/30 bg-green-500/10 px-4 py-3 text-sm text-green-300 fade-in-up">
+                  <Icon name="check" size={16} color="#30D158" />
+                  {successMsg}
                 </div>
               )}
 
