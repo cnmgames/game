@@ -130,7 +130,7 @@ export default function RegisterPage() {
                   value={email}
                   onChange={(e) => handleEmailChange(e.target.value)}
                   onBlur={() => checkEmail(email)}
-                  placeholder="your@email.com"
+                  placeholder="请输入邮箱"
                   className={`w-full rounded-xl border bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:bg-white/10 focus:ring-2 ${emailError ? "border-red-500/50 focus:border-red-400/50 focus:ring-red-500/20" : "border-white/10 focus:border-pink-400/50 focus:ring-pink-500/20"}`}
                   required
                 />
