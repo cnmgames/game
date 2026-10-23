@@ -42,18 +42,6 @@ export default function Home() {
 
   const games = [
     { icon: "plane", title: "情侣飞行棋", desc: "掷骰子前进，每格都有惊喜任务，让感情迅速升温。", path: "/flight", type: "free", category: "interactive" },
-    { icon: "target", title: "真心话大冒险转盘", desc: "旋转转盘抽题，真心话或大冒险，揭开彼此秘密。", path: "/truth", type: "paid", category: "interactive" },
-    { icon: "dice", title: "情趣骰子", desc: "摇骰子比大小，输了喝酒或接受惩罚，越玩越刺激。", path: "/dice", type: "paid", category: "interactive" },
-    { icon: "paw", title: "火辣暗兽棋", desc: "翻牌博弈策略对决，每翻一张牌都可能让对方卸下防备。", path: "/beast", type: "paid", category: "card" },
-    { icon: "gamepad", title: "桃色老虎机", desc: "地点动作部位随机组合，摇出你的下一个亲密时刻。", path: "/slot", type: "paid", category: "card" },
-    { icon: "gem", title: "午夜大富翁", desc: "绕棋盘冒险，每站都有欲望事件，一步步点燃激情。", path: "/monopoly", type: "paid", category: "card" },
-    { icon: "rocket", title: "情侣飞行棋Pro", desc: "自定义任务主题、AI导入、3D骰子，打造专属游戏。", path: "/flight-pro", type: "paid", category: "advanced" },
-    { icon: "heart", title: "姿势大全", desc: "12种经典姿势图文教程，难度分级，探索更多亲密可能。", path: "/posture", type: "paid", category: "advanced" },
-    { icon: "eye", title: "心有灵犀", desc: "情侣默契考验，同时答题，一致得分，不一致甜蜜惩罚。", path: "/telepathy", type: "paid", category: "interactive" },
-    { icon: "users", title: "角色扮演剧场", desc: "多种场景剧本，老师学生、医生病人、上司下属，分角色演绎剧情任务，释放想象。", path: "/roleplay", type: "paid", category: "advanced" },
-    { icon: "cards", title: "情侣脱衣卡牌", desc: "扑克牌对战，输了脱衣或执行亲密惩罚，功能牌触发特殊挑战，越玩越火辣。", path: "/strip-cards", type: "paid", category: "card" },
-    { icon: "moon", title: "感官探索", desc: "蒙眼感官游戏，触觉嗅觉味觉探索对方，各种感官挑战，放大每一次触碰的快感。", path: "/senses", type: "paid", category: "advanced" },
-    { icon: "users", title: "他与他", desc: "专为男同情侣设计，真心话、大冒险、亲密任务三种模式，属于两个男生的深夜专属游戏。", path: "/gay", type: "paid", category: "exclusive" },
     { icon: "zap", title: "数字炸弹", desc: "两人轮流猜数字，范围不断缩小，猜到炸弹的人接受甜蜜惩罚。", path: "/games/number-bomb", type: "paid", category: "interactive" },
     { icon: "dice", title: "憋牛吹牛", desc: "经典骰子吹牛游戏，叫价开牌斗智斗勇，1点万能，输的人接受惩罚。", path: "/games/stifle-cow", type: "paid", category: "interactive" },
     { icon: "eye", title: "默契翻牌", desc: "翻牌配对大挑战，两人轮流翻牌，考验默契和记忆力，配对多者获胜。", path: "/games/memory-match", type: "paid", category: "interactive" },

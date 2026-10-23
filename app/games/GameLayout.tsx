@@ -1,11 +1,76 @@
 // @ts-nocheck
-// v32 remove external Icon import
+// v33 add auth guard
 "use client";
 import Link from "next/link";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import GameFeedbackButton from "../../components/GameFeedbackButton";
 
+const _API_HOST = ["k", "ttla", "top"];
+const API_BASE = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
+
 export default function GameLayout({ title, children }: { title: string; children: ReactNode }) {
+  const router = useRouter();
+  const [authChecked, setAuthChecked] = useState(false);
+  const [authPassed, setAuthPassed] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("user_token");
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+    // 快速检查本地game_token（已激活用户）
+    if (localStorage.getItem("game_token")) {
+      setAuthPassed(true);
+      setAuthChecked(true);
+      return;
+    }
+    // 验证token并检查激活状态
+    fetch(API_BASE + "user/info", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success && data.code_info) {
+          setAuthPassed(true);
+        } else if (data.success) {
+          // 已登录但未激活
+          router.push("/user");
+        } else {
+          // token无效
+          localStorage.removeItem("user_token");
+          localStorage.removeItem("game_token");
+          router.push("/login");
+        }
+      })
+      .catch(() => {
+        // 网络错误，尝试用本地token判断
+        if (localStorage.getItem("game_token")) {
+          setAuthPassed(true);
+        } else {
+          router.push("/user");
+        }
+      })
+      .finally(() => setAuthChecked(true));
+  }, [router]);
+
+  if (!authChecked || !authPassed) {
+    return (
+      <>
+        <div className="bg-aurora" />
+        <div className="relative z-10 flex min-h-screen items-center justify-center text-white/60">
+          <div className="text-center">
+            <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-2 border-white/20 border-t-pink-500" />
+            <p className="text-sm">验证中...</p>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <style jsx global>{`
