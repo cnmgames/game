@@ -75,8 +75,9 @@ export default function RegisterPage() {
       } else {
         setError(data.message || "发送失败");
       }
-    } catch {
-      setError("网络连接失败，请检查网络后重试");
+    } catch (err: any) {
+      console.error("send_code error:", err);
+      setError(err instanceof TypeError ? "无法连接到服务器，请检查网络后重试" : "服务器异常（" + (err?.message || "请稍后再试") + "）");
     } finally {
       setSending(false);
     }
@@ -102,8 +103,9 @@ export default function RegisterPage() {
       } else {
         setError(data.message || "注册失败");
       }
-    } catch {
-      setError("网络连接失败，请检查网络后重试");
+    } catch (err: any) {
+      console.error("register error:", err);
+      setError(err instanceof TypeError ? "无法连接到服务器，请检查网络后重试" : "服务器异常（" + (err?.message || "请稍后再试") + "）");
     } finally {
       setLoading(false);
     }
@@ -197,6 +199,7 @@ export default function RegisterPage() {
                 </div>
               )}
 
+              {/* 协议勾选 */}
               <div className="flex items-start gap-2">
                 <input
                   type="checkbox"
