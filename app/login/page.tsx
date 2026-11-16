@@ -54,7 +54,7 @@ export default function LoginPage() {
     try {
       const res = await fetch(API_BASE + "user/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({ email, password, device_id: getDeviceId() }),
       });
       if (!res.ok) { throw new Error("HTTP " + res.status); }
@@ -82,7 +82,7 @@ export default function LoginPage() {
     try {
       const res = await fetch(API_BASE + "user/send_verify", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({ email }),
       });
       if (!res.ok) { throw new Error("HTTP " + res.status); }

@@ -26,7 +26,7 @@ export default function RegisterPage() {
     try {
       const res = await fetch(API_BASE + "user/check_email", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({ email: emailVal }),
       });
       const data = await res.json();
@@ -64,7 +64,7 @@ export default function RegisterPage() {
     try {
       const res = await fetch(API_BASE + "user/send_code", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({ email, type: "register" }),
       });
       if (!res.ok) { throw new Error("HTTP " + res.status); }
@@ -93,7 +93,7 @@ export default function RegisterPage() {
     try {
       const res = await fetch(API_BASE + "user/register", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({ email, code, password }),
       });
       if (!res.ok) { throw new Error("HTTP " + res.status); }
