@@ -6,11 +6,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "情侣游戏 - 情侣互动小游戏合集",
-  description: "情侣互动小游戏合集，包含情侣飞行棋、真心话大冒险、情蝨骰子等多种情侣游戏",
+  description: "情侣互动小游戏合集，包含情侣飞行棋、真心话大冒险、情趣骰子等多种情侣游戏",
 };
 
 // 全局请求补丁：把 application/json 转成 text/plain，并移除自定义头。
-// 作用：让所有跳域 POST 成为「简单请求」，不触发 OPTIONS 预检，
+// 作用：让所有跨域 POST 成为「简单请求」，不触发 OPTIONS 预检，
 // 规避微信 X5 / 部分手机浏览器预检失败导致的「无法连接到服务器」。
 // 后端 api.php 读取 php://input 做 JSON 解析，不校验 Content-Type，因此完全兼容。
 const FETCH_PATCH = `
@@ -44,7 +44,17 @@ const FETCH_PATCH = `
         }
       }
     } catch (e) {}
-    return rawFetch.apply(this, arguments);
+    var self = this, args = arguments;
+    return rawFetch.apply(self, args).catch(function (err) {
+      // 网络层失败（DNS/TLS/被代理或插件拦截）自动重试一次，间隔 600ms
+      try {
+        var url = typeof input === 'string' ? input : ((input && input.url) || '');
+        if (url.indexOf('api.php') === -1) throw err;
+      } catch (e2) { throw err; }
+      return new Promise(function (res) { setTimeout(res, 600); }).then(function () {
+        return rawFetch.apply(self, args);
+      });
+    });
   };
     })();
 `;
