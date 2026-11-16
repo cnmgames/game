@@ -136,7 +136,7 @@ export default function RegisterPage() {
                   value={email}
                   onChange={handleEmailChange}
                   onBlur={() => checkEmail(email)}
-                  placeholder="邮箱前缀，如 2540455840"
+                  placeholder="邮箱前缀"
                   error={!!emailError}
                 />
                 {emailError === "registered" && (
@@ -173,12 +173,12 @@ export default function RegisterPage() {
                 </div>
               </div>
               <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">密码</label>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">密码（至少6位）</label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="至少6位"
+                  placeholder=""
                   className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10 focus:ring-2 focus:ring-pink-500/20"
                   required
                 />
@@ -189,7 +189,7 @@ export default function RegisterPage() {
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="再次输入密码"
+                  placeholder=""
                   className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10 focus:ring-2 focus:ring-pink-500/20"
                   required
                 />
