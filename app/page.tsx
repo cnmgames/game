@@ -62,7 +62,7 @@ export default function Home() {
     if (token) {
       fetch(API_BASE + "user/info", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({ token }),
       })
         .then((r) => r.json())
@@ -84,7 +84,7 @@ export default function Home() {
     let retryCount = 0;
     fetch(API_BASE + "online/visit", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({ code: "", device_id: getDeviceId() }),
     }).catch(() => {});
     const fetchOnline = () => {
@@ -104,7 +104,7 @@ export default function Home() {
     setTimeout(fetchOnline, 500);
     const timer = setInterval(() => {
       if (!document.hidden) fetchOnline();
-    }, 2000);
+    }, 10000);
     return () => clearInterval(timer);
   }, []);
 
@@ -137,7 +137,7 @@ export default function Home() {
         try {
           const res = await fetch(API_BASE + "user/info", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "text/plain" },
             body: JSON.stringify({ token }),
           });
           const data = await res.json();
