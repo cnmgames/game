@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Icon from "../../components/Icon";
+import EmailInput from "../../components/EmailInput";
 
 const _API_HOST = ["k", "ttla", "top"];
 const API_BASE = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
@@ -48,9 +49,11 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
     setNeedVerify(false);
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError("请输入邮箱"); return; }
+    if (!password) { setError("请输入密码"); return; }
+    setLoading(true);
     try {
       const res = await fetch(API_BASE + "user/login", {
         method: "POST",
@@ -112,13 +115,10 @@ export default function LoginPage() {
             <form onSubmit={handleLogin} className="space-y-5">
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">邮箱</label>
-                <input
-                  type="email"
+                <EmailInput
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="请输入邮箱"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10 focus:ring-2 focus:ring-pink-500/20"
-                  required
+                  onChange={setEmail}
+                  placeholder="邮箱前缀，如 2540455840"
                 />
               </div>
               <div>
