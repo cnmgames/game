@@ -286,8 +286,8 @@ export default function EmailInput({
               >
                 <span>{d}</span>
                 {d === domain && (
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF8FA8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 12 4 20" transform="translate(0,-2)" />
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF8FA8" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
                   </svg>
                 )}
               </button>
