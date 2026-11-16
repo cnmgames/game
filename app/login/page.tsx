@@ -11,7 +11,6 @@ function getDeviceId(): string {
   if (typeof window === "undefined") return "dev_unknown";
   let did = localStorage.getItem("device_id");
   if (!did) {
-    // 生成基于浏览器指纹的设备ID，与license.ts保持一致
     const nav = navigator as any;
     let canvasFp = "";
     try {
@@ -57,6 +56,7 @@ export default function LoginPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, device_id: getDeviceId() }),
       });
+      if (!res.ok) { throw new Error("HTTP " + res.status); }
       const data = await res.json();
       if (data.success) {
         localStorage.setItem("user_token", data.token);
@@ -66,9 +66,8 @@ export default function LoginPage() {
         setError(data.message || "登录失败");
         if (data.need_verify) setNeedVerify(true);
       }
-    } catch (err: any) {
-      const errMsg = err?.message ? `网络错误：${err.message}` : "网络错误，请检查网络后重试";
-      setError(errMsg);
+    } catch {
+      setError("网络连接失败，请检查网络后重试");
     } finally {
       setLoading(false);
     }
@@ -84,9 +83,10 @@ export default function LoginPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
+      if (!res.ok) { throw new Error("HTTP " + res.status); }
       const data = await res.json();
       setResendMsg(data.message || (data.success ? "验证邮件已发送" : "发送失败"));
-    } catch { setResendMsg("网络错误"); }
+    } catch { setResendMsg("网络连接失败，请检查网络后重试"); }
     finally { setResending(false); }
   };
 
