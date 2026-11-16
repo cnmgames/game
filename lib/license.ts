@@ -68,7 +68,7 @@ async function cloudActivate(code: string): Promise<{ success: boolean; message:
     const deviceId = getDeviceId();
     const res = await fetch(API_BASE_URL + "activate", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "X-Device-Id": deviceId },
+      headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({ code, device_id: deviceId }),
       signal: AbortSignal.timeout(8000),
     });
@@ -95,7 +95,7 @@ async function cloudVerify(token: string): Promise<{ valid: boolean; message?: s
     const deviceId = getDeviceId();
     const res = await fetch(API_BASE_URL + "verify", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "X-Token": token, "X-Device-Id": deviceId },
+      headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({ token, device_id: deviceId }),
       signal: AbortSignal.timeout(5000),
     });
@@ -179,7 +179,7 @@ export function checkActivation(): Promise<{ active: boolean; type?: string; exp
       try {
         const res = await fetch(API_BASE_URL + "user/info", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "text/plain" },
           body: JSON.stringify({ token: userToken }),
           signal: AbortSignal.timeout(5000),
         });

@@ -35,7 +35,7 @@ export async function checkUserStatus(): Promise<{ banned: boolean; message: str
   try {
     const res = await fetch(API_BASE + "user/info", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({ token }),
     });
     const data = await res.json();
