@@ -37,6 +37,7 @@ export default function ForgotPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, type: "reset" }),
       });
+      if (!res.ok) { throw new Error("HTTP " + res.status); }
       const data = await res.json();
       if (data.success) {
         setCountdown(60);
@@ -45,7 +46,7 @@ export default function ForgotPage() {
         setError(data.message || "发送失败");
       }
     } catch {
-      setError("网络错误，请重试");
+      setError("网络连接失败，请检查网络后重试");
     } finally {
       setSending(false);
     }
@@ -64,6 +65,7 @@ export default function ForgotPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, code, new_password: newPassword }),
       });
+      if (!res.ok) { throw new Error("HTTP " + res.status); }
       const data = await res.json();
       if (data.success) {
         setSuccess(true);
@@ -72,7 +74,7 @@ export default function ForgotPage() {
         setError(data.message || "重置失败");
       }
     } catch {
-      setError("网络错误，请重试");
+      setError("网络连接失败，请检查网络后重试");
     } finally {
       setLoading(false);
     }
