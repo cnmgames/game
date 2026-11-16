@@ -99,9 +99,16 @@ export default function EmailInput({
       setTimeout(() => inputRef.current?.focus(), 60);
       return;
     }
+    // 从「其他邮箱」切回常见后缀时，保留用户已输入的前缀，避免清空
+    let pre = prefix;
+    if (custom) {
+      const at = full.lastIndexOf("@");
+      pre = at > 0 ? full.slice(0, at) : full.replace(/@/g, "");
+    }
     setCustom(false);
+    setPrefix(pre);
     setDomain(d);
-    emit(prefix, d, false, "");
+    emit(pre, d, false, "");
     setTimeout(() => inputRef.current?.focus(), 60);
   };
 
