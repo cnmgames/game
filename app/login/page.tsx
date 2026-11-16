@@ -8,6 +8,8 @@ import EmailInput from "../../components/EmailInput";
 const _API_HOST = ["k", "ttla", "top"];
 const API_BASE = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
 
+const NET_ERR = "连不上服务器：请关闭代理/VPN 或广告拦截插件后重试，也可切换手机流量再试";
+
 function getDeviceId(): string {
   if (typeof window === "undefined") return "dev_unknown";
   let did = localStorage.getItem("device_id");
@@ -72,7 +74,7 @@ export default function LoginPage() {
       }
     } catch (err: any) {
       console.error("login error:", err);
-      setError(err instanceof TypeError ? "无法连接到服务器，请检查网络后重试" : "服务器异常（" + (err?.message || "请稍后再试") + "）");
+      setError(err instanceof TypeError ? NET_ERR : "服务器异常（" + (err?.message || "请稍后再试") + "）");
     } finally {
       setLoading(false);
     }
@@ -93,7 +95,7 @@ export default function LoginPage() {
       setResendMsg(data.message || (data.success ? "验证邮件已发送" : "发送失败"));
     } catch (err: any) {
       console.error("resend error:", err);
-      setResendMsg(err instanceof TypeError ? "无法连接到服务器，请检查网络后重试" : "服务器异常，请稍后再试");
+      setResendMsg(err instanceof TypeError ? NET_ERR : "服务器异常，请稍后再试");
     }
     finally { setResending(false); }
   };
