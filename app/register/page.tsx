@@ -67,6 +67,7 @@ export default function RegisterPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, type: "register" }),
       });
+      if (!res.ok) { throw new Error("HTTP " + res.status); }
       const data = await res.json();
       if (data.success) {
         setCountdown(60);
@@ -75,7 +76,7 @@ export default function RegisterPage() {
         setError(data.message || "发送失败");
       }
     } catch {
-      setError("网络错误，请重试");
+      setError("网络连接失败，请检查网络后重试");
     } finally {
       setSending(false);
     }
@@ -94,15 +95,15 @@ export default function RegisterPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, code, password }),
       });
+      if (!res.ok) { throw new Error("HTTP " + res.status); }
       const data = await res.json();
       if (data.success) {
         router.push("/login");
       } else {
         setError(data.message || "注册失败");
       }
-    } catch (err: any) {
-      const errMsg = err?.message ? `网络错误：${err.message}` : "网络错误，请检查网络后重试";
-      setError(errMsg);
+    } catch {
+      setError("网络连接失败，请检查网络后重试");
     } finally {
       setLoading(false);
     }
@@ -196,7 +197,6 @@ export default function RegisterPage() {
                 </div>
               )}
 
-              {/* 协议勾选 */}
               <div className="flex items-start gap-2">
                 <input
                   type="checkbox"
