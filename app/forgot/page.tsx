@@ -128,7 +128,7 @@ export default function ForgotPage() {
                 <EmailInput
                   value={email}
                   onChange={setEmail}
-                  placeholder="邮箱前缀，如 2540455840"
+                  placeholder="邮箱前缀"
                 />
               </div>
               <div>
@@ -153,12 +153,12 @@ export default function ForgotPage() {
                 </div>
               </div>
               <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">新密码</label>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">新密码（至少6位）</label>
                 <input
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="至少6位"
+                  placeholder=""
                   className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10 focus:ring-2 focus:ring-pink-500/20"
                   required
                 />
@@ -169,7 +169,7 @@ export default function ForgotPage() {
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="再次输入新密码"
+                  placeholder=""
                   className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10 focus:ring-2 focus:ring-pink-500/20"
                   required
                 />
