@@ -24,6 +24,7 @@ export default function UserPage() {
   const [feedbackType, setFeedbackType] = useState("suggestion");
   const [feedbackSending, setFeedbackSending] = useState(false);
   const [feedbackMsg, setFeedbackMsg] = useState("");
+  const [myTickets, setMyTickets] = useState<any[]>([]);
   const [showPartner, setShowPartner] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -32,7 +33,7 @@ export default function UserPage() {
     if (!token) { router.push("/login"); return; }
     fetch(API_BASE + "user/info", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({ token }),
     })
       .then((r) => r.json())
@@ -40,6 +41,18 @@ export default function UserPage() {
         if (data.success) {
           setUser(data.user);
           setCodeInfo(data.code_info);
+          if (data.user?.email) {
+            fetch(API_BASE + "ticket/list", {
+              method: "POST",
+              headers: { "Content-Type": "text/plain" },
+              body: JSON.stringify({ email: data.user.email }),
+            })
+              .then((r) => r.json())
+              .then((d) => {
+                if (d.success && Array.isArray(d.list)) setMyTickets(d.list);
+              })
+              .catch(() => {});
+          }
         } else {
           localStorage.removeItem("user_token");
           router.push("/login");
@@ -57,7 +70,7 @@ export default function UserPage() {
     setMessage("");
     fetch(API_BASE + "user/bind", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({ token, code: code.trim(), device_id: getDeviceId() }),
     })
       .then((r) => r.json())
@@ -79,7 +92,7 @@ export default function UserPage() {
     if (token) {
       fetch(API_BASE + "user/logout", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({ token }),
       }).catch(() => {});
     }
@@ -127,7 +140,7 @@ export default function UserPage() {
     try {
       const res = await fetch(API_BASE + "ticket/create", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({
           title: `[${typeMap[feedbackType] || "建议反馈"}] ${text.slice(0, 30)}`,
           content: text,
@@ -140,6 +153,18 @@ export default function UserPage() {
         setFeedbackMsg("提交成功，感谢你的建议！");
         setFeedbackText("");
         setFeedbackType("suggestion");
+        if (user?.email) {
+          fetch(API_BASE + "ticket/list", {
+            method: "POST",
+            headers: { "Content-Type": "text/plain" },
+            body: JSON.stringify({ email: user.email }),
+          })
+            .then((r) => r.json())
+            .then((d) => {
+              if (d.success && Array.isArray(d.list)) setMyTickets(d.list);
+            })
+            .catch(() => {});
+        }
         setTimeout(() => setShowFeedback(false), 1500);
       } else {
         setFeedbackMsg(data.message || "提交失败");
@@ -283,6 +308,43 @@ export default function UserPage() {
             </div>
           </div>
         </div>
+
+        {myTickets.length > 0 && (
+          <div className="game-container mb-6 fade-in-up" style={{ animationDelay: "0.25s" }}>
+            <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-pink-200">
+              <Icon name="ticket" size={16} /> 我的反馈
+            </h3>
+            <div className="space-y-3">
+              {myTickets.map((t: any) => (
+                <div key={t.id} className="rounded-xl border border-white/10 bg-white/5 p-3">
+                  <div className="mb-1.5 flex items-center justify-between gap-2">
+                    <span className="truncate text-xs text-white/40">
+                      #{t.id} · {(t.created_at || "").replace("T", " ").substring(0, 16)}
+                    </span>
+                    <span
+                      className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                        t.status === "closed"
+                          ? "bg-white/10 text-white/50"
+                          : t.status === "pending"
+                          ? "bg-blue-500/20 text-blue-300"
+                          : "bg-amber-500/20 text-amber-300"
+                      }`}
+                    >
+                      {t.status === "closed" ? "已关闭" : t.status === "pending" ? "处理中" : "待处理"}
+                    </span>
+                  </div>
+                  <p className="text-sm leading-relaxed text-white/80">{t.title}</p>
+                  {t.reply && (
+                    <div className="mt-2 rounded-lg border border-pink-400/20 bg-pink-500/10 p-2.5 text-xs leading-relaxed text-white/70 whitespace-pre-wrap break-words">
+                      <span className="font-semibold text-pink-300">官方回复：</span>
+                      {t.reply}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="mb-4 rounded-xl border border-amber-500/20 bg-amber-500/5 px-4 py-3 text-center">
           <p className="text-xs text-amber-200/70 flex items-center justify-center gap-1.5">
