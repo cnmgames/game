@@ -34,7 +34,7 @@ export default function ForgotPage() {
     try {
       const res = await fetch(API_BASE + "user/send_code", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({ email, type: "reset" }),
       });
       if (!res.ok) { throw new Error("HTTP " + res.status); }
@@ -63,7 +63,7 @@ export default function ForgotPage() {
     try {
       const res = await fetch(API_BASE + "user/reset_password", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({ email, code, new_password: newPassword }),
       });
       if (!res.ok) { throw new Error("HTTP " + res.status); }
