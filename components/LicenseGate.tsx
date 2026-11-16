@@ -42,6 +42,17 @@ export default function LicenseGate({
     verify();
   }, [verify]);
 
+  // 未激活时统一跳转（放在 effect 中，避免每次渲染重复安排定时器）
+  useEffect(() => {
+    if (status !== "unactivated") return;
+    let token = "";
+    try { token = localStorage.getItem("user_token") || ""; } catch (e) {}
+    const timer = setTimeout(() => {
+      router.push(token ? "/user" : "/login");
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [status, router]);
+
   const formatInput = (value: string) => {
     const clean = value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 16);
     const parts = [];
@@ -86,13 +97,6 @@ export default function LicenseGate({
   }
 
   if (status === "unactivated") {
-    // 未激活直接跳转到用户中心
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("user_token");
-      setTimeout(() => {
-        router.push(token ? "/user" : "/login");
-      }, 300);
-    }
     return (
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "radial-gradient(ellipse at top, #1a0a1a 0%, #000 60%)" }}>
         <div style={{ textAlign: "center" }}>
