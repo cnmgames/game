@@ -11,6 +11,7 @@ function getDeviceId(): string {
   if (typeof window === "undefined") return "dev_unknown";
   let did = localStorage.getItem("device_id");
   if (!did) {
+    // 生成基于浏览器指纹的设备ID，与license.ts保持一致
     const nav = navigator as any;
     let canvasFp = "";
     try {
@@ -66,8 +67,9 @@ export default function LoginPage() {
         setError(data.message || "登录失败");
         if (data.need_verify) setNeedVerify(true);
       }
-    } catch {
-      setError("网络连接失败，请检查网络后重试");
+    } catch (err: any) {
+      console.error("login error:", err);
+      setError(err instanceof TypeError ? "无法连接到服务器，请检查网络后重试" : "服务器异常（" + (err?.message || "请稍后再试") + "）");
     } finally {
       setLoading(false);
     }
@@ -86,7 +88,10 @@ export default function LoginPage() {
       if (!res.ok) { throw new Error("HTTP " + res.status); }
       const data = await res.json();
       setResendMsg(data.message || (data.success ? "验证邮件已发送" : "发送失败"));
-    } catch { setResendMsg("网络连接失败，请检查网络后重试"); }
+    } catch (err: any) {
+      console.error("resend error:", err);
+      setResendMsg(err instanceof TypeError ? "无法连接到服务器，请检查网络后重试" : "服务器异常，请稍后再试");
+    }
     finally { setResending(false); }
   };
 
