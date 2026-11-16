@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Icon from "../../components/Icon";
+import EmailInput from "../../components/EmailInput";
 
 const _API_HOST = ["k", "ttla", "top"];
 const API_BASE = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
@@ -86,6 +87,7 @@ export default function RegisterPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError("请输入邮箱"); return; }
     if (password !== confirmPassword) { setError("两次密码不一致"); return; }
     if (password.length < 6) { setError("密码至少6位"); return; }
     if (!code) { setError("请输入验证码"); return; }
@@ -128,14 +130,12 @@ export default function RegisterPage() {
             <form onSubmit={handleRegister} className="space-y-4">
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-pink-200">邮箱</label>
-                <input
-                  type="email"
+                <EmailInput
                   value={email}
-                  onChange={(e) => handleEmailChange(e.target.value)}
+                  onChange={handleEmailChange}
                   onBlur={() => checkEmail(email)}
-                  placeholder="请输入邮箱"
-                  className={`w-full rounded-xl border bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:bg-white/10 focus:ring-2 ${emailError ? "border-red-500/50 focus:border-red-400/50 focus:ring-red-500/20" : "border-white/10 focus:border-pink-400/50 focus:ring-pink-500/20"}`}
-                  required
+                  placeholder="邮箱前缀，如 2540455840"
+                  error={!!emailError}
                 />
                 {emailError === "registered" && (
                   <div className="mt-2 flex items-center justify-between gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2.5 fade-in-up">
