@@ -59,7 +59,18 @@ module.exports = async function handler(req, res) {
     res.setHeader("Content-Type", "application/json; charset=utf-8");
     res.status(r.status).send(text);
   } catch (e) {
-    res.status(502).json({ success: false, message: "上游不可达", detail: String(e && e.message || e) });
+    const c = (e && e.cause) || {};
+    res.status(502).json({
+      success: false,
+      message: "上游不可达",
+      detail: String((e && e.message) || e),
+      code: c.code || c.errno || null,
+      syscall: c.syscall || null,
+      host: c.hostname || null,
+      addr: c.address || null,
+      port: c.port || null,
+      cname: c.name || null,
+    });
   } finally {
     clearTimeout(timer);
   }
