@@ -120,19 +120,19 @@ export default function LoginPage() {
                 <EmailInput
                   value={email}
                   onChange={setEmail}
-                  placeholder="邮箱前缀，如 2540455840"
+                  placeholder="邮箱前缀"
                 />
               </div>
               <div>
                 <div className="mb-2 flex items-center justify-between">
-                  <label className="block text-xs font-semibold uppercase tracking-widest text-pink-200">密码</label>
+                  <label className="block text-xs font-semibold uppercase tracking-widest text-pink-200">密码（至少6位）</label>
                   <Link href="/forgot" className="text-xs font-medium text-pink-300 hover:text-pink-200 transition">忘记密码？</Link>
                 </div>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder=""
                   className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-white/30 outline-none transition focus:border-pink-400/50 focus:bg-white/10 focus:ring-2 focus:ring-pink-500/20"
                   required
                 />
