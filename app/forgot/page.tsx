@@ -8,6 +8,8 @@ import EmailInput from "../../components/EmailInput";
 const _API_HOST = ["k", "ttla", "top"];
 const API_BASE = "https://" + _API_HOST[0] + "." + _API_HOST[1] + "." + _API_HOST[2] + "/api.php?action=";
 
+const NET_ERR = "连不上服务器：请关闭代理/VPN 或广告拦截插件后重试，也可切换手机流量再试";
+
 export default function ForgotPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -48,7 +50,7 @@ export default function ForgotPage() {
       }
     } catch (err: any) {
       console.error("send_code error:", err);
-      setError(err instanceof TypeError ? "无法连接到服务器，请检查网络后重试" : "服务器异常（" + (err?.message || "请稍后再试") + "）");
+      setError(err instanceof TypeError ? NET_ERR : "服务器异常（" + (err?.message || "请稍后再试") + "）");
     } finally {
       setSending(false);
     }
@@ -78,7 +80,7 @@ export default function ForgotPage() {
       }
     } catch (err: any) {
       console.error("reset error:", err);
-      setError(err instanceof TypeError ? "无法连接到服务器，请检查网络后重试" : "服务器异常（" + (err?.message || "请稍后再试") + "）");
+      setError(err instanceof TypeError ? NET_ERR : "服务器异常（" + (err?.message || "请稍后再试") + "）");
     } finally {
       setLoading(false);
     }
